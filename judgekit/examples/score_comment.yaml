@@ -1,5 +1,9 @@
 name: 评论区拱火度
 primitive: score
-criteria: 判断这条评论在多大程度上会激化讨论对立、带节奏或引战（纯吐槽/正常讨论算低分）。
+criteria: 这条评论在多大程度上会激化讨论对立、带节奏或引战（纯吐槽/正常讨论算低分）
+levels:                      # 原生 Jev score criteria（刻度锚点）/ LLM prompt 参考
+  - 正常讨论或吐槽，无对立意图
+  - 有带节奏苗头，轻度煽动
+  - 明确引战或煽动对立
 provider: rules
 fallback_rules: {}

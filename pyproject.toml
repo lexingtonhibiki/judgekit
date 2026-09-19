@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "judgekit"
+version = "0.2.0"
+description = "Runtime judgment engine for System One (judge) models — YAML tasks, classify/score/route/verify, provider-agnostic (native TypeSafe Jev + any OpenAI-compatible backend), rule fallback, per-decision cost accounting."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = ["pyyaml>=6"]
+keywords = ["judge", "system-one", "typesafe", "jev", "llm", "routing", "classification", "calibrated-probability"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-cov"]
+plot = ["matplotlib"]
+
+[project.scripts]
+judgekit = "judgekit.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["judgekit"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

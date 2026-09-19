@@ -1,4 +1,4 @@
-from .engine import Decision, Task, run_task, build_prompt, rules_fallback
-from .providers import OpenAICompat, RulesProvider, load_providers
+from .engine import Decision, Task, run_task, rules_fallback, PRIMITIVES
+from .providers import load_providers, RulesProvider, OpenAICompat, TypeSafe
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

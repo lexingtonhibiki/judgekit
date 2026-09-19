@@ -1,40 +1,40 @@
-# 判官供应商注册表。价格单位：元/1k token；router 免费链/订阅内边际成本按 0 记。
-# deepseek 为占位价（按官网调价后请修正）；jev 按决策计费，官方价拿到 early access 后填 per_decision_cost。
+# 判官供应商注册表。价格单位：元/1k token；订阅/免费内边际成本按 0 记。
+# key 一律走环境变量（见 .env.example），永远不要把真实 key 写进本文件。
 providers:
   rules:
     kind: rules
+  # ---- 原生 TypeSafe Jev（decisions API，四原语原生映射）----
+  typesafe:
+    kind: typesafe
+    model: jev-latest
+    api_key_env: TYPESAFE_API_KEY
+    per_decision_cost: null      # 官方按次定价公布后填，如 0.0001
+  # ---- 本地路由 / 任意 OpenAI 兼容端点（换成你的 base_url 即可）----
   router-free-auto:
     kind: openai
     base_url: http://127.0.0.1:3456/v1
     model: free-auto
     api_key_env: ROUTER_API_KEY
     api_key_default: sk-local
-    price_in_per_1k: 0.0
-    price_out_per_1k: 0.0
   router-glm-5.3-flash:
     kind: openai
     base_url: http://127.0.0.1:3456/v1
     model: glm-5.3-flash
     api_key_env: ROUTER_API_KEY
     api_key_default: sk-local
-    price_in_per_1k: 0.0
-    price_out_per_1k: 0.0
   router-deepseek-flash:
     kind: openai
     base_url: http://127.0.0.1:3456/v1
     model: deepseek-flash
     api_key_env: ROUTER_API_KEY
     api_key_default: sk-local
-    price_in_per_1k: 0.0
-    price_out_per_1k: 0.0
   router-web-gemini:
     kind: openai
     base_url: http://127.0.0.1:3456/v1
     model: web/gemini-3.8-flash
     api_key_env: ROUTER_API_KEY
     api_key_default: sk-local
-    price_in_per_1k: 0.0
-    price_out_per_1k: 0.0
+  # ---- AIMLAPI 转售的 Jev（OpenAI 兼容包装，对照原生端点用）----
   aimlapi-jev:
     kind: openai
     base_url: https://api.aimlapi.com/v1
