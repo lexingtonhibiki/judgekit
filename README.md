@@ -46,15 +46,15 @@ PRs welcome.
 
 - One judgment call per sample; `temperature=0`; no few-shot examples.
 - Accuracy reported with **Wilson 95% CI** (small-sample honest).
-- Cost = provider list price at run time (Jev: $0.042/MTok input, output free).
+- Cost = provider list price at run time (Jev: $0.042/MTok input, output free; cost/1k = total cost / total decisions).
 - Every run is reproducible: `python benchmarks/run_bench.py --models rules,typesafe --limit 0`.
 
 ### Results (2026-09-20, n=130)
 
 | provider | backend | accuracy (95% CI) | latency/decision | cost / 1000 decisions |
 |---|---|---|---|---|
-| **typesafe** (Jev `jev-1.13.0`, native decisions API) | choice → full probability distribution | **97.7% [93.6–99.2%]** (127/130) | **~890 ms** | **¥0.104** |
-| rules (keyword baseline) | — | 91.5% [85.5–95.4%] (119/130) | ~0 ms | ¥0 |
+| **typesafe** (Jev `jev-1.13.0`, native decisions API) | choice → full probability distribution | **97.7% [93.4–99.2%]** (127/130) | **~890 ms** | **¥0.105** |
+| rules (keyword baseline) | — | 91.5% [85.5–95.2%] (119/130) | ~0 ms | ¥0 |
 | LLM judges (GLM / DeepSeek / free chain) | OpenAI-compatible | pending (gateway outage during run window) | ~3 s | varies |
 
 ![cost-accuracy pareto](docs/pareto.png)
@@ -145,7 +145,7 @@ CI runs tests + zero-cost smoke on Ubuntu/Windows × Python 3.10/3.12.
 ## Roadmap
 
 - [x] Four-primitive engine + native TypeSafe adapter + OpenAI-compat + rules
-- [x] judge-econ mini benchmark + Pareto report (Jev 97.7% @ ¥0.104/1k, n=130)
+- [x] judge-econ mini benchmark + Pareto report (Jev 97.7% @ ¥0.105/1k, n=130)
 - [x] Confidence-gating study (0.7 gate → 100% error capture @ 9% escalation)
 - [x] learn_next / resume_lens recipes (dual-mode)
 - [x] Test suite + CI

@@ -42,15 +42,15 @@ judge-econ 测的是**成本-准确率**，不是聪明程度：同一批任务�
 
 - 每样本 1 次判断调用；`temperature=0`；无 few-shot。
 - 准确率附 **Wilson 95% 置信区间**（小样本诚实口径）。
-- 成本 = 运行时供应商牌价（Jev：$0.042/MTok 输入，输出免费）。
+- 成本 = 运行时供应商牌价（Jev：$0.042/MTok 输入，输出免费；每千次成本=总成本÷总次数）。
 - 完全可复现：`python benchmarks/run_bench.py --models rules,typesafe --limit 0`。
 
 ### 结果（2026-09-20，n=130）
 
 | 供应商 | 后端 | 准确率 (95% CI) | 延迟/次 | 每千次成本 |
 |---|---|---|---|---|
-| **typesafe**（Jev `jev-1.13.0`，原生 decisions API） | choice → 全量概率分布 | **97.7% [93.6–99.2%]**（127/130） | **~890 ms** | **¥0.104** |
-| rules（关键词基线） | — | 91.5% [85.5–95.4%]（119/130） | ~0 ms | ¥0 |
+| **typesafe**（Jev `jev-1.13.0`，原生 decisions API） | choice → 全量概率分布 | **97.7% [93.4–99.2%]**（127/130） | **~890 ms** | **¥0.105** |
+| rules（关键词基线） | — | 91.5% [85.5–95.2%]（119/130） | ~0 ms | ¥0 |
 | LLM 判官对照（GLM / DeepSeek / 免费链） | OpenAI 兼容 | 补测中（跑批窗口本地网关故障） | ~3 s | 视渠道 |
 
 ![cost-accuracy pareto](docs/pareto.png)
@@ -133,7 +133,7 @@ CI 在 Ubuntu/Windows × Python 3.10/3.12 上跑测试 + 零成本烟测。
 ## 路线图
 
 - [x] 四原语引擎 + 原生 TypeSafe 适配器 + OpenAI 兼容 + 规则兜底
-- [x] judge-econ mini 基准 + Pareto 报告（Jev 97.7% @ ¥0.104/千次，n=130）
+- [x] judge-econ mini 基准 + Pareto 报告（Jev 97.7% @ ¥0.105/千次，n=130）
 - [x] 置信度门控研究（0.7 门控 → 捕获 100% 错误 @ 9% 升级率）
 - [x] learn_next / resume_lens 配方（双模式）
 - [x] 测试套件 + CI
