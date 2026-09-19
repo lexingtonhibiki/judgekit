@@ -1,5 +1,61 @@
 [
  {
+  "file": "deepseek-direct__intent_zh",
+  "id": "i030",
+  "gold": "咨询其他",
+  "pred": "退款售后",
+  "conf": 0.85
+ },
+ {
+  "file": "deepseek-direct__spam_zh",
+  "id": "p027",
+  "gold": "正常",
+  "pred": "垃圾",
+  "conf": 0.95
+ },
+ {
+  "file": "deepseek-direct__spam_zh",
+  "id": "p029",
+  "gold": "正常",
+  "pred": "垃圾",
+  "conf": 0.95
+ },
+ {
+  "file": "deepseek-direct__urgency_zh",
+  "id": "u009",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.75
+ },
+ {
+  "file": "deepseek-direct__urgency_zh",
+  "id": "u011",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.82
+ },
+ {
+  "file": "glm-coding-direct__intent_zh",
+  "id": "i010",
+  "gold": "物流查询",
+  "pred": "咨询其他",
+  "conf": 0.86
+ },
+ {
+  "file": "glm-coding-direct__intent_zh",
+  "id": "i030",
+  "gold": "咨询其他",
+  "pred": "退款售后",
+  "conf": 0.65
+ },
+ {
+  "file": "glm-coding-direct__spam_zh",
+  "id": "p027",
+  "gold": "正常",
+  "pred": "垃圾",
+  "conf": 0.78
+ },
+ {
   "file": "rules__intent_zh",
   "id": "i010",
   "gold": "物流查询",
@@ -84,6 +140,20 @@
   "conf": 0.63
  },
  {
+  "file": "typesafe__intent_zh__r2",
+  "id": "i030",
+  "gold": "咨询其他",
+  "pred": "退款售后",
+  "conf": 0.55
+ },
+ {
+  "file": "typesafe__intent_zh__r3",
+  "id": "i030",
+  "gold": "咨询其他",
+  "pred": "退款售后",
+  "conf": 0.57
+ },
+ {
   "file": "typesafe__spam_zh",
   "id": "p004",
   "gold": "垃圾",
@@ -96,5 +166,33 @@
   "gold": "正常",
   "pred": "垃圾",
   "conf": 0.37
+ },
+ {
+  "file": "typesafe__spam_zh__r2",
+  "id": "p004",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.46
+ },
+ {
+  "file": "typesafe__spam_zh__r2",
+  "id": "p027",
+  "gold": "正常",
+  "pred": "垃圾",
+  "conf": 0.28
+ },
+ {
+  "file": "typesafe__spam_zh__r3",
+  "id": "p004",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.42
+ },
+ {
+  "file": "typesafe__spam_zh__r3",
+  "id": "p027",
+  "gold": "正常",
+  "pred": "垃圾",
+  "conf": 0.33
  }
 ]

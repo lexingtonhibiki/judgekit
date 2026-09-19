@@ -29,7 +29,10 @@ def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     rows = []
+    import re
     for f in sorted(RES.glob("*__*.jsonl")):
+        if re.search(r"__r\d+$", f.stem):   # 多轮重复文件（--tag r2/r3）不进单轮汇总
+            continue
         provider, ds = f.stem.rsplit("__", 1)
         recs = [json.loads(l) for l in open(f, encoding="utf-8") if l.strip()]
         if not recs:
@@ -57,15 +60,15 @@ def main() -> None:
                      f"{r['avg_latency_ms']} | {r['errors']} |")
     (RES / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    # Pareto 数据：准确率按样本合并（micro 平均，比 macro 更真实）；成本取每千次均值
+    # Pareto 数据：准确率按样本合并（micro 平均，比 macro 更真实）；成本 = 总成本/总次数（与 README 同口径）
     agg: dict[str, dict] = {}
     for r in rows:
-        a = agg.setdefault(r["provider"], {"k": 0, "n": 0, "cost": []})
+        a = agg.setdefault(r["provider"], {"k": 0, "n": 0, "cost": 0.0})
         a["k"] += round(r["accuracy"] * r["n"])
         a["n"] += r["n"]
-        a["cost"].append(r["cost_per_1k"])
+        a["cost"] += r["cost_total"]
     pareto = [{"provider": p, "accuracy": round(v["k"] / max(1, v["n"]), 4),
-               "cost_per_1k": round(sum(v["cost"]) / len(v["cost"]), 4)}
+               "cost_per_1k": round(v["cost"] / max(1, v["n"]) * 1000, 4)}
               for p, v in agg.items()]
     pareto.sort(key=lambda x: x["cost_per_1k"])
     with open(RES / "pareto.csv", "w", newline="", encoding="utf-8") as f:

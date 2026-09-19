@@ -109,10 +109,10 @@ def run_task(task: Task, x: dict, providers: dict, fallback: bool = True) -> Dec
             dec = Decision(task.primitive, None, 0.0, "", task.provider,
                            int((time.monotonic() - t0) * 1000), 0.0,
                            ok=False, error=f"{type(e).__name__}: {e}")
-        if not dec.ok and fallback and task.fallback_rules and task.primitive in ("classify", "route"):
-            fb = rules_fallback(task, x, "rules-after-fail")
-            if fb.ok:
-                fb.error = f"provider-failed({dec.error}); fallback-ok"  # 保留根因，防止兜底假数据混入结果
-                return fb
-            dec.error = f"{dec.error}; fallback:{fb.error}"
+    if not dec.ok and fallback and task.fallback_rules and task.primitive in ("classify", "route"):
+        fb = rules_fallback(task, x, "rules-after-fail")
+        if fb.ok:
+            fb.error = f"provider-failed({dec.error}); fallback-ok"  # 保留根因，防止兜底假数据混入结果
+            return fb
+        dec.error = f"{dec.error}; fallback:{fb.error}"
     return dec

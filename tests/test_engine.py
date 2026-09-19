@@ -53,6 +53,19 @@ def test_run_task_rules_provider_shortcircuits():
     assert dec.ok and dec.provider == "r"
 
 
+def test_run_task_fallback_carries_original_error():
+    """兜底成功时必须保留供应商失败根因（防止静默兜底产生假数据）。"""
+    class Boom:
+        name = "boom"
+        def decide(self, task, x):
+            raise RuntimeError("HTTP 429 insufficient balance")
+    t = Task.from_dict({"primitive": "classify", "labels": ["a"],
+                        "provider": "boom", "fallback_rules": {"a": ["x"]}})
+    dec = run_task(t, {"text": "x"}, providers={"boom": Boom()})
+    assert dec.ok and dec.value == "a" and dec.provider == "rules-after-fail"
+    assert "RuntimeError" in dec.error and "429" in dec.error
+
+
 def test_task_load_yaml(tmp_path):
     p = tmp_path / "t.yaml"
     p.write_text("""

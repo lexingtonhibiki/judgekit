@@ -1,0 +1,30 @@
+{"id": "s001", "gold": "正面", "pred": "正面", "confidence": 0.6, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s002", "gold": "正面", "pred": "正面", "confidence": 0.5, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s003", "gold": "正面", "pred": "正面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s004", "gold": "正面", "pred": "正面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s005", "gold": "正面", "pred": "正面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s006", "gold": "正面", "pred": null, "confidence": 0.0, "correct": false, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": false, "error": "rules-no-hit; fallback:rules-no-hit"}
+{"id": "s007", "gold": "正面", "pred": "正面", "confidence": 0.5, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s008", "gold": "正面", "pred": "正面", "confidence": 0.5, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s009", "gold": "正面", "pred": null, "confidence": 0.0, "correct": false, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": false, "error": "rules-no-hit; fallback:rules-no-hit"}
+{"id": "s010", "gold": "正面", "pred": "正面", "confidence": 0.5, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s011", "gold": "正面", "pred": null, "confidence": 0.0, "correct": false, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": false, "error": "rules-no-hit; fallback:rules-no-hit"}
+{"id": "s012", "gold": "正面", "pred": "正面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s013", "gold": "正面", "pred": "正面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s014", "gold": "正面", "pred": "正面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s015", "gold": "正面", "pred": "正面", "confidence": 0.5, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s016", "gold": "负面", "pred": "负面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s017", "gold": "负面", "pred": "负面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s018", "gold": "负面", "pred": "负面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s019", "gold": "负面", "pred": "负面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s020", "gold": "负面", "pred": "负面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s021", "gold": "负面", "pred": "负面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s022", "gold": "负面", "pred": "负面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s023", "gold": "负面", "pred": null, "confidence": 0.0, "correct": false, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": false, "error": "rules-no-hit; fallback:rules-no-hit"}
+{"id": "s024", "gold": "负面", "pred": "负面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s025", "gold": "负面", "pred": null, "confidence": 0.0, "correct": false, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": false, "error": "rules-no-hit; fallback:rules-no-hit"}
+{"id": "s026", "gold": "负面", "pred": null, "confidence": 0.0, "correct": false, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": false, "error": "rules-no-hit; fallback:rules-no-hit"}
+{"id": "s027", "gold": "负面", "pred": null, "confidence": 0.0, "correct": false, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": false, "error": "rules-no-hit; fallback:rules-no-hit"}
+{"id": "s028", "gold": "负面", "pred": null, "confidence": 0.0, "correct": false, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": false, "error": "rules-no-hit; fallback:rules-no-hit"}
+{"id": "s029", "gold": "负面", "pred": "负面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
+{"id": "s030", "gold": "负面", "pred": "负面", "confidence": 0.4, "correct": true, "latency_ms": 0, "cost": 0.0, "provider": "rules", "ok": true, "error": ""}
