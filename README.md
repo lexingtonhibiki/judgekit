@@ -1,144 +1,164 @@
-# judgekit 判官工具箱
+# judgekit
 
 [![CI](https://github.com/lexingtonhibiki/judgekit/actions/workflows/ci.yml/badge.svg)](https://github.com/lexingtonhibiki/judgekit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](pyproject.toml)
 
-> **Runtime judgment engine for System One (judge) models** — YAML 定义判断任务，
-> `classify / score / route / verify` 四原语执行，供应商无关，成本透明。
-> 原生支持 TypeSafe Jev decisions API，兼容任意 OpenAI-compatible 端点。
->
-> English TL;DR: judgekit is a provider-agnostic runtime layer that turns judge models
-> (TypeSafe Jev natively, or any OpenAI-compatible LLM) into cheap, typed decisions —
-> classification, scoring, routing, verification — with calibrated probabilities,
-> rule-based fallbacks, and per-decision cost accounting. Ship it inside your app,
-> not just your test suite.
+**English** | [简体中文](README.zh-CN.md)
 
-## 这不是又一个评测框架
+> **Runtime judgment engine for System One (judge) models.**
+> Define a judgment task once in YAML, execute it natively on TypeSafe Jev's
+> decisions API or translate it to any OpenAI-compatible LLM, get typed decisions
+> with calibrated probabilities — and measure what every judgment costs.
 
-| 项目 | 回答的问题 | 时机 |
+| Project | Answers the question | When |
 |---|---|---|
-| [JudgeBench](https://github.com/ScalerLab/JudgeBench) (ICLR'25) / [JudgeLM](https://github.com/baaivision/JudgeLM) | 判官模型判断得**准不准**（难题对抗对） | 学术基准 |
-| [DeepEval](https://github.com/confident-ai/deepeval) / [promptfoo](https://github.com/promptfoo/promptfoo) | LLM 输出在**测试时**过不过关 | 开发期/CI |
-| [semantic-router](https://github.com/aurelio-labs/semantic-router) | 请求路由给哪个模型（向量相似度） | 运行时，但仅路由 |
-| **judgekit** | 生产请求的**每一个判断**要花多少钱、多可靠 | **运行时判断层** |
+| [JudgeBench](https://github.com/ScalerLab/JudgeBench) (ICLR'25) / [JudgeLM](https://github.com/baaivision/JudgeLM) | Are judge models **accurate** on hard adversarial pairs? | Academic benchmarks |
+| [DeepEval](https://github.com/confident-ai/deepeval) / [promptfoo](https://github.com/promptfoo/promptfoo) | Does the LLM output **pass tests**? | Dev-time / CI |
+| [semantic-router](https://github.com/aurelio-labs/semantic-router) | Which model should serve this request? | Runtime, routing only |
+| **judgekit** | What does **every production judgment** cost, and can I trust it? | **Runtime judgment layer** |
 
-一句话：**别人测判官聪不聪明，我们让判断以可控成本常驻生产。**
+One line: **others measure whether judges are smart — judgekit makes judgment a
+dependable, cost-accounted resident of your production stack.**
 
-## 实测（judge-econ mini 基准，n=24，详见 benchmarks/）
+## Benchmarks (judge-econ)
 
-| 供应商 | 后端 | acc | 延迟/次 | 成本 |
+judge-econ measures **cost-accuracy**, not brilliance: accuracy, latency, and
+¥-per-1000-decisions across providers on the same tasks. To our knowledge these
+are the first public Chinese-scenario judge evaluation numbers
+([awesome-jev-zh](https://github.com/yzfly/awesome-jev-zh) explicitly lists the
+lack of zh-scenario public evaluations as a gap).
+
+### Datasets (hand-built mini sets, v0.1)
+
+| dataset | n | task | examples |
+|---|---|---|---|
+| `intent_zh` | 40 | route: e-commerce ticket → department | 退货 / 物流 / 投诉 / 故障 / 咨询 |
+| `sentiment_zh` | 30 | classify: review polarity | 正面 / 负面 |
+| `spam_zh` | 30 | classify: comment spam | 垃圾(广告导流/灌水) / 正常 |
+| `urgency_zh` | 30 | classify: support urgency | 紧急(安全/资损) / 非紧急 |
+
+Total 130 samples, all included in this repo with keyword-rule baselines
+(`*.rules.yaml`). Public large-scale sets (ag_news, sst2) are on the roadmap —
+PRs welcome.
+
+### Protocol
+
+- One judgment call per sample; `temperature=0`; no few-shot examples.
+- Accuracy reported with **Wilson 95% CI** (small-sample honest).
+- Cost = provider list price at run time (Jev: $0.042/MTok input, output free).
+- Every run is reproducible: `python benchmarks/run_bench.py --models rules,typesafe --limit 0`.
+
+### Results (2026-09-20, n=130)
+
+| provider | backend | accuracy (95% CI) | latency/decision | cost / 1000 decisions |
 |---|---|---|---|---|
-| **typesafe**（Jev `jev-1.13.0`，原生 decisions API） | choice→全量概率分布 | **95.8%**（intent 11/12 · sentiment 12/12） | **~1.0s** | **¥0.109 / 千次**（官方 $0.042/MTok 输入，输出免费） |
-| rules（关键词基线） | 规则 | 87.5% | ~0ms | ¥0 |
-| LLM 对照组（GLM / DeepSeek / 免费链） | OpenAI 兼容 | 补测中（本地网关渠道波动） | ~3s | 视渠道 |
-
-两个先说清楚的点：
-
-1. **这是中文场景下判官模型的第一批公开评测数字之一**——awesome-jev-zh 收录方明确写着"中文场景至今没有公开评测，这是目前最缺的一块"，judge-econ 就是要补这块；mini 基准全部开源，欢迎 PR 扩充。
-2. **原子任务设计有实证背书**：社区钓鱼评测显示，让判官直接回答复合问题 62.6% vs 拆成原子信号+代码组合 95.0%——judgekit 的 Task（单原语、单判断、置信度门控、兜底显式）就是这个结论的工程化。
+| **typesafe** (Jev `jev-1.13.0`, native decisions API) | choice → full probability distribution | **97.7% [93.6–99.2%]** (127/130) | **~890 ms** | **¥0.104** |
+| rules (keyword baseline) | — | 91.5% [85.5–95.4%] (119/130) | ~0 ms | ¥0 |
+| LLM judges (GLM / DeepSeek / free chain) | OpenAI-compatible | pending (gateway outage during run window) | ~3 s | varies |
 
 ![cost-accuracy pareto](docs/pareto.png)
 
-## 结构（monorepo）
+### Finding: Jev's calibrated probabilities are actually calibrated
 
-```
-judgekit/                 核心框架（本仓库同名包）
-  engine.py               Task/Decision + 四原语调度 + 规则兜底
-  providers/
-    typesafe.py           原生 TypeSafe Jev（/v1/systemone：choice/score/noul 全量概率）
-    openai_compat.py      任意 OpenAI 兼容端点（提示词自动生成 + JSON 解析）
-    rules.py              关键词规则（零成本基线/兜底）
-  cli.py                  judgekit run task.yaml --input x.jsonl
-  examples/               triage.yaml（派单路由）、score_comment.yaml（刻度打分）
-benchmarks/               judge-econ：判官 cost-accuracy 排行榜（每元准确率 Pareto）
-recipes/                  官方配方（全部建在 judgekit 之上，双模式：本地 0 成本 / 判官增强）
-  learn_next/             学习导航：下一个最该学的知识点（知识图谱 + 目标可配置）
-  resume_lens/            简历×岗位双向匹配（意愿问卷前置 + JD 红旗核验）
-tests/                    22 个单元测试（离线，CI 必跑）
-```
+All 3 misjudgments fell **below 0.7 confidence** (0.63 / 0.42 / 0.37), while
+low-confidence (<0.7) outputs made up only 9.2% of all decisions:
 
-## 快速开始
+> **A confidence gate at 0.7 catches 100% of errors at the price of handing
+> ~9% of decisions to a free rule fallback.** This is exactly the
+> "atomic task + confidence gating + explicit fallback" pattern judgekit's Task
+> abstraction enforces — consistent with community findings that atomized
+> judgments beat monolithic ones (62.6% → 95.0% on phishing-detection evals).
+
+Misjudgment details ([errors.json](docs/errors.json)): 1 ambiguous
+label (warranty-policy inquiry), 1 soft-ad undetected, 1 negative review flagged
+as spam — all genuinely borderline, all low-confidence.
+
+## Quick start
 
 ```bash
 git clone https://github.com/lexingtonhibiki/judgekit && cd judgekit
-pip install -e .              # 唯一硬依赖 pyyaml；judgekit 命令同时可用
-cp .env.example .env          # 填入 TYPESAFE_API_KEY（可选，不填走零成本规则兜底）
+pip install -e .              # only hard dep is pyyaml; installs `judgekit` CLI
+cp .env.example .env          # optional: TYPESAFE_API_KEY (works keyless via rule fallback)
 
-# ① 一份 YAML，跑一个派单判断（无 key 时自动走规则兜底，0 成本）
+# ① One YAML, one routing decision (rule fallback when no key → 0 cost)
 judgekit run judgekit/examples/triage.yaml --input benchmarks/data/intent_zh.jsonl --limit 3
 
-# ② 原生 Jev：export TYPESAFE_API_KEY=... 后同一份 YAML 直接进原生 decisions API
-#    classify/route → choice（全量概率分布）；score → 刻度打分；verify → noul 单值概率
+# ② Same YAML natively on Jev (choice/score/noul, full probability distribution)
+export TYPESAFE_API_KEY=...
 judgekit run judgekit/examples/triage.yaml --input benchmarks/data/intent_zh.jsonl --limit 3
 
-# ③ 排行榜：规则基线 → 报告（全程 0 成本）
-python benchmarks/run_bench.py --models rules --limit 6
+# ③ Full benchmark + Pareto report
+python benchmarks/run_bench.py --models rules,typesafe --limit 0
 python benchmarks/report.py   # → benchmarks/results/report.md + docs/pareto.png
 
-# ④ 任意 OpenAI 兼容渠道（GLM/DeepSeek/OpenRouter/自建网关…改 benchmarks/models.yaml）
-python benchmarks/run_bench.py --models rules,typesafe --limit 4
-
-# ⑤ 配方（默认 0 成本启发式；--model typesafe 开判官精排）
+# ④ Recipes (heuristic mode is free; --model enables judge rescoring)
 python recipes/learn_next/next.py --model typesafe --top 3
 python recipes/resume_lens/match.py --model typesafe
 ```
 
-## 同一份任务定义，任意后端
+## One task definition, any backend
 
 ```yaml
-name: 工单派单
+name: ticket-routing
 primitive: route
-criteria: 判断该求助内容应流转到哪个部门
-labels:                       # map 写法：候选→说明
-  退款售后: 退货、退款、换货、发票、赔偿
-  物流查询: 快递、运单、发货进度、签收
-provider: typesafe            # 换成任意 openai 兼容供应商名即切换后端，YAML 零改动
-fallback_rules:               # 供应商失败/无 key 时的零成本兜底
-  退款售后: [退款, 退货, 换货, 发票]
+criteria: which department should handle this ticket
+labels:                       # map form: option → description
+  refund: returns, refunds, exchanges, invoices
+  logistics: shipping, tracking, delivery
+provider: typesafe            # swap to any openai-compatible provider name — YAML unchanged
+fallback_rules:               # zero-cost fallback when provider fails / no key
+  refund: [refund, return, invoice]
 ```
 
-- **typesafe 后端**：choice 原生 criteria（候选→说明）、score 原生刻度、verify→noul，
-  返回全量概率分布与 confidence
-- **openai 后端**：同一份 YAML 自动翻译成「只输出 JSON」的提示词（含刻度锚点）
-- **rules 后端**：关键词兜底，永远免费
+- **typesafe backend**: native choice criteria, scored levels (normalized to
+  0–1), noul → verify; returns full probability distribution + confidence
+- **openai backend**: same YAML auto-translated to a JSON-only prompt (with
+  level anchors); response parsed and label-validated
+- **rules backend**: keyword matching, always free
 
-## 供应商无关（bring your own providers）
+## Providers (bring your own)
 
-`benchmarks/models.yaml` 声明供应商：`kind: typesafe | openai | rules`。
-key 一律走环境变量（`.env.example` 模板），**永远不进仓库**。没有国外渠道完全成立：
-本地网关/GLM/DeepSeek/任何兼容端点即可跑通全链路，Jev 只是其中一家。
+Declared in `benchmarks/models.yaml`: `kind: typesafe | openai | rules`.
+Keys come from env vars only (`.env.example` template) — never committed.
+No Claude/GPT/Grok keys? Fine: any OpenAI-compatible endpoint (local gateways,
+GLM, DeepSeek, OpenRouter…) runs the full pipeline; Jev is one provider among many.
 
-## 配方四原则
+## Recipe principles
 
-1. 判官给概率，人做决定（涉人场景强制意愿/知情前置）
-2. 不做员工逐人标签；不做企业侧自动淘汰
-3. 每个配方必须带零成本本地模式——判官是增强，不是依赖
-4. 成本透明：每次运行打印本次判官花费
+1. Judges give probabilities, humans make decisions (willingness survey mandatory
+   for people-facing recipes)
+2. No per-employee labeling; no employer-side auto-screening
+3. Every recipe ships a zero-cost local mode — the judge is an enhancement,
+   never a dependency
+4. Cost transparency: every run prints its judge spend
 
-## 开发
+## Development
 
 ```bash
 pip install -e .[dev]
-pytest               # 22 tests, 离线可跑
+pytest               # 22 offline unit tests
 ```
 
-CI（GitHub Actions）在 Ubuntu/Windows × Python 3.10/3.12 上跑测试 + 零成本烟测。
+CI runs tests + zero-cost smoke on Ubuntu/Windows × Python 3.10/3.12.
 
 ## Roadmap
 
-- [x] judgekit 四原语引擎 + 原生 TypeSafe Jev 适配器 + OpenAI 兼容 + 规则兜底
-- [x] judge-econ 迷你基准 + Pareto 报告（Jev 实测 95.8% @ ¥0.109/千次）
-- [x] learn_next / resume_lens 配方（双模式）
-- [x] 测试套件 + CI
-- [ ] LLM 对照组全量补测（免费链/GLM/DeepSeek 渠道恢复后）
-- [ ] 完整数据集（ag_news / sst2 / 客服意图全量）
-- [ ] smart-triage 配方（12345 政务热线派单）
-- [ ] PyPI 发布 / 英文文档 / GIF
+- [x] Four-primitive engine + native TypeSafe adapter + OpenAI-compat + rules
+- [x] judge-econ mini benchmark + Pareto report (Jev 97.7% @ ¥0.104/1k, n=130)
+- [x] Confidence-gating study (0.7 gate → 100% error capture @ 9% escalation)
+- [x] learn_next / resume_lens recipes (dual-mode)
+- [x] Test suite + CI
+- [ ] LLM-judge对照组 full run (GLM / DeepSeek / free chain)
+- [ ] Public large-scale datasets (ag_news / sst2 / full support-intent sets)
+- [ ] smart-triage recipe (12345 government hotline routing)
+- [ ] PyPI release / GIF demo
 
-## 贡献
+## Contributing
 
-配方欢迎 PR（放 `recipes/`，遵守四原则）；基准数据欢迎扩充（放 `benchmarks/data/`，带 `.rules.yaml` 基线）；新供应商适配欢迎 PR（`judgekit/providers/`，实现 `decide(task, x) -> Decision` 即可）。
+Recipes welcome (under `recipes/`, follow the four principles); benchmark data
+welcome (under `benchmarks/data/`, with a `.rules.yaml` baseline); new providers
+welcome (`judgekit/providers/`, implement `decide(task, x) -> Decision`).
 
 ## License
 

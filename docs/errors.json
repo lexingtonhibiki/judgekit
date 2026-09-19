@@ -1,0 +1,100 @@
+[
+ {
+  "file": "rules__intent_zh",
+  "id": "i010",
+  "gold": "物流查询",
+  "pred": "咨询其他",
+  "conf": 0.4
+ },
+ {
+  "file": "rules__intent_zh",
+  "id": "i033",
+  "gold": "投诉建议",
+  "pred": "退款售后",
+  "conf": 0.4
+ },
+ {
+  "file": "rules__sentiment_zh",
+  "id": "s006",
+  "gold": "正面",
+  "pred": null,
+  "conf": 0.0
+ },
+ {
+  "file": "rules__sentiment_zh",
+  "id": "s009",
+  "gold": "正面",
+  "pred": null,
+  "conf": 0.0
+ },
+ {
+  "file": "rules__sentiment_zh",
+  "id": "s011",
+  "gold": "正面",
+  "pred": null,
+  "conf": 0.0
+ },
+ {
+  "file": "rules__sentiment_zh",
+  "id": "s023",
+  "gold": "负面",
+  "pred": null,
+  "conf": 0.0
+ },
+ {
+  "file": "rules__sentiment_zh",
+  "id": "s025",
+  "gold": "负面",
+  "pred": null,
+  "conf": 0.0
+ },
+ {
+  "file": "rules__sentiment_zh",
+  "id": "s026",
+  "gold": "负面",
+  "pred": null,
+  "conf": 0.0
+ },
+ {
+  "file": "rules__sentiment_zh",
+  "id": "s027",
+  "gold": "负面",
+  "pred": null,
+  "conf": 0.0
+ },
+ {
+  "file": "rules__sentiment_zh",
+  "id": "s028",
+  "gold": "负面",
+  "pred": null,
+  "conf": 0.0
+ },
+ {
+  "file": "rules__urgency_zh",
+  "id": "u022",
+  "gold": "非紧急",
+  "pred": null,
+  "conf": 0.0
+ },
+ {
+  "file": "typesafe__intent_zh",
+  "id": "i030",
+  "gold": "咨询其他",
+  "pred": "退款售后",
+  "conf": 0.63
+ },
+ {
+  "file": "typesafe__spam_zh",
+  "id": "p004",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.42
+ },
+ {
+  "file": "typesafe__spam_zh",
+  "id": "p027",
+  "gold": "正常",
+  "pred": "垃圾",
+  "conf": 0.37
+ }
+]

@@ -14,6 +14,17 @@ from pathlib import Path
 RES = Path(__file__).resolve().parent / "results"
 
 
+def wilson_ci(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """Wilson score interval for a binomial proportion (small-sample honest)."""
+    if n == 0:
+        return (0.0, 0.0)
+    p = k / n
+    denom = 1 + z * z / n
+    center = (p + z * z / (2 * n)) / denom
+    half = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / denom
+    return (max(0.0, center - half), min(1.0, center + half))
+
+
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
@@ -34,22 +45,26 @@ def main() -> None:
                      "avg_latency_ms": round(lat), "errors": err})
 
     # 汇总表（按数据集分组、按准确率降序）
-    lines = ["# benchmarks 结果", "",
-             "| provider | dataset | n | accuracy | ¥/1000次 | 平均延迟ms | err |",
+    lines = ["# judge-econ 结果", "",
+             "协议：temperature=0，每样本 1 次判断调用，无 few-shot；CI 为 Wilson 95%。", "",
+             "| provider | dataset | n | accuracy (95% CI) | ¥/1000次 | 平均延迟ms | err |",
              "|---|---|---|---|---|---|---|"]
     for r in sorted(rows, key=lambda x: (x["dataset"], -x["accuracy"])):
+        k = round(r["accuracy"] * r["n"])
+        lo, hi = wilson_ci(k, r["n"])
         lines.append(f"| {r['provider']} | {r['dataset']} | {r['n']} | "
-                     f"{r['accuracy']:.1%} | {r['cost_per_1k']:.4f} | "
+                     f"{r['accuracy']:.1%} [{lo:.0%}–{hi:.0%}] | {r['cost_per_1k']:.4f} | "
                      f"{r['avg_latency_ms']} | {r['errors']} |")
     (RES / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    # Pareto 数据：整体平均（跨数据集）
+    # Pareto 数据：准确率按样本合并（micro 平均，比 macro 更真实）；成本取每千次均值
     agg: dict[str, dict] = {}
     for r in rows:
-        a = agg.setdefault(r["provider"], {"acc": [], "cost": []})
-        a["acc"].append(r["accuracy"])
+        a = agg.setdefault(r["provider"], {"k": 0, "n": 0, "cost": []})
+        a["k"] += round(r["accuracy"] * r["n"])
+        a["n"] += r["n"]
         a["cost"].append(r["cost_per_1k"])
-    pareto = [{"provider": p, "accuracy": round(sum(v["acc"]) / len(v["acc"]), 4),
+    pareto = [{"provider": p, "accuracy": round(v["k"] / max(1, v["n"]), 4),
                "cost_per_1k": round(sum(v["cost"]) / len(v["cost"]), 4)}
               for p, v in agg.items()]
     pareto.sort(key=lambda x: x["cost_per_1k"])
@@ -57,6 +72,19 @@ def main() -> None:
         w = csv.DictWriter(f, fieldnames=["provider", "accuracy", "cost_per_1k"])
         w.writeheader()
         w.writerows(pareto)
+
+    # 错误样本清单（误判明细，供 README 错误分析节引用）
+    errs = []
+    for f in sorted(RES.glob("*__*.jsonl")):
+        for l in open(f, encoding="utf-8"):
+            if not l.strip():
+                continue
+            r = json.loads(l)
+            if not r["correct"]:
+                errs.append({"file": f.stem, "id": r["id"], "gold": r["gold"],
+                             "pred": r["pred"], "conf": r["confidence"]})
+    with open(RES / "errors.json", "w", encoding="utf-8") as f:
+        json.dump(errs, f, ensure_ascii=False, indent=1)
 
     # ASCII Pareto：x=成本(对数), y=准确率
     lines = ["", "## Cost-Accuracy Pareto（x=¥/1000次判断, y=accuracy）", "", "```"]
