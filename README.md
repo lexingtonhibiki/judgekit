@@ -53,9 +53,17 @@ PRs welcome.
 
 | provider | backend | accuracy (95% CI) | latency/decision | cost / 1000 decisions |
 |---|---|---|---|---|
-| **typesafe** (Jev `jev-1.13.0`, native decisions API) | choice → full probability distribution | **97.7% [93.4–99.2%]** (127/130) | **~890 ms** | **¥0.105** |
+| **typesafe** (Jev `jev-1.13.0`, native decisions API) | choice → full probability distribution | **97.7% [93.4–99.2%]** (127/130; **3 independent runs, 0 judgment flips**) | **~890 ms** | **¥0.105** |
+| glm-5.3-flash (Zhipu coding-plan endpoint) | OpenAI-compatible | 97.7% (127/130; shares 2 of Jev's 3 errors) | ~4.0 s | ¥0 (subscription) |
+| deepseek-flash (official API) | OpenAI-compatible | 96.2% (125/130; **missed 2 urgent tickets**) | ~1.1 s | usage-based |
 | rules (keyword baseline) | — | 91.5% [85.5–95.2%] (119/130) | ~0 ms | ¥0 |
-| LLM judges (GLM / DeepSeek / free chain) | OpenAI-compatible | pending (gateway outage during run window) | ~3 s | varies |
+
+Reading: Jev matches the much larger GLM-5.3-flash at **4.5× lower latency** and
+3 runs with zero decision drift (temperature=0 is fully deterministic here).
+The keyword baseline stays competitive — traditional baselines are not dead.
+Error overlap: Jev and GLM share the same 2 genuinely-borderline misjudgments;
+DeepSeek additionally missed 2 urgent tickets (u009/u011), the error type that
+matters most for support routing.
 
 ![cost-accuracy pareto](docs/pareto.png)
 

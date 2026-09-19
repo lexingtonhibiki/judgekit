@@ -59,6 +59,7 @@ def main() -> None:
                     help="并发数；环境并发额度 2，默认串行")
     ap.add_argument("--providers-file", default=str(ROOT / "benchmarks" / "models.yaml"))
     ap.add_argument("--out-dir", default=str(ROOT / "benchmarks" / "results"))
+    ap.add_argument("--tag", default="", help="输出文件名后缀（多轮重复用，如 r2）")
     args = ap.parse_args()
 
     providers = load_providers(args.providers_file)
@@ -94,7 +95,7 @@ def main() -> None:
             acc = sum(r["correct"] for r in recs) / max(1, len(recs))
             cost = sum(r["cost"] for r in recs)
             lat = sum(r["latency_ms"] for r in recs) / max(1, len(recs))
-            out = out_dir / f"{name}__{ds}.jsonl"
+            out = out_dir / f"{name}__{ds}{'__' + args.tag if args.tag else ''}.jsonl"
             with open(out, "w", encoding="utf-8") as f:
                 for r in recs:
                     f.write(json.dumps(r, ensure_ascii=False) + "\n")

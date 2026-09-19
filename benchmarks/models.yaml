@@ -37,6 +37,31 @@ providers:
     model: web/gemini-3.8-flash
     api_key_env: ROUTER_API_KEY
     api_key_default: sk-local
+  # ---- LLM 判官对照（订阅/自有 key 直连）----
+  glm-coding-direct:
+    kind: openai
+    base_url: https://open.bigmodel.cn/api/coding/paas/v4
+    model: glm-5.3-flash
+    api_key_env: ZHIPU_CODING_KEY
+    timeout: 120
+  deepseek-direct:
+    kind: openai
+    base_url: https://api.deepseek.com/v1
+    model: deepseek-flash
+    api_key_env: DEEPSEEK_KEY
+    timeout: 120
+  gemini-direct:
+    kind: openai
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    model: gemini-3.5-flash-lite
+    api_key_env: GEMINI_API_KEY
+    timeout: 60
+  modelscope-deepseek:
+    kind: openai
+    base_url: https://api-inference.modelscope.cn/v1
+    model: deepseek-ai/DeepSeek-V4.1-Flash
+    api_key_env: MODELSCOPE_TOKEN
+    timeout: 60
   # ---- AIMLAPI 转售的 Jev（OpenAI 兼容包装，对照原生端点用）----
   aimlapi-jev:
     kind: openai
