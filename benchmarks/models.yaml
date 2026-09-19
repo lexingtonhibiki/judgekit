@@ -3,6 +3,10 @@
 providers:
   rules:
     kind: rules
+  # ---- 本地 NanoJev（0.6B 判官复刻，需先起 serve_decisions.py，见 docs/nanojev-research.md）----
+  nanojev-local:
+    kind: nanojev
+    base_url: http://127.0.0.1:8765
   # ---- 原生 TypeSafe Jev（decisions API，四原语原生映射）----
   # 官方定价：$0.042 / 1M 输入 token，输出 token 免费（换算 ≈ ¥0.0003 / 1k token，汇率 7.2）
   typesafe:

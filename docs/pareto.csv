@@ -1,5 +1,6 @@
 provider,accuracy,cost_per_1k
 deepseek-direct,0.9615,0.0
 glm-coding-direct,0.9769,0.0
+nanojev-local,0.6154,0.0
 rules,0.9154,0.0
 typesafe,0.9769,0.1051

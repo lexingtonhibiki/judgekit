@@ -56,6 +56,356 @@
   "conf": 0.78
  },
  {
+  "file": "nanojev-local__intent_zh",
+  "id": "i010",
+  "gold": "物流查询",
+  "pred": "咨询其他",
+  "conf": 0.429
+ },
+ {
+  "file": "nanojev-local__intent_zh",
+  "id": "i011",
+  "gold": "退款售后",
+  "pred": "物流查询",
+  "conf": 0.466
+ },
+ {
+  "file": "nanojev-local__intent_zh",
+  "id": "i024",
+  "gold": "技术故障",
+  "pred": "咨询其他",
+  "conf": 0.406
+ },
+ {
+  "file": "nanojev-local__intent_zh",
+  "id": "i025",
+  "gold": "咨询其他",
+  "pred": "物流查询",
+  "conf": 0.673
+ },
+ {
+  "file": "nanojev-local__intent_zh",
+  "id": "i026",
+  "gold": "退款售后",
+  "pred": "技术故障",
+  "conf": 0.439
+ },
+ {
+  "file": "nanojev-local__intent_zh",
+  "id": "i028",
+  "gold": "投诉建议",
+  "pred": "退款售后",
+  "conf": 0.446
+ },
+ {
+  "file": "nanojev-local__intent_zh",
+  "id": "i038",
+  "gold": "投诉建议",
+  "pred": "咨询其他",
+  "conf": 0.382
+ },
+ {
+  "file": "nanojev-local__intent_zh",
+  "id": "i040",
+  "gold": "咨询其他",
+  "pred": "物流查询",
+  "conf": 0.518
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s016",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.815
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s017",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.876
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s018",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.508
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s019",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.671
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s020",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.854
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s021",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.805
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s023",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.934
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s024",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.918
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s025",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.689
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s026",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.912
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s027",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.546
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s028",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.866
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s029",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.783
+ },
+ {
+  "file": "nanojev-local__sentiment_zh",
+  "id": "s030",
+  "gold": "负面",
+  "pred": "正面",
+  "conf": 0.92
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p001",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.911
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p002",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.925
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p003",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.947
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p004",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.901
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p005",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.645
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p006",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.877
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p007",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.54
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p008",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.846
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p009",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.926
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p010",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.826
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p011",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.831
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p012",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.849
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p013",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.86
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p014",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.902
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p015",
+  "gold": "垃圾",
+  "pred": "正常",
+  "conf": 0.688
+ },
+ {
+  "file": "nanojev-local__spam_zh",
+  "id": "p024",
+  "gold": "正常",
+  "pred": "垃圾",
+  "conf": 0.708
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u001",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.573
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u002",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.62
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u003",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.711
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u004",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.862
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u006",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.838
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u007",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.667
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u008",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.761
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u009",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.567
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u010",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.604
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u011",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.688
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u012",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.854
+ },
+ {
+  "file": "nanojev-local__urgency_zh",
+  "id": "u014",
+  "gold": "紧急",
+  "pred": "非紧急",
+  "conf": 0.816
+ },
+ {
   "file": "rules__intent_zh",
   "id": "i010",
   "gold": "物流查询",

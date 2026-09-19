@@ -57,6 +57,7 @@ PRs welcome.
 | glm-5.3-flash (Zhipu coding-plan endpoint) | OpenAI-compatible | 97.7% (127/130; shares 2 of Jev's 3 errors) | ~4.0 s | ¥0 (subscription) |
 | deepseek-flash (official API) | OpenAI-compatible | 96.2% (125/130; **missed 2 urgent tickets**) | ~1.1 s | usage-based |
 | rules (keyword baseline) | — | 91.5% [85.5–95.2%] (119/130) | ~0 ms | ¥0 |
+| nanojev-local (NanoJev 0.6B, [open replica](https://github.com/TianyuCodings/NanoJev), runs on this GPU) | local decisions API | 61.5% (80/130; zero-shot zh transfer from game-domain training) | **~220 ms** | ¥0 |
 
 Reading: Jev matches the much larger GLM-5.3-flash at **4.5× lower latency** and
 3 runs with zero decision drift (temperature=0 is fully deterministic here).

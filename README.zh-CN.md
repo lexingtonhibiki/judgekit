@@ -53,6 +53,7 @@ judge-econ 测的是**成本-准确率**，不是聪明程度：同一批任务�
 | glm-5.3-flash（智谱 coding-plan 端点） | OpenAI 兼容 | 97.7%（127/130；与 Jev 共享 3 个误判中的 2 个） | ~4.0 s | ¥0（订阅） |
 | deepseek-flash（官方 API） | OpenAI 兼容 | 96.2%（125/130；**漏判 2 条紧急工单**） | ~1.1 s | 按量 |
 | rules（关键词基线） | — | 91.5% [85.5–95.2%]（119/130） | ~0 ms | ¥0 |
+| nanojev-local（NanoJev 0.6B，[开源复刻](https://github.com/TianyuCodings/NanoJev)，本机 GPU 实测） | 本地 decisions API | 61.5%（80/130；英文游戏域零样本跨中文域） | **~220 ms** | ¥0 |
 
 解读：Jev 与大得多的 GLM-5.3-flash 精度持平、**延迟只有 1/4.5**，且 3 轮零漂移
 （temperature=0 下完全确定）；关键词基线 91.5% 依然能打——传统基线没有死。

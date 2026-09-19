@@ -11,6 +11,7 @@ import os
 from .rules import RulesProvider          # noqa: F401
 from .openai_compat import OpenAICompat   # noqa: F401
 from .typesafe import TypeSafe            # noqa: F401
+from .nanojev import NanoJev              # noqa: F401
 
 
 def load_providers(path: str) -> dict:
@@ -35,6 +36,13 @@ def load_providers(path: str) -> dict:
                 price_out_per_1k=float(c.get("price_out_per_1k", 0.0)),
                 timeout=int(c.get("timeout", 60)),
             )
+        elif kind == "nanojev":
+            out[name] = NanoJev(
+                name=name,
+                base_url=c.get("base_url", "http://127.0.0.1:8765"),
+                model=c.get("model", "nanojev"),
+                timeout=int(c.get("timeout", 300)),
+            )
         else:
             out[name] = OpenAICompat(
                 name=name,
@@ -49,4 +57,9 @@ def load_providers(path: str) -> dict:
     return out
 
 
-__all__ = ["load_providers", "RulesProvider", "OpenAICompat", "TypeSafe"]
+from .rules import RulesProvider          # noqa: F401
+from .openai_compat import OpenAICompat   # noqa: F401
+from .typesafe import TypeSafe            # noqa: F401
+from .nanojev import NanoJev              # noqa: F401
+
+__all__ = ["load_providers", "RulesProvider", "OpenAICompat", "TypeSafe", "NanoJev"]
