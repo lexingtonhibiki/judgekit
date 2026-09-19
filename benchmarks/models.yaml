@@ -4,11 +4,14 @@ providers:
   rules:
     kind: rules
   # ---- 原生 TypeSafe Jev（decisions API，四原语原生映射）----
+  # 官方定价：$0.042 / 1M 输入 token，输出 token 免费（换算 ≈ ¥0.0003 / 1k token，汇率 7.2）
   typesafe:
     kind: typesafe
     model: jev-latest
     api_key_env: TYPESAFE_API_KEY
-    per_decision_cost: null      # 官方按次定价公布后填，如 0.0001
+    price_in_per_1k: 0.0003
+    price_out_per_1k: 0.0
+    per_decision_cost: null      # 如需按次计价可改为固定值，优先级高于 token 计价
   # ---- 本地路由 / 任意 OpenAI 兼容端点（换成你的 base_url 即可）----
   router-free-auto:
     kind: openai

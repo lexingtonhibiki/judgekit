@@ -25,13 +25,18 @@
 
 一句话：**别人测判官聪不聪明，我们让判断以可控成本常驻生产。**
 
-## 实测（mini 基准，详见 benchmarks/）
+## 实测（judge-econ mini 基准，n=24，详见 benchmarks/）
 
 | 供应商 | 后端 | acc | 延迟/次 | 成本 |
 |---|---|---|---|---|
-| **typesafe**（Jev `jev-1.13.0`，原生 decisions API） | choice→全量概率分布 | **8/8 = 100%** | **~1.0s** | 待官方定价 |
-| router-free-auto（Gemini 3.8 via 本地网关） | OpenAI 兼容 | 2/2 = 100% | ~2.9s | ¥0（免费链） |
-| rules（关键词基线） | 规则 | 11/12 = 91.7% | ~0ms | ¥0 |
+| **typesafe**（Jev `jev-1.13.0`，原生 decisions API） | choice→全量概率分布 | **95.8%**（intent 11/12 · sentiment 12/12） | **~1.0s** | **¥0.109 / 千次**（官方 $0.042/MTok 输入，输出免费） |
+| rules（关键词基线） | 规则 | 87.5% | ~0ms | ¥0 |
+| LLM 对照组（GLM / DeepSeek / 免费链） | OpenAI 兼容 | 补测中（本地网关渠道波动） | ~3s | 视渠道 |
+
+两个先说清楚的点：
+
+1. **这是中文场景下判官模型的第一批公开评测数字之一**——awesome-jev-zh 收录方明确写着"中文场景至今没有公开评测，这是目前最缺的一块"，judge-econ 就是要补这块；mini 基准全部开源，欢迎 PR 扩充。
+2. **原子任务设计有实证背书**：社区钓鱼评测显示，让判官直接回答复合问题 62.6% vs 拆成原子信号+代码组合 95.0%——judgekit 的 Task（单原语、单判断、置信度门控、兜底显式）就是这个结论的工程化。
 
 ![cost-accuracy pareto](docs/pareto.png)
 
@@ -123,10 +128,10 @@ CI（GitHub Actions）在 Ubuntu/Windows × Python 3.10/3.12 上跑测试 + 零�
 ## Roadmap
 
 - [x] judgekit 四原语引擎 + 原生 TypeSafe Jev 适配器 + OpenAI 兼容 + 规则兜底
-- [x] judge-econ 迷你基准 + Pareto 报告（Jev 实测 8/8）
+- [x] judge-econ 迷你基准 + Pareto 报告（Jev 实测 95.8% @ ¥0.109/千次）
 - [x] learn_next / resume_lens 配方（双模式）
 - [x] 测试套件 + CI
-- [ ] 官方定价接入 per_decision_cost → 首张含真实价格的 Pareto
+- [ ] LLM 对照组全量补测（免费链/GLM/DeepSeek 渠道恢复后）
 - [ ] 完整数据集（ag_news / sst2 / 客服意图全量）
 - [ ] smart-triage 配方（12345 政务热线派单）
 - [ ] PyPI 发布 / 英文文档 / GIF
