@@ -1,0 +1,5 @@
+name: 评论区拱火度
+primitive: score
+criteria: 判断这条评论在多大程度上会激化讨论对立、带节奏或引战（纯吐槽/正常讨论算低分）。
+provider: rules
+fallback_rules: {}

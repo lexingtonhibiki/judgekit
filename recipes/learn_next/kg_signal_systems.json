@@ -1,0 +1,21 @@
+{
+  "course": "信号与系统",
+  "goal_weights": {
+    "pass_exam": {"连贯性": 0.3, "过考概率": 0.5, "掌握缺口": 0.2},
+    "interest": {"连贯性": 0.4, "过考概率": 0.1, "掌握缺口": 0.5}
+  },
+  "nodes": [
+    {"id": "n01", "name": "信号分类与基本运算", "prereqs": [], "exam_weight": 0.5, "fun": 0.2},
+    {"id": "n02", "name": "阶跃与冲激函数", "prereqs": ["n01"], "exam_weight": 0.7, "fun": 0.3},
+    {"id": "n03", "name": "LTI系统性质（线性/时不变/因果/稳定）", "prereqs": ["n01"], "exam_weight": 0.8, "fun": 0.3},
+    {"id": "n04", "name": "卷积积分", "prereqs": ["n02", "n03"], "exam_weight": 0.9, "fun": 0.4},
+    {"id": "n05", "name": "傅里叶级数", "prereqs": ["n04"], "exam_weight": 0.7, "fun": 0.5},
+    {"id": "n06", "name": "傅里叶变换", "prereqs": ["n05"], "exam_weight": 1.0, "fun": 0.7},
+    {"id": "n07", "name": "频域分析与理想滤波器", "prereqs": ["n06"], "exam_weight": 0.8, "fun": 0.6},
+    {"id": "n08", "name": "采样定理", "prereqs": ["n06"], "exam_weight": 0.9, "fun": 0.8},
+    {"id": "n09", "name": "拉普拉斯变换", "prereqs": ["n04"], "exam_weight": 1.0, "fun": 0.4},
+    {"id": "n10", "name": "系统函数与稳定性判据", "prereqs": ["n09"], "exam_weight": 0.9, "fun": 0.5},
+    {"id": "n11", "name": "Z变换", "prereqs": ["n04"], "exam_weight": 0.9, "fun": 0.4},
+    {"id": "n12", "name": "离散系统分析与数字滤波器入门", "prereqs": ["n11"], "exam_weight": 0.8, "fun": 0.7}
+  ]
+}

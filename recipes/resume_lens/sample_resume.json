@@ -1,0 +1,12 @@
+{
+  "name": "陈工",
+  "title": "Python 后端工程师",
+  "years": 3,
+  "education": "电子信息工程 本科",
+  "skills": ["Python", "FastAPI", "MySQL", "Redis", "Docker", "爬虫", "Linux"],
+  "projects": [
+    "电商订单系统：日均 10 万单，接口 P99 < 200ms",
+    "数据采集平台：50+ 站点爬虫与清洗管道"
+  ],
+  "prefs": ["电商/互联网", "稳定性优先"]
+}

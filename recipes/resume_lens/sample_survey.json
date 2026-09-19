@@ -1,0 +1,7 @@
+{
+  "expected_salary_min": 18000,
+  "overtime_tolerance": 2,
+  "remote_preference": 3,
+  "industry_preference": ["电商", "互联网", "AI"],
+  "priority": ["工作强度", "薪资", "技术栈匹配"]
+}

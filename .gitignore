@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+results/
+.DS_Store
+
+# 内部商业分析，不随开源仓库发布
+调研报告.md

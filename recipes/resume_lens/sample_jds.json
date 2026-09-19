@@ -1,0 +1,20 @@
+[
+  {
+    "id": "jd_a",
+    "company": "某电商平台",
+    "title": "Python 后端工程师",
+    "requirements": ["3年+ Python", "FastAPI/Django", "MySQL/Redis", "高并发经验", "Docker"],
+    "nice_to_have": ["电商业务经验"],
+    "salary_range": "18-28k",
+    "extras": "六险一金、双休、弹性工作、年度体检"
+  },
+  {
+    "id": "jd_b",
+    "company": "某车载设备公司",
+    "title": "嵌入式软件工程师",
+    "requirements": ["C/C++ 5年", "CAN 总线", "RTOS", "AUTOSAR"],
+    "nice_to_have": ["车载行业经验"],
+    "salary_range": "15-22k",
+    "extras": "大小周轮班、驻场客户现场、项目制奖金"
+  }
+]
