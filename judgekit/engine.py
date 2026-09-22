@@ -43,11 +43,20 @@ class Task:
     criteria: str = ""                               # score/verify 的判据；也作 choice 的 instructions
     levels: list = field(default_factory=list)       # score 的刻度描述（原生 score criteria）
     instruction: str = ""                            # 附加领域说明
+    input_field: str = "text"                        # 输入字段白名单：规则匹配/LLM prompt 只看这个字段
     provider: str = ""                               # providers.yaml 里的供应商名
     fallback_rules: dict = field(default_factory=dict)      # {标签: [关键词,...]}
 
     @staticmethod
     def from_dict(d: dict) -> "Task":
+        if not isinstance(d, dict):
+            raise ValueError("task 定义必须是 YAML 映射（检查文件是否为空/缩进错）")
+        known = {"name", "primitive", "labels", "label_descriptions", "criteria", "levels",
+                 "instruction", "input_field", "provider", "fallback_rules"}
+        unknown = set(d) - known
+        if unknown:
+            import warnings
+            warnings.warn(f"task 定义里有未识别的键（可能拼错）：{sorted(unknown)}")
         t = Task(name=d.get("name", "task"), primitive=d.get("primitive", "classify"))
         if t.primitive not in PRIMITIVES:
             raise ValueError(f"未知原语 {t.primitive!r}，可选 {PRIMITIVES}")
@@ -59,9 +68,12 @@ class Task:
         else:
             t.labels = list(raw_labels)
             t.label_descriptions = d.get("label_descriptions", {}) or {}
+        if t.primitive in ("classify", "route") and not t.labels:
+            raise ValueError("classify/route 任务必须给 labels 候选")
         t.criteria = d.get("criteria", "")
         t.levels = list(d.get("levels", []) or [])
         t.instruction = d.get("instruction", "")
+        t.input_field = str(d.get("input_field", "text") or "text")
         t.provider = d.get("provider", "")
         t.fallback_rules = d.get("fallback_rules", {}) or {}
         return t
@@ -74,9 +86,9 @@ class Task:
 
 
 def rules_fallback(task: Task, x: dict, provider_name: str = "rules") -> Decision:
-    """关键词规则兜底：classify/route 按关键词计数选标签；其他原语直接失败。"""
+    """关键词规则兜底：classify/route 在声明的输入字段里按关键词计数选标签；其他原语直接失败。"""
     t0 = time.monotonic()
-    text = json.dumps(x, ensure_ascii=False)
+    text = str(x.get(task.input_field, ""))  # 只看白名单字段，防金标/元数据混入虚增命中
     if task.fallback_rules and task.primitive in ("classify", "route"):
         best, best_hits = None, 0
         for label, kws in task.fallback_rules.items():
@@ -95,7 +107,10 @@ def run_task(task: Task, x: dict, providers: dict, fallback: bool = True) -> Dec
     """执行一次判断：供应商 decide() → 失败时（可选）规则兜底。"""
     from .providers import RulesProvider
     p = providers.get(task.provider)
-    if p is None:
+    if p is None and task.provider in ("", "rules"):
+        # 保留名 "rules"/未指定：免 providers.yaml 直接规则兜底（零依赖离线路径）
+        dec = rules_fallback(task, x, "rules")
+    elif p is None:
         dec = Decision(task.primitive, None, 0.0, "", "missing-provider", 0, 0.0,
                        ok=False, error=f"provider {task.provider!r} not found")
     elif isinstance(p, RulesProvider):
@@ -111,6 +126,7 @@ def run_task(task: Task, x: dict, providers: dict, fallback: bool = True) -> Dec
                            ok=False, error=f"{type(e).__name__}: {e}")
     if not dec.ok and fallback and task.fallback_rules and task.primitive in ("classify", "route"):
         fb = rules_fallback(task, x, "rules-after-fail")
+        fb.latency_ms += dec.latency_ms  # 失败尝试的真实耗时别丢（兜底 latency 失真修复）
         if fb.ok:
             fb.error = f"provider-failed({dec.error}); fallback-ok"  # 保留根因，防止兜底假数据混入结果
             return fb

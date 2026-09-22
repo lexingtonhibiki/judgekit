@@ -20,7 +20,7 @@ _JSON_RE = re.compile(r"\{.*\}", re.DOTALL)
 def build_prompt(task: Task, x: dict) -> tuple[str, str]:
     """返回 (system, user)。x 会被 JSON 序列化作为输入载荷。"""
     system = "你是判断引擎（System One）。只输出一个 JSON 对象，禁止输出任何其他文字、解释或 markdown。"
-    payload = json.dumps(x, ensure_ascii=False)
+    payload = json.dumps({task.input_field: x.get(task.input_field, "")}, ensure_ascii=False)  # 白名单字段，防金标泄漏
     extra = f"\n领域说明：{task.instruction}" if task.instruction else ""
 
     if task.primitive in ("classify", "route"):
@@ -64,19 +64,24 @@ def parse_decision(task: Task, raw: str, name: str, latency: int, cost: float) -
     if task.primitive in ("classify", "route"):
         label = str(obj.get("label", "")).strip()
         hit = next((lb for lb in task.labels if lb == label), None) \
-            or next((lb for lb in task.labels if lb in label or label in lb), None) \
-            or next((lb for lb in task.labels if lb in raw), None)
+            or next((lb for lb in task.labels if lb in label or label in lb), None)
+        # 注意：不做"候选词出现在响应原文任意位置"的三级模糊匹配——那会把顺嘴一提当判定
         if hit is None:
             raise ValueError(f"label-not-in-candidates: {label!r}")
         return Decision(task.primitive, hit, conf, raw, name, latency, cost)
     if task.primitive == "score":
-        if obj.get("score", -1) < 0:
-            raise ValueError("score-missing")
-        return Decision(task.primitive, round(max(0.0, min(1.0, float(obj["score"]))), 3),
+        try:
+            sc = float(obj["score"])
+        except (KeyError, TypeError, ValueError):
+            raise ValueError(f"score-invalid: {obj.get('score')!r}")
+        return Decision(task.primitive, round(max(0.0, min(1.0, sc)), 3),
                         conf, raw, name, latency, cost)
-    if "verdict" not in obj:
-        raise ValueError("verdict-missing")
-    return Decision(task.primitive, bool(obj["verdict"]), conf, raw, name, latency, cost)
+    v = obj.get("verdict")
+    if isinstance(v, str) and v.strip().lower() in ("true", "false"):
+        v = v.strip().lower() == "true"   # 模型爱把布尔写成字符串 "false"——bool("false") 是 True，必须先归一
+    if not isinstance(v, bool):
+        raise ValueError(f"verdict-invalid: {obj.get('verdict')!r}")
+    return Decision(task.primitive, v, conf, raw, name, latency, cost)
 
 
 @dataclass
