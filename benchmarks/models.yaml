@@ -73,6 +73,12 @@ providers:
     model: typesafe/jev
     api_key_env: AIMLAPI_API_KEY
     per_decision_cost: null
+  # ---- responses模型桩（未启用，仅注释占位，不改名不动现有条目）----
+  # 省审C路候选：muse-spark-1.3 / gpt-5.6-luna（/responses端点）。
+  # 现状2026-09-22：OPENCODE_GO_KEY调公开Zen（/models|/chat/completions|/responses）均403，
+  # Go套餐不走公开Zen，需Zen充值key。待key就位后再加正式条目；ABC管线侧已留--c-responses桩。
+  # muse-spark-1.3-stub: {kind: openai, base_url: <zen-responses>, model: muse-spark-1.3}  # 占位未启用
+  # gpt-5.6-luna-stub: {kind: openai, base_url: <zen-responses>, model: gpt-5.6-luna}  # 占位未启用
   # ---- GO 网关（https://opencode.ai/zen/go/v1；key 走环境变量 OPENCODE_GO_KEY，绝不入库）----
   go-glm-5.3-flash:
     kind: go-chat
