@@ -185,3 +185,40 @@ def test_gates_out_and_rework(tmp_path):
     assert rep["FakeReview"]["verdict"] == "OUT"
     assert rep["CSDS_agree"] == {"n": 4, "agree": 2, "agree_rate": 0.5,
                                  "verdict": "回炉"}
+
+
+# ---- T5刷单标准进agent（离线：rubric关键词断言prompt含锚点，不调网）----
+BRUSH_UPAN = ("U盘已经收到，显示57.6G，写入速度很稳定，在40m/s，"
+              "金士顿金字招牌，很棒，京东一如既往的神速！")
+BRUSH_HOT = ("哈喽！火锅爱好者的叨叨上线了～成都火锅哪里好吃？"
+             "安利一家南门的火锅店！甜品免费随便吃！集美们冲呀！")
+NORMAL_NEAR = ("地点就在科华路川大附近，很好找。等了一个多小时才吃到，"
+               "不过为了美味总体很值！")
+
+
+def test_spam_prompt_has_brush_anchors():
+    for txt in (BRUSH_UPAN, BRUSH_HOT):
+        p = m.Adapter._abc_user_prompt("spam", txt, [], "")
+        for kw in ("很稳定", "神速", "感叹号", "全维度", "零客观细节",
+                   "简洁客观", "排队", "参考价值", "U盘", "火锅",
+                   "地点附近", "总体很值", "刷单"):
+            assert kw in p, f"缺锚点{kw}"
+    assert "很稳定" in m.SPAM_DESC["垃圾"] and "神速" in m.SPAM_DESC["垃圾"]
+    assert "排队" in m.SPAM_DESC["正常"] and "参考价值" in m.SPAM_DESC["正常"]
+
+
+def test_spam_mock_brush_vs_normal_no_net():
+    spam_reply = {"choices": [{"message": {"content":
+        '{"label":"垃圾","confidence":0.95,"reason":"刷单夸词"}'}}], "usage": {}}
+    norm_reply = {"choices": [{"message": {"content":
+        '{"label":"正常","confidence":0.95,"reason":"客观带缺点"}'}}], "usage": {}}
+    provs, calls = _chat_provider(spam_reply)
+    ad = m.Adapter(provs, "go-c", transport=provs["go-c"].transport)
+    r = ad.call("spam", BRUSH_UPAN, [], 0.95)
+    assert r["value"] == "垃圾"  # 刷例判spam
+    assert "很稳定" in calls[0]["messages"][1]["content"]  # prompt含锚点
+    provs2, calls2 = _chat_provider(norm_reply)
+    ad2 = m.Adapter(provs2, "go-c", transport=provs2["go-c"].transport)
+    r2 = ad2.call("spam", NORMAL_NEAR, [], 0.95)
+    assert r2["value"] == "正常"  # 正常例判normal
+    assert "排队" in calls2[0]["messages"][1]["content"]

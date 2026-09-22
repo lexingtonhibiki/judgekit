@@ -28,9 +28,32 @@ for sub in [XLSX_SKILL_DIR, XLSX_SKILL_DIR + r"\templates"]:
         sys.path.insert(0, sub)
 from base import (FONT_NAME, NEUTRAL_600, NEUTRAL_900, setup_sheet, style_header_row,  # noqa: E402
                   style_data_row, auto_fit_row_heights)
+import base as _xlsx_base  # noqa: E402  writer层色值FF归一用（根因：6位hex被补00透明通道）
 from openpyxl import Workbook  # noqa: E402
-from openpyxl.styles import Alignment, Font, PatternFill  # noqa: E402
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side  # noqa: E402
 from openpyxl.worksheet.datavalidation import DataValidation  # noqa: E402
+
+
+def _ff6(h: str) -> str:
+    h = str(h or "")
+    return ("FF" + h) if len(h) == 6 else h
+
+
+# writer层所有色值alpha归一FF：base模板token在建表前即打FF补丁，避免openpyxl补00透明通道
+for _k in ("PRIMARY", "PRIMARY_LIGHT", "SECONDARY", "ACCENT_POSITIVE",
+           "ACCENT_NEGATIVE", "ACCENT_WARNING", "NEUTRAL_900", "NEUTRAL_600",
+           "NEUTRAL_200", "NEUTRAL_100", "NEUTRAL_50", "NEUTRAL_0", "HEADER_TEXT"):
+    try:
+        _v = getattr(_xlsx_base, _k, "")
+        if isinstance(_v, str) and len(_v) == 6:
+            setattr(_xlsx_base, _k, _ff6(_v))
+    except Exception:  # noqa: BLE001
+        pass
+try:
+    _xlsx_base.CHART_COLORS = [_ff6(c) for c in getattr(_xlsx_base, "CHART_COLORS", [])]
+except Exception:  # noqa: BLE001
+    pass
+NEUTRAL_600, NEUTRAL_900 = _ff6(NEUTRAL_600), _ff6(NEUTRAL_900)
 
 ROOT = Path(__file__).resolve().parents[1]
 if hasattr(sys.stdout, "reconfigure"):
@@ -39,20 +62,99 @@ if hasattr(sys.stdout, "reconfigure"):
 TASK_CN = {"route": "路由", "handoff": "转人工", "sentiment": "情感", "spam": "垃圾"}
 TASK_SHEET = {"route": "02路由", "handoff": "03转人工", "sentiment": "04情感", "spam": "05垃圾"}
 
-RED_FILL = PatternFill("solid", fgColor="FDEDEC")
-RED_FONT = Font(name=FONT_NAME, size=11, color="C0392B", bold=True)
-YEL_FILL = PatternFill("solid", fgColor="FEF9E7")
-YEL_FONT = Font(name=FONT_NAME, size=11, color="D4820A", bold=True)
-GRN_FILL = PatternFill("solid", fgColor="E8F5E9")
-GRN_FONT = Font(name=FONT_NAME, size=11, color="1B7D46", bold=True)
+RED_FILL = PatternFill("solid", fgColor="FFFDEDEC", bgColor="FFFDEDEC")
+RED_FONT = Font(name=FONT_NAME, size=11, color="FFC0392B", bold=True)
+YEL_FILL = PatternFill("solid", fgColor="FFFEF9E7", bgColor="FFFEF9E7")
+YEL_FONT = Font(name=FONT_NAME, size=11, color="FFD4820A", bold=True)
+GRN_FILL = PatternFill("solid", fgColor="FFE8F5E9", bgColor="FFE8F5E9")
+GRN_FONT = Font(name=FONT_NAME, size=11, color="FF1B7D46", bold=True)
 VERDICT_STYLE = {"待定": (RED_FILL, RED_FONT), "⚠人工": (YEL_FILL, YEL_FONT),
-                 "✓通过": (GRN_FILL, GRN_FONT)}
-RANK = {"待定": 0, "⚠人工": 1, "✓通过": 2}
+                 "✓通过": (GRN_FILL, GRN_FONT),
+                 "✗删除": (RED_FILL, RED_FONT), "改标": (YEL_FILL, YEL_FONT)}
+
+
+def _fix_argb(rgb: str | None) -> str | None:
+    """6位hex被openpyxl补00透明通道的根因修复：alpha归一FF。
+
+    仅处理8位00头非全零色（00XXXXXX→FFXXXXXX）；00000000默认底留原样由调用方按需对齐。
+    """
+    if not isinstance(rgb, str) or len(rgb) != 8 or not rgb.startswith("00"):
+        return rgb
+    if rgb == "00000000":
+        return rgb
+    return "FF" + rgb[2:]
+
+
+def fix_workbook_colors(wb) -> int:
+    """writer层所有色值alpha归一FF（含base.py模板色）。返回修复计数。
+
+    安全实现：整体替换fill/font/border对象，不原地改共享Color（原地改会污染
+    默认00000000共享对象，导致数据区底色被染成表头蓝）。默认00000000底保留，
+    Excel对此兼容；校验时仅要求调色板色无00头。
+    """
+    n = 0
+    for ws in wb.worksheets:
+        for row in ws.iter_rows():
+            for c in row:
+                try:
+                    fg = c.fill.fgColor.rgb if c.fill.fgColor else None
+                    bg = c.fill.bgColor.rgb if c.fill.bgColor else None
+                except Exception:  # noqa: BLE001
+                    continue
+                new_fg = _fix_argb(fg) if isinstance(fg, str) else fg
+                new_bg = _fix_argb(bg) if isinstance(bg, str) else bg
+                if new_bg == "00000000":
+                    new_bg = bg  # 默认底保留，不碰共享对象
+                if (isinstance(new_fg, str) and new_fg != fg) or \
+                   (isinstance(new_bg, str) and new_bg != bg):
+                    try:
+                        c.fill = PatternFill(patternType=c.fill.patternType or "solid",
+                                             fgColor=new_fg or "00000000",
+                                             bgColor=new_bg or "00000000")
+                        n += 1
+                    except Exception:  # noqa: BLE001
+                        pass
+                # font（整体替换，避免共享Color污染）
+                try:
+                    frgb = c.font.color.rgb if c.font.color else None
+                except Exception:  # noqa: BLE001
+                    frgb = None
+                new_f = _fix_argb(frgb) if isinstance(frgb, str) else frgb
+                if isinstance(new_f, str) and new_f != frgb:
+                    try:
+                        c.font = Font(name=c.font.name, size=c.font.size,
+                                      bold=c.font.bold, italic=c.font.italic,
+                                      color=new_f)
+                        n += 1
+                    except Exception:  # noqa: BLE001
+                        pass
+                # border（重建Border，避免改共享Side）
+                try:
+                    sides = []
+                    dirty = False
+                    for side in (c.border.left, c.border.right,
+                                 c.border.top, c.border.bottom):
+                        srgb = side.color.rgb if side.color and isinstance(
+                            side.color.rgb, str) else None
+                        nsrgb = _fix_argb(srgb) if isinstance(srgb, str) else srgb
+                        if isinstance(nsrgb, str) and nsrgb != srgb and srgb != "00000000":
+                            dirty = True
+                            sides.append(Side(style=side.style, color=nsrgb))
+                        else:
+                            sides.append(side)
+                    if dirty:
+                        c.border = Border(left=sides[0], right=sides[1],
+                                          top=sides[2], bottom=sides[3])
+                        n += 1
+                except Exception:  # noqa: BLE001
+                    pass
+    return n
+RANK = {"待定": 0, "⚠人工": 1, "✓通过": 2, "✗删除": 0, "改标": 1}
 
 HEADERS = ["id", "文本", "原标签", "来源", "A判定", "A理由≤18", "B判定", "B理由≤18",
            "C终判", "C理由≤35", "分差", "C置信", "我的最终", "端点"]
 WIDTHS = [16, 60, 14, 12, 10, 20, 10, 20, 12, 36, 7, 8, 10, 30]
-FINAL_COL = len(HEADERS) + 1  # B列起算：我的最终是第13列 -> column index 2+12=14
+FINAL_COL = len(HEADERS)  # B列起算：我的最终idx12 -> column 2+12=14（len=14）
 
 
 def verdict_of(r: dict, gold_check: bool = False) -> str:
@@ -319,6 +421,7 @@ def main() -> None:
         dv.add(f"I5:I{4 + len(pending)}")
 
     wb.properties.creator = "jev-judge ABC"
+    n_fix = fix_workbook_colors(wb)
     out = ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
     wb.save(out)
@@ -326,7 +429,8 @@ def main() -> None:
     print(f"evidence: cache_rows={len(recs)} sheets={len(wb.sheetnames)} "
           f"final_nonempty={sum(len(v) for v in by_task.values())} "
           f"pass={sum(1 for t in by_task for _, v in by_task[t] if v == '✓通过')}"
-          + (f" gold_mismatch={n_gold}" if args.gold_mismatch else ""))
+          + (f" gold_mismatch={n_gold}" if args.gold_mismatch else "")
+          + f" color_fix={n_fix}")
     for s in wb.sheetnames:
         print(" -", s)
 

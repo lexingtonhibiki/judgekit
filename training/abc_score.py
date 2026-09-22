@@ -105,9 +105,19 @@ HANDOFF_DESC = {
     "不转": "仅投诉但冷静、有具体诉求、无失控情绪，不转",
 }
 SPAM_DESC = {
-    "垃圾": "营销引流（加微/链接/首存/发票/贷款/赌博/钓鱼）或刷屏重复才判",
-    "正常": "抱怨差评、正常咨询、事实陈述均不判垃圾",
+    "垃圾": "营销引流（加微/链接/首存/发票/贷款/赌博/钓鱼）或刷屏重复才判；"
+            "刷单刷评：常见夸词（很稳定类）不可信，品牌名+神速，零客观细节纯夸张，"
+            "感叹号轰炸/全维度夸=刷单刷评",
+    "正常": "抱怨差评、正常咨询、事实陈述均不判垃圾；"
+            "正常=简洁客观+带小缺点（如排队久）+对买家有参考价值",
 }
+# T5刷单rubric（A/B提示词共用，锚点三例压缩：U盘刷/火锅刷/地点附近正常）
+SPAM_BRUSH_RUBRIC = ("刷单刷评：常见夸词（很稳定类）不可信，品牌名+神速，"
+                     "零客观细节纯夸张，感叹号轰炸/全维度夸=刷单刷评；"
+                     "正常=简洁客观+带小缺点（如排队久）+对买家有参考价值；"
+                     "锚点：U盘例写入速度很稳定+金士顿金字招牌+京东神速=刷，"
+                     "火锅例安利集美冲呀免费吃=刷，"
+                     "地点附近好找+等一小时排队久+总体很值=正常")
 
 # ---- 重试判定 ----
 _RETRYABLE = ("429", "500", "502", "503", "504", "529", "timeout", "timed out",
@@ -231,7 +241,8 @@ class Adapter:
                         criteria=SENTI_CRITERIA, instruction=(SENTI_ANCHOR + "。" + ins) if ins else SENTI_ANCHOR)
         return Task(name="abc-spam", primitive="classify", labels=["垃圾", "正常"],
                     label_descriptions=dict(SPAM_DESC),
-                    criteria="垃圾判定：营销引流刷屏才判，抱怨差评驳回", instruction=ins)
+                    criteria=("垃圾判定：营销引流刷屏才判，抱怨差评驳回；" + SPAM_BRUSH_RUBRIC),
+                    instruction=(SPAM_BRUSH_RUBRIC + "。" + ins) if ins else SPAM_BRUSH_RUBRIC)
 
     @staticmethod
     def _ts_reason(kind: str, value, conf: float) -> str:
@@ -353,7 +364,8 @@ class Adapter:
         if kind == "sentiment":
             return (f"情感权重0-10分。{SENTI_CRITERIA}。锚点：{SENTI_ANCHOR}。{arb_ctx}\n输入：{text}\n"
                     '只输出JSON：{"score":0-10数字,"confidence":0-1,"reason":"≤40字理由"}')
-        return (f"垃圾判定：营销引流/刷屏重复才判垃圾；抱怨差评正常咨询不判。{arb_ctx}\n输入：{text}\n"
+        return (f"垃圾判定：营销引流/刷屏重复才判垃圾；抱怨差评正常咨询不判。"
+                f"{SPAM_BRUSH_RUBRIC}。{arb_ctx}\n输入：{text}\n"
                 '只输出JSON：{"label":"垃圾|正常","confidence":0-1,"reason":"≤18字理由"}')
 
     # ---- openai chat（遗留直连，urllib）----
