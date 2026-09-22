@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from training import abc_score as m  # noqa: E402
+from training import build_v4_xlsx as b4  # noqa: E402
 from training import derive_csds as dc  # noqa: E402
 from training import fetch_probe as fp  # noqa: E402
 
@@ -137,6 +138,27 @@ def test_derive_uttid_misaligned_falls_back():
     r = dc.derive_one(d)
     assert r["text"].strip() and r["window_turns"] >= 1
     assert "回退" in r["rule"]
+
+
+def test_gold_mismatch_row_forced_into_pending():
+    base = {"id": "t", "text": "x", "task": "spam", "delta": 0,
+            "A": {"value": "正常", "ok": True},
+            "B": {"value": "正常", "ok": True}}
+    mm = dict(base, id="mm", orig_label="刷单spam",
+              C={"final": "正常", "ok": True, "confidence": 0.95,
+                 "action": "通过"})
+    ok = dict(base, id="ok", orig_label="正常",
+              C={"final": "正常", "ok": True, "confidence": 0.95,
+                 "action": "通过"})
+    assert b4.verdict_of(mm) == "✓通过"  # 旧逻辑：一致+高置信即过
+    assert b4.verdict_of(mm, gold_check=True) == "待定"  # 新规则升级
+    assert b4.verdict_of(ok, gold_check=True) == "✓通过"  # 非mismatch不动
+    by_task = {"route": [], "handoff": [], "sentiment": [],
+               "spam": [(mm, b4.verdict_of(mm, True)),
+                        (ok, b4.verdict_of(ok, True))]}
+    pend = b4.select_pending(by_task)
+    assert [r["id"] for r, _ in pend] == ["mm"]  # mismatch行必进汇总
+    assert b4.gold_tag(mm) == "与预标签不符（预刷单spam）"
 
 
 def test_gates_out_and_rework(tmp_path):
