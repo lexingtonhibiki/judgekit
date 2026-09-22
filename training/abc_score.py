@@ -8,7 +8,8 @@
   情感   waimai_10k+weibo_senti  0-10权重，沿用dsh锚点（见training/dsh_prompts.md）
   垃圾   dmr+fbs                 营销引流/刷屏才判；抱怨差评驳回
 
-三方（T3默认异构）：A=go-mimo-v2.6-flash / B=go-deepseek-v4.1-flash temp0.7独立打分，
+三方（T3默认异构）：A=go-mimo-v2.6-flash / B=go-deepseek-v4.1-flash temp独立打分
+（--temp-ab，T4起默认0.95），
 C=go-gpt-5.6-luna temp0.2仲裁（分差≤2取均值、>2重判）；C2=go-glm-5.3-flash仅分差超阈
 （默认>4.0，情感任务）才调，作第二意见（C正常取C、C失败/低置信C2转正、C与C2分歧>2
  升级需人工复核）。evidence摘要默认关（原文前60字桩），--evidence spark才调
@@ -45,6 +46,8 @@ DeepSeek直连key禁用：本脚本默认只走GO的deepseek-v4.1-flash，不读
   python training/abc_score.py --only dmr,fbs --workers 3
 冒烟：
   python training/abc_score.py --limit 1 --workers 1 --cache training/abc_out/abc_cache_go_smoke.jsonl --out training/abc_out/abc_scores_go_smoke.jsonl
+探针（T4：自带task jsonl，A/B走--temp-ab默认0.95，C恒0.2）：
+  python training/abc_score.py --input training/abc_out/probe_all.jsonl --workers 3 --cache training/abc_out/probe_cache.jsonl --out training/abc_out/probe_scores.jsonl
 """
 from __future__ import annotations
 
@@ -147,9 +150,13 @@ def usage_totals(u: dict) -> tuple[int, int, int]:
 
 
 def cache_key_of(iid: str, a: str, b: str, c: str, c2: str,
-                 c2t: float, ev: str) -> str:
-    """cache键含模型名：换任一槽即全量重打，旧Jev行（无键）天然不命中。"""
-    return f"{iid}|A={a}|B={b}|C={c}|C2={c2 or '-'}|C2t={c2t}|EV={ev}"
+                 c2t: float, ev: str, temp_ab: float | None = None) -> str:
+    """cache键含模型名：换任一槽即全量重打，旧Jev行（无键）天然不命中。
+
+    T4起含AB温度：temp_ab=None=旧格式（T3兼容）；传值则追加|TAB=后缀，换温即重打。
+    """
+    base = f"{iid}|A={a}|B={b}|C={c}|C2={c2 or '-'}|C2t={c2t}|EV={ev}"
+    return base if temp_ab is None else f"{base}|TAB={temp_ab}"
 
 
 def dedup_by_key(recs: list[dict]) -> list[dict]:
@@ -483,6 +490,23 @@ def load_items(limit: int, only: str = "") -> tuple[list[dict], dict[str, list[s
     return items, route_labels
 
 
+def load_input(path: str, limit: int = 0) -> tuple[list[dict], dict[str, list[str]]]:
+    """T4探针入口：自带task的jsonl（{id,text,task[,source,orig_label,url,license]}）。"""
+    rows = [json.loads(l) for l in open(path, encoding="utf-8") if l.strip()]
+    items = []
+    for r in rows[:limit] if limit else rows:
+        task = r.get("task", "")
+        if task not in TASK_CN:
+            raise ValueError(f"未知task: {task!r}（行{r.get('id')}）")
+        if not (r.get("id") and r.get("text")):
+            raise ValueError(f"行缺id/text: {str(r)[:80]!r}")
+        items.append({"id": r["id"], "text": r["text"], "task": task,
+                      "source": r.get("source", "probe"), "src_file": "probe",
+                      "orig_label": r.get("orig_label", ""),
+                      "url": r.get("url", ""), "license": r.get("license", "")})
+    return items, {}
+
+
 def arbitrate(kind: str, text: str, a: dict, b: dict, c_ad: Adapter,
               c_responses: str) -> tuple[dict, float]:
     """C仲裁：分类一致/情感分差≤2→均值或取该值（不调C）；否则C重判。返回(C, delta)。"""
@@ -606,6 +630,10 @@ def main() -> None:
                     help="C2第二意见模型；空串禁用（合规只用go-槽）")
     ap.add_argument("--c2-threshold", type=float, default=4.0,
                     help="C2触发阈值（情感分差>阈值才调；分类需阈值≤1才启用）")
+    ap.add_argument("--temp-ab", type=float, default=0.95,
+                    help="A/B独立打分温度（T4起默认0.95；C恒0.2不受此影响）")
+    ap.add_argument("--input", default="",
+                    help="T4探针入口：自带task的jsonl路径（设了则忽略--only/EXT八集）")
     ap.add_argument("--evidence", default="off", choices=("off", "spark"),
                     help="off=原文前60字桩；spark=调evidence摘要模型（默认关，旗开）")
     ap.add_argument("--evidence-provider", default=DEFAULT_EVIDENCE_PROVIDER,
@@ -654,7 +682,8 @@ def main() -> None:
     fb_ad = Adapter(providers, args.fallback_b) if args.fallback_b else None
     quota_raise = fb_ad is not None
 
-    items, route_labels = load_items(args.limit, args.only)
+    items, route_labels = (load_input(args.input, args.limit) if args.input
+                             else load_items(args.limit, args.only))
     out_p, cache_p = Path(args.out), Path(args.cache)
     out_p.parent.mkdir(parents=True, exist_ok=True)
     done: set[str] = set()
@@ -670,7 +699,8 @@ def main() -> None:
             (done if (r.get("A", {}).get("ok") and r.get("B", {}).get("ok"))
              else failed).add(k)
     cur_key = lambda iid: cache_key_of(iid, args.a, args.b, args.c,
-                                       args.c2, args.c2_threshold, args.evidence)
+                                       args.c2, args.c2_threshold, args.evidence,
+                                       args.temp_ab)
     skip = done if args.retry_failed else (done | failed)
     todo = [r for r in items if cur_key(r["id"]) not in skip]
     print(f"items={len(items)} cached_ok={len(done)} cached_fail={len(failed)} "
@@ -702,18 +732,19 @@ def main() -> None:
         t0 = time.time()
         try:
             try:
-                a = a_ad.call(kind, text, labels, 0.7, tries=args.tries,
+                a = a_ad.call(kind, text, labels, args.temp_ab, tries=args.tries,
                               quota_raise=quota_raise)
             except Exception as e:  # noqa: BLE001
                 a = fail_side(a_ad, e)
             try:
-                b = b_ad.call(kind, text, labels, 0.7, tries=args.tries,
+                b = b_ad.call(kind, text, labels, args.temp_ab, tries=args.tries,
                               quota_raise=quota_raise)
             except Exception as e:  # noqa: BLE001
                 msg = str(e)
                 if is_quota_err(msg) and fb_ad is not None:
                     try:
-                        b = fb_ad.call(kind, text, labels, 0.7, tries=args.tries)
+                        b = fb_ad.call(kind, text, labels, args.temp_ab,
+                                       tries=args.tries)
                         b["fallback_from"] = args.b
                     except Exception as e2:  # noqa: BLE001
                         b = fail_side(fb_ad, e2)
@@ -809,7 +840,7 @@ def main() -> None:
                                   "reasoning_effort": args.reasoning_effort or None,
                                   "max_tokens_chat": args.max_tokens,
                                   "max_tokens_resp": args.resp_tokens,
-                                  "temp_AB": 0.7, "temp_C": 0.2,
+                                   "temp_AB": args.temp_ab, "temp_C": 0.2,
                                   "gateway_note": gw,
                                   "fallback_note": b.get("fallback_from", ""),
                                   "spark_excerpt": excerpt,
