@@ -425,14 +425,51 @@ def main() -> None:
     out = ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
     wb.save(out)
+    n_xml = fix_styles_xml(out)
     print("saved:", out)
     print(f"evidence: cache_rows={len(recs)} sheets={len(wb.sheetnames)} "
           f"final_nonempty={sum(len(v) for v in by_task.values())} "
           f"pass={sum(1 for t in by_task for _, v in by_task[t] if v == '✓通过')}"
           + (f" gold_mismatch={n_gold}" if args.gold_mismatch else "")
-          + f" color_fix={n_fix}")
+          + f" color_fix={n_fix} styles_xml_fix={n_xml}")
     for s in wb.sheetnames:
         print(" -", s)
+
+
+def fix_styles_xml(path) -> int:
+    """writer层最终归一：openpyxl默认indexedColors带00透明头（空表亦46个），
+    Excel严格校验报损坏。重写zip中所有xml的 rgb="00 → rgb="FF"。返回替换数。
+
+    手工补丁（裁决改值/删除率行）经openpyxl重存后同样调用本函数，保证零00头。
+    """
+    import re
+    import os
+    import shutil
+    import tempfile
+    import zipfile
+    from pathlib import Path as _P
+    p = _P(path)
+    _fd, _tmp = tempfile.mkstemp(suffix=".xlsx")
+    os.close(_fd)
+    tmp = _P(_tmp)
+    total = 0
+    with zipfile.ZipFile(p, "r") as zin, zipfile.ZipFile(
+            tmp, "w", zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            data = zin.read(item.filename)
+            if item.filename.endswith(".xml"):
+                try:
+                    txt = data.decode("utf-8")
+                except UnicodeDecodeError:
+                    zout.writestr(item, data)
+                    continue
+                new, n = re.subn(r'rgb="00', 'rgb="FF', txt)
+                total += n
+                zout.writestr(item, new.encode("utf-8"))
+            else:
+                zout.writestr(item, data)
+    shutil.move(str(tmp), str(p))
+    return total
 
 
 if __name__ == "__main__":
