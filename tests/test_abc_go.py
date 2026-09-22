@@ -184,3 +184,17 @@ def test_apply_c2_c_failed_c2_takes_over():
          "ok": False, "endpoint": "e", "model": "m", "usage": {}}
     c2c, c2rec = apply_c2("sentiment", "t", [], a, b, c, 8.0, ad, 4.0)
     assert c2c["called"] == "rejudge-c2" and c2c["final"] == 3.0
+
+
+def test_go_only_defaults_and_evidence_registry():
+    """R1-F1/F2：默认槽全为go-（GO唯一合规路径）；evidence provider名以models.yaml为准。"""
+    from training import abc_score as m
+    for d in (m.DEFAULT_A, m.DEFAULT_B, m.DEFAULT_C, m.DEFAULT_C2):
+        assert d.startswith("go-")
+    assert m.DEFAULT_EVIDENCE_PROVIDER == "go-muse-spark-1.3"  # provider名，非model名
+    from judgekit.providers import load_providers
+    from judgekit.providers.go_openai import GoResponsesProvider
+    provs = load_providers(str(m.PROVIDERS_YAML))  # 读yaml注册表，不联网不读key值
+    ev = provs[m.DEFAULT_EVIDENCE_PROVIDER]
+    assert isinstance(ev, GoResponsesProvider)
+    assert ev.model == "muse-spark-1.3-contributor"

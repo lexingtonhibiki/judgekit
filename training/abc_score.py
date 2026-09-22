@@ -11,8 +11,9 @@
 三方（T3默认异构）：A=go-mimo-v2.6-flash / B=go-deepseek-v4.1-flash temp0.7独立打分，
 C=go-gpt-5.6-luna temp0.2仲裁（分差≤2取均值、>2重判）；C2=go-glm-5.3-flash仅分差超阈
 （默认>4.0，情感任务）才调，作第二意见（C正常取C、C失败/低置信C2转正、C与C2分歧>2
-升级需人工复核）。evidence摘要默认关（原文前60字桩），--evidence spark才调
-go-muse-spark-1.3-contributor（effort强制low，存摘录不存原文）。
+ 升级需人工复核）。evidence摘要默认关（原文前60字桩），--evidence spark才调
+provider名go-muse-spark-1.3（其model为muse-spark-1.3-contributor，以models.yaml为准；
+effort强制low，存摘录不存原文）。
 provider抽象：--a/--b/--c/--c2 指定 judgekit provider名；GO双kind走curl子进程传输
 （go_openai.curl_post_json，绝不用urllib，CF 1010会拦python-urllib）。
 
@@ -33,6 +34,9 @@ T1遗留concerns处理：
      续跑捡回。quota类错误：配了--fallback-b才立即转备援（遗留GLM周配额路径），
      否则同样退避重试。
 DeepSeek直连key禁用：本脚本默认只走GO的deepseek-v4.1-flash，不读DEEPSEEK_KEY。
+合规路径声明（R1评审F1，选注释+--help方案，不加--strict-go）：GO为唯一合规路径
+（A/B/C/C2/EV默认全为go-槽）。TypeSafe/OpenAICompat分支为遗留兼容，仅本地mock/
+离线测试用（见Adapter类注释），生产打分禁止用--a/--b/--c/--c2切到非go-槽。
 
 用法（分批400，GO全量）：
   python training/abc_score.py --only smp2019_ecdt,crosswoz --workers 3
@@ -69,7 +73,7 @@ DEFAULT_A = "go-mimo-v2.6-flash"
 DEFAULT_B = "go-deepseek-v4.1-flash"
 DEFAULT_C = "go-gpt-5.6-luna"
 DEFAULT_C2 = "go-glm-5.3-flash"
-DEFAULT_EVIDENCE_PROVIDER = "go-muse-spark-1.3"
+DEFAULT_EVIDENCE_PROVIDER = "go-muse-spark-1.3"  # provider名（model=muse-spark-1.3-contributor，以models.yaml为准；离线测试锁死，见R1-F2）
 
 # source文件 -> 任务
 TASK_OF = {
@@ -165,7 +169,11 @@ def c2_should_call(kind: str, delta: float, threshold: float) -> bool:
 
 # ---------------- provider适配 ----------------
 class Adapter:
-    """统一调用口：call(task_kind, text, ctx, temp) -> dict(value,reason,confidence,ok,error,endpoint,model,usage,latency_ms)"""
+    """统一调用口：call(task_kind, text, ctx, temp) -> dict(value,reason,confidence,ok,error,endpoint,model,usage,latency_ms)
+
+    合规（R1-F1）：生产只用GO双kind（GoChatProvider/GoResponsesProvider）；
+    TypeSafe/OpenAICompat遗留分支仅本地mock/离线测试用，生产禁止切非go-槽。
+    """
 
     def __init__(self, providers: dict, name: str, transport=None,
                  max_tokens: int = 1024, resp_tokens: int = 1024,
@@ -588,16 +596,20 @@ def main() -> None:
     ap.add_argument("--sleep", type=float, default=0,
                     help="每行完成后暂停秒数（降速保429配额）")
     ap.add_argument("--tries", type=int, default=5)
-    ap.add_argument("--a", default=DEFAULT_A)
-    ap.add_argument("--b", default=DEFAULT_B)
-    ap.add_argument("--c", default=DEFAULT_C)
+    ap.add_argument("--a", default=DEFAULT_A,
+                    help="A路provider（合规只用go-槽；遗留非go槽仅本地测试）")
+    ap.add_argument("--b", default=DEFAULT_B,
+                    help="B路provider（合规只用go-槽，deepseek直连禁用；遗留非go槽仅本地测试）")
+    ap.add_argument("--c", default=DEFAULT_C,
+                    help="C路provider（合规只用go-槽；遗留非go槽仅本地测试）")
     ap.add_argument("--c2", default=DEFAULT_C2,
-                    help="C2第二意见模型；空串禁用")
+                    help="C2第二意见模型；空串禁用（合规只用go-槽）")
     ap.add_argument("--c2-threshold", type=float, default=4.0,
                     help="C2触发阈值（情感分差>阈值才调；分类需阈值≤1才启用）")
     ap.add_argument("--evidence", default="off", choices=("off", "spark"),
                     help="off=原文前60字桩；spark=调evidence摘要模型（默认关，旗开）")
-    ap.add_argument("--evidence-provider", default=DEFAULT_EVIDENCE_PROVIDER)
+    ap.add_argument("--evidence-provider", default=DEFAULT_EVIDENCE_PROVIDER,
+                    help="evidence摘要provider名（合规只用go-槽；须为models.yaml注册名）")
     ap.add_argument("--fallback-b", default="",
                     help="B路quota时备援provider（遗留GLM周配额路径）；空=退避重试+失败落盘")
     ap.add_argument("--max-tokens", type=int, default=1024,

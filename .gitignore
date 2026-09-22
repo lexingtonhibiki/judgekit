@@ -8,8 +8,3 @@ results/
 training/abc_out/
 # 内部商业分析，不随开源仓库发布
 调研报告.md
-PROJECT_STATE.md
-task_cards.json
-next_task.py
-quota_reset.py
-# 本机任务卡片与配额规划（learn_next 分化版，含本地策略）
