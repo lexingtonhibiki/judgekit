@@ -12,6 +12,7 @@ from .rules import RulesProvider          # noqa: F401
 from .openai_compat import OpenAICompat   # noqa: F401
 from .typesafe import TypeSafe            # noqa: F401
 from .nanojev import NanoJev              # noqa: F401
+from .go_openai import GO_BASE_URL, GoChatProvider, GoResponsesProvider  # noqa: F401
 
 
 def load_providers(path: str) -> dict:
@@ -43,7 +44,7 @@ def load_providers(path: str) -> dict:
                 model=c.get("model", "nanojev"),
                 timeout=int(c.get("timeout", 300)),
             )
-        else:
+        elif kind == "openai":
             out[name] = OpenAICompat(
                 name=name,
                 base_url=c["base_url"],
@@ -54,12 +55,34 @@ def load_providers(path: str) -> dict:
                 per_decision_cost=c.get("per_decision_cost"),
                 timeout=int(c.get("timeout", 90)),
             )
+        elif kind == "go-chat":
+            out[name] = GoChatProvider(
+                name=name,
+                base_url=c.get("base_url", GO_BASE_URL),
+                model=c["model"],
+                api_key=key,
+                session_id=c.get("session_id"),
+                price_in_per_1k=float(c.get("price_in_per_1k", 0.0)),
+                price_out_per_1k=float(c.get("price_out_per_1k", 0.0)),
+                per_decision_cost=c.get("per_decision_cost"),
+                timeout=int(c.get("timeout", 90)),
+            )
+        elif kind == "go-responses":
+            out[name] = GoResponsesProvider(
+                name=name,
+                base_url=c.get("base_url", GO_BASE_URL),
+                model=c["model"],
+                api_key=key,
+                session_id=c.get("session_id"),
+                price_in_per_1k=float(c.get("price_in_per_1k", 0.0)),
+                price_out_per_1k=float(c.get("price_out_per_1k", 0.0)),
+                per_decision_cost=c.get("per_decision_cost"),
+                timeout=int(c.get("timeout", 120)),
+            )
+        else:
+            raise ValueError(f"provider {name!r} 的 kind={kind!r} 不认识（可选 rules/openai/typesafe/nanojev/go-chat/go-responses）")
     return out
 
 
-from .rules import RulesProvider          # noqa: F401
-from .openai_compat import OpenAICompat   # noqa: F401
-from .typesafe import TypeSafe            # noqa: F401
-from .nanojev import NanoJev              # noqa: F401
-
-__all__ = ["load_providers", "RulesProvider", "OpenAICompat", "TypeSafe", "NanoJev"]
+__all__ = ["load_providers", "RulesProvider", "OpenAICompat", "TypeSafe", "NanoJev",
+           "GoChatProvider", "GoResponsesProvider"]
