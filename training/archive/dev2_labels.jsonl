@@ -1,0 +1,140 @@
+{"id": "p2_cr01", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.1, "逻辑错误": 0.9, "并发问题": 0.0, "资源泄漏": 0.0}}
+{"id": "p2_cr02", "task": "dev2_code_review", "probs": {"资源泄漏": 0.0, "并发问题": 0.0, "逻辑错误": 1.0, "边界条件缺失": 0.0}}
+{"id": "p2_cr03", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.25, "逻辑错误": 0.75, "资源泄漏": 0.0, "并发问题": 0.0}}
+{"id": "p2_cr04", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.01, "逻辑错误": 0.99, "并发问题": 0.0, "资源泄漏": 0.0}}
+{"id": "p2_cr05", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.01, "逻辑错误": 0.99, "资源泄漏": 0.0, "并发问题": 0.0}}
+{"id": "p2_cr06", "task": "dev2_code_review", "probs": {"并发问题": 0.0, "逻辑错误": 1.0, "边界条件缺失": 0.0, "资源泄漏": 0.0}}
+{"id": "p2_cr07", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.49, "逻辑错误": 0.51, "并发问题": 0.0, "资源泄漏": 0.0}}
+{"id": "p2_cr08", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.0, "逻辑错误": 1.0, "并发问题": 0.0, "资源泄漏": 0.0}}
+{"id": "p2_cr09", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.16, "逻辑错误": 0.84, "资源泄漏": 0.0, "并发问题": 0.0}}
+{"id": "p2_cr10", "task": "dev2_code_review", "probs": {"资源泄漏": 0.0, "边界条件缺失": 1.0, "逻辑错误": 0.0, "并发问题": 0.0}}
+{"id": "p2_cr11", "task": "dev2_code_review", "probs": {"逻辑错误": 0.06, "边界条件缺失": 0.94, "并发问题": 0.0, "资源泄漏": 0.0}}
+{"id": "p2_cr12", "task": "dev2_code_review", "probs": {"资源泄漏": 0.0, "逻辑错误": 0.6, "并发问题": 0.0, "边界条件缺失": 0.4}}
+{"id": "p2_cr13", "task": "dev2_code_review", "probs": {"并发问题": 0.0, "资源泄漏": 0.0, "逻辑错误": 0.85, "边界条件缺失": 0.15}}
+{"id": "p2_cr14", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.92, "并发问题": 0.0, "逻辑错误": 0.08, "资源泄漏": 0.0}}
+{"id": "p2_cr15", "task": "dev2_code_review", "probs": {"并发问题": 0.0, "逻辑错误": 0.0, "边界条件缺失": 1.0, "资源泄漏": 0.0}}
+{"id": "p2_cr16", "task": "dev2_code_review", "probs": {"资源泄漏": 0.0, "并发问题": 0.0, "边界条件缺失": 0.99, "逻辑错误": 0.01}}
+{"id": "p2_cr17", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.0, "资源泄漏": 1.0, "逻辑错误": 0.0, "并发问题": 0.0}}
+{"id": "p2_cr18", "task": "dev2_code_review", "probs": {"资源泄漏": 1.0, "边界条件缺失": 0.0, "并发问题": 0.0, "逻辑错误": 0.0}}
+{"id": "p2_cr19", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.0, "资源泄漏": 1.0, "并发问题": 0.0, "逻辑错误": 0.0}}
+{"id": "p2_cr20", "task": "dev2_code_review", "probs": {"资源泄漏": 1.0, "并发问题": 0.0, "逻辑错误": 0.0, "边界条件缺失": 0.0}}
+{"id": "p2_cr21", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.0, "逻辑错误": 0.0, "资源泄漏": 1.0, "并发问题": 0.0}}
+{"id": "p2_cr22", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.0, "资源泄漏": 1.0, "并发问题": 0.0, "逻辑错误": 0.0}}
+{"id": "p2_cr23", "task": "dev2_code_review", "probs": {"逻辑错误": 0.0, "资源泄漏": 1.0, "边界条件缺失": 0.0, "并发问题": 0.0}}
+{"id": "p2_cr24", "task": "dev2_code_review", "probs": {"并发问题": 0.99, "边界条件缺失": 0.0, "逻辑错误": 0.0, "资源泄漏": 0.01}}
+{"id": "p2_cr25", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.0, "资源泄漏": 0.0, "逻辑错误": 0.0, "并发问题": 1.0}}
+{"id": "p2_cr26", "task": "dev2_code_review", "probs": {"并发问题": 1.0, "逻辑错误": 0.0, "边界条件缺失": 0.0, "资源泄漏": 0.0}}
+{"id": "p2_cr27", "task": "dev2_code_review", "probs": {"资源泄漏": 0.0, "逻辑错误": 0.0, "边界条件缺失": 0.0, "并发问题": 1.0}}
+{"id": "p2_cr28", "task": "dev2_code_review", "probs": {"边界条件缺失": 0.0, "逻辑错误": 0.0, "资源泄漏": 0.0, "并发问题": 1.0}}
+{"id": "p2_cr29", "task": "dev2_code_review", "probs": {"逻辑错误": 0.0, "资源泄漏": 0.0, "并发问题": 1.0, "边界条件缺失": 0.0}}
+{"id": "p2_cr30", "task": "dev2_code_review", "probs": {"资源泄漏": 0.0, "边界条件缺失": 0.0, "逻辑错误": 0.0, "并发问题": 1.0}}
+{"id": "p2_slo01", "task": "dev2_num_slo", "probs": {"达标": 1.0, "违约": 0.0}}
+{"id": "p2_slo02", "task": "dev2_num_slo", "probs": {"违约": 0.0, "达标": 1.0}}
+{"id": "p2_slo03", "task": "dev2_num_slo", "probs": {"违约": 0.01, "达标": 0.99}}
+{"id": "p2_slo04", "task": "dev2_num_slo", "probs": {"达标": 0.99, "违约": 0.01}}
+{"id": "p2_slo05", "task": "dev2_num_slo", "probs": {"达标": 0.99, "违约": 0.01}}
+{"id": "p2_slo06", "task": "dev2_num_slo", "probs": {"达标": 1.0, "违约": 0.0}}
+{"id": "p2_slo07", "task": "dev2_num_slo", "probs": {"违约": 0.16, "达标": 0.84}}
+{"id": "p2_slo08", "task": "dev2_num_slo", "probs": {"违约": 0.02, "达标": 0.98}}
+{"id": "p2_slo09", "task": "dev2_num_slo", "probs": {"达标": 0.98, "违约": 0.02}}
+{"id": "p2_slo10", "task": "dev2_num_slo", "probs": {"达标": 0.93, "违约": 0.07}}
+{"id": "p2_slo11", "task": "dev2_num_slo", "probs": {"违约": 0.02, "达标": 0.98}}
+{"id": "p2_slo12", "task": "dev2_num_slo", "probs": {"达标": 0.95, "违约": 0.05}}
+{"id": "p2_slo13", "task": "dev2_num_slo", "probs": {"违约": 0.01, "达标": 0.99}}
+{"id": "p2_slo14", "task": "dev2_num_slo", "probs": {"达标": 1.0, "违约": 0.0}}
+{"id": "p2_slo15", "task": "dev2_num_slo", "probs": {"违约": 0.01, "达标": 0.99}}
+{"id": "p2_slo16", "task": "dev2_num_slo", "probs": {"违约": 1.0, "达标": 0.0}}
+{"id": "p2_slo17", "task": "dev2_num_slo", "probs": {"达标": 0.01, "违约": 0.99}}
+{"id": "p2_slo18", "task": "dev2_num_slo", "probs": {"达标": 0.01, "违约": 0.99}}
+{"id": "p2_slo19", "task": "dev2_num_slo", "probs": {"违约": 1.0, "达标": 0.0}}
+{"id": "p2_slo20", "task": "dev2_num_slo", "probs": {"违约": 0.98, "达标": 0.02}}
+{"id": "p2_slo21", "task": "dev2_num_slo", "probs": {"达标": 0.0, "违约": 1.0}}
+{"id": "p2_slo22", "task": "dev2_num_slo", "probs": {"达标": 0.14, "违约": 0.86}}
+{"id": "p2_slo23", "task": "dev2_num_slo", "probs": {"达标": 0.01, "违约": 0.99}}
+{"id": "p2_slo24", "task": "dev2_num_slo", "probs": {"违约": 0.99, "达标": 0.01}}
+{"id": "p2_slo25", "task": "dev2_num_slo", "probs": {"违约": 1.0, "达标": 0.0}}
+{"id": "p2_slo26", "task": "dev2_num_slo", "probs": {"违约": 1.0, "达标": 0.0}}
+{"id": "p2_slo27", "task": "dev2_num_slo", "probs": {"达标": 0.08, "违约": 0.92}}
+{"id": "p2_slo28", "task": "dev2_num_slo", "probs": {"达标": 0.0, "违约": 1.0}}
+{"id": "p2_slo29", "task": "dev2_num_slo", "probs": {"违约": 0.7, "达标": 0.3}}
+{"id": "p2_slo30", "task": "dev2_num_slo", "probs": {"违约": 1.0, "达标": 0.0}}
+{"id": "p2_calc01", "task": "dev2_num_calc", "probs": {"计算正确": 0.99, "计算有误": 0.01}}
+{"id": "p2_calc02", "task": "dev2_num_calc", "probs": {"计算正确": 0.97, "计算有误": 0.03}}
+{"id": "p2_calc03", "task": "dev2_num_calc", "probs": {"计算有误": 0.32, "计算正确": 0.68}}
+{"id": "p2_calc04", "task": "dev2_num_calc", "probs": {"计算正确": 1.0, "计算有误": 0.0}}
+{"id": "p2_calc05", "task": "dev2_num_calc", "probs": {"计算正确": 0.98, "计算有误": 0.02}}
+{"id": "p2_calc06", "task": "dev2_num_calc", "probs": {"计算有误": 0.06, "计算正确": 0.94}}
+{"id": "p2_calc07", "task": "dev2_num_calc", "probs": {"计算正确": 0.61, "计算有误": 0.39}}
+{"id": "p2_calc08", "task": "dev2_num_calc", "probs": {"计算有误": 0.09, "计算正确": 0.91}}
+{"id": "p2_calc09", "task": "dev2_num_calc", "probs": {"计算正确": 0.72, "计算有误": 0.28}}
+{"id": "p2_calc10", "task": "dev2_num_calc", "probs": {"计算正确": 0.7, "计算有误": 0.3}}
+{"id": "p2_calc11", "task": "dev2_num_calc", "probs": {"计算有误": 0.02, "计算正确": 0.98}}
+{"id": "p2_calc12", "task": "dev2_num_calc", "probs": {"计算正确": 0.78, "计算有误": 0.22}}
+{"id": "p2_calc13", "task": "dev2_num_calc", "probs": {"计算正确": 0.55, "计算有误": 0.45}}
+{"id": "p2_calc14", "task": "dev2_num_calc", "probs": {"计算正确": 0.28, "计算有误": 0.72}}
+{"id": "p2_calc15", "task": "dev2_num_calc", "probs": {"计算正确": 0.9, "计算有误": 0.1}}
+{"id": "p2_calc16", "task": "dev2_num_calc", "probs": {"计算正确": 0.77, "计算有误": 0.23}}
+{"id": "p2_calc17", "task": "dev2_num_calc", "probs": {"计算正确": 0.62, "计算有误": 0.38}}
+{"id": "p2_calc18", "task": "dev2_num_calc", "probs": {"计算有误": 0.14, "计算正确": 0.86}}
+{"id": "p2_calc19", "task": "dev2_num_calc", "probs": {"计算正确": 0.9, "计算有误": 0.1}}
+{"id": "p2_calc20", "task": "dev2_num_calc", "probs": {"计算正确": 0.3, "计算有误": 0.7}}
+{"id": "p2_re01", "task": "dev2_route_en", "probs": {"performance": 0.0, "bug": 1.0, "feature request": 0.0, "docs issue": 0.0}}
+{"id": "p2_re02", "task": "dev2_route_en", "probs": {"performance": 0.0, "docs issue": 0.0, "bug": 1.0, "feature request": 0.0}}
+{"id": "p2_re03", "task": "dev2_route_en", "probs": {"bug": 0.98, "performance": 0.0, "feature request": 0.0, "docs issue": 0.02}}
+{"id": "p2_re04", "task": "dev2_route_en", "probs": {"feature request": 0.0, "performance": 0.0, "bug": 1.0, "docs issue": 0.0}}
+{"id": "p2_re05", "task": "dev2_route_en", "probs": {"bug": 1.0, "docs issue": 0.0, "feature request": 0.0, "performance": 0.0}}
+{"id": "p2_re06", "task": "dev2_route_en", "probs": {"bug": 0.0, "feature request": 1.0, "docs issue": 0.0, "performance": 0.0}}
+{"id": "p2_re07", "task": "dev2_route_en", "probs": {"performance": 0.0, "bug": 0.01, "feature request": 0.99, "docs issue": 0.0}}
+{"id": "p2_re08", "task": "dev2_route_en", "probs": {"performance": 0.0, "feature request": 0.97, "docs issue": 0.0, "bug": 0.03}}
+{"id": "p2_re09", "task": "dev2_route_en", "probs": {"docs issue": 0.0, "bug": 0.0, "performance": 0.0, "feature request": 1.0}}
+{"id": "p2_re10", "task": "dev2_route_en", "probs": {"performance": 0.0, "docs issue": 0.0, "feature request": 1.0, "bug": 0.0}}
+{"id": "p2_re11", "task": "dev2_route_en", "probs": {"docs issue": 0.93, "bug": 0.07, "feature request": 0.0, "performance": 0.0}}
+{"id": "p2_re12", "task": "dev2_route_en", "probs": {"feature request": 0.0, "docs issue": 1.0, "performance": 0.0, "bug": 0.0}}
+{"id": "p2_re13", "task": "dev2_route_en", "probs": {"bug": 0.0, "feature request": 0.0, "performance": 0.0, "docs issue": 1.0}}
+{"id": "p2_re14", "task": "dev2_route_en", "probs": {"feature request": 0.02, "performance": 0.0, "docs issue": 0.98, "bug": 0.0}}
+{"id": "p2_re15", "task": "dev2_route_en", "probs": {"feature request": 0.0, "performance": 0.0, "bug": 0.0, "docs issue": 1.0}}
+{"id": "p2_re16", "task": "dev2_route_en", "probs": {"bug": 0.0, "feature request": 0.0, "docs issue": 0.0, "performance": 1.0}}
+{"id": "p2_re17", "task": "dev2_route_en", "probs": {"performance": 1.0, "bug": 0.0, "feature request": 0.0, "docs issue": 0.0}}
+{"id": "p2_re18", "task": "dev2_route_en", "probs": {"bug": 0.0, "feature request": 0.0, "docs issue": 0.0, "performance": 1.0}}
+{"id": "p2_re19", "task": "dev2_route_en", "probs": {"performance": 0.95, "feature request": 0.0, "bug": 0.05, "docs issue": 0.0}}
+{"id": "p2_re20", "task": "dev2_route_en", "probs": {"docs issue": 0.0, "bug": 0.0, "performance": 1.0, "feature request": 0.0}}
+{"id": "p2_gt01", "task": "dev2_gate_en", "probs": {"allow": 1.0, "require human approval": 0.0}}
+{"id": "p2_gt02", "task": "dev2_gate_en", "probs": {"require human approval": 0.01, "allow": 0.99}}
+{"id": "p2_gt03", "task": "dev2_gate_en", "probs": {"require human approval": 0.0, "allow": 1.0}}
+{"id": "p2_gt04", "task": "dev2_gate_en", "probs": {"allow": 0.95, "require human approval": 0.05}}
+{"id": "p2_gt05", "task": "dev2_gate_en", "probs": {"require human approval": 0.0, "allow": 1.0}}
+{"id": "p2_gt06", "task": "dev2_gate_en", "probs": {"allow": 0.9, "require human approval": 0.1}}
+{"id": "p2_gt07", "task": "dev2_gate_en", "probs": {"require human approval": 0.0, "allow": 1.0}}
+{"id": "p2_gt08", "task": "dev2_gate_en", "probs": {"allow": 1.0, "require human approval": 0.0}}
+{"id": "p2_gt09", "task": "dev2_gate_en", "probs": {"require human approval": 0.0, "allow": 1.0}}
+{"id": "p2_gt10", "task": "dev2_gate_en", "probs": {"allow": 1.0, "require human approval": 0.0}}
+{"id": "p2_gt11", "task": "dev2_gate_en", "probs": {"allow": 0.0, "require human approval": 1.0}}
+{"id": "p2_gt12", "task": "dev2_gate_en", "probs": {"allow": 0.0, "require human approval": 1.0}}
+{"id": "p2_gt13", "task": "dev2_gate_en", "probs": {"allow": 0.0, "require human approval": 1.0}}
+{"id": "p2_gt14", "task": "dev2_gate_en", "probs": {"require human approval": 1.0, "allow": 0.0}}
+{"id": "p2_gt15", "task": "dev2_gate_en", "probs": {"require human approval": 1.0, "allow": 0.0}}
+{"id": "p2_gt16", "task": "dev2_gate_en", "probs": {"require human approval": 1.0, "allow": 0.0}}
+{"id": "p2_gt17", "task": "dev2_gate_en", "probs": {"require human approval": 1.0, "allow": 0.0}}
+{"id": "p2_gt18", "task": "dev2_gate_en", "probs": {"require human approval": 0.99, "allow": 0.01}}
+{"id": "p2_gt19", "task": "dev2_gate_en", "probs": {"allow": 0.0, "require human approval": 1.0}}
+{"id": "p2_gt20", "task": "dev2_gate_en", "probs": {"require human approval": 1.0, "allow": 0.0}}
+{"id": "p2_tg01", "task": "dev2_triage_mixed", "probs": {"retry-transient": 1.0, "ignorable": 0.0, "needs code fix": 0.0}}
+{"id": "p2_tg02", "task": "dev2_triage_mixed", "probs": {"retry-transient": 0.99, "needs code fix": 0.0, "ignorable": 0.01}}
+{"id": "p2_tg03", "task": "dev2_triage_mixed", "probs": {"ignorable": 0.01, "retry-transient": 0.99, "needs code fix": 0.0}}
+{"id": "p2_tg04", "task": "dev2_triage_mixed", "probs": {"needs code fix": 0.0, "ignorable": 0.04, "retry-transient": 0.96}}
+{"id": "p2_tg05", "task": "dev2_triage_mixed", "probs": {"retry-transient": 0.99, "ignorable": 0.01, "needs code fix": 0.0}}
+{"id": "p2_tg06", "task": "dev2_triage_mixed", "probs": {"needs code fix": 0.01, "ignorable": 0.04, "retry-transient": 0.95}}
+{"id": "p2_tg07", "task": "dev2_triage_mixed", "probs": {"ignorable": 0.26, "retry-transient": 0.74, "needs code fix": 0.0}}
+{"id": "p2_tg08", "task": "dev2_triage_mixed", "probs": {"needs code fix": 1.0, "retry-transient": 0.0, "ignorable": 0.0}}
+{"id": "p2_tg09", "task": "dev2_triage_mixed", "probs": {"ignorable": 0.0, "retry-transient": 0.0, "needs code fix": 1.0}}
+{"id": "p2_tg10", "task": "dev2_triage_mixed", "probs": {"needs code fix": 1.0, "ignorable": 0.0, "retry-transient": 0.0}}
+{"id": "p2_tg11", "task": "dev2_triage_mixed", "probs": {"needs code fix": 1.0, "ignorable": 0.0, "retry-transient": 0.0}}
+{"id": "p2_tg12", "task": "dev2_triage_mixed", "probs": {"retry-transient": 0.0, "ignorable": 0.0, "needs code fix": 1.0}}
+{"id": "p2_tg13", "task": "dev2_triage_mixed", "probs": {"ignorable": 0.0, "retry-transient": 0.0, "needs code fix": 1.0}}
+{"id": "p2_tg14", "task": "dev2_triage_mixed", "probs": {"needs code fix": 1.0, "ignorable": 0.0, "retry-transient": 0.0}}
+{"id": "p2_tg15", "task": "dev2_triage_mixed", "probs": {"needs code fix": 0.0, "retry-transient": 0.0, "ignorable": 1.0}}
+{"id": "p2_tg16", "task": "dev2_triage_mixed", "probs": {"retry-transient": 0.0, "ignorable": 1.0, "needs code fix": 0.0}}
+{"id": "p2_tg17", "task": "dev2_triage_mixed", "probs": {"retry-transient": 0.0, "ignorable": 1.0, "needs code fix": 0.0}}
+{"id": "p2_tg18", "task": "dev2_triage_mixed", "probs": {"retry-transient": 0.25, "ignorable": 0.74, "needs code fix": 0.01}}
+{"id": "p2_tg19", "task": "dev2_triage_mixed", "probs": {"needs code fix": 0.01, "ignorable": 0.47, "retry-transient": 0.52}}
+{"id": "p2_tg20", "task": "dev2_triage_mixed", "probs": {"ignorable": 0.97, "retry-transient": 0.03, "needs code fix": 0.0}}

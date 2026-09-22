@@ -1,0 +1,313 @@
+{
+  "fromscratch": {
+    "bench_acc": 0.3769,
+    "bench_by_ds": {
+      "intent_zh": 0.075,
+      "sentiment_zh": 0.4667,
+      "spam_zh": 0.5,
+      "urgency_zh": 0.5667
+    },
+    "heldout_acc": 0.58,
+    "heldout_by_family": {
+      "zh_intent": 0.36,
+      "zh_sentiment": 0.52,
+      "zh_spam": 0.64,
+      "zh_urgency": 0.8
+    },
+    "ece": 0.118,
+    "sft_minutes": 7.6,
+    "pretrain_minutes": 55.0,
+    "pretrain_tokens": 13492224
+  },
+  "contpretrain": {
+    "bench_acc": 0.4385,
+    "bench_by_ds": {
+      "intent_zh": 0.25,
+      "sentiment_zh": 0.4667,
+      "spam_zh": 0.6,
+      "urgency_zh": 0.5
+    },
+    "heldout_acc": 0.71,
+    "heldout_by_family": {
+      "zh_intent": 0.36,
+      "zh_sentiment": 0.72,
+      "zh_spam": 0.8,
+      "zh_urgency": 0.96
+    },
+    "ece": 0.1068,
+    "sft_minutes": 6.3,
+    "pretrain_minutes": 55.0,
+    "pretrain_tokens": 13074432
+  },
+  "minimind2_offtheshelf": {
+    "bench_acc": 0.554,
+    "bench_by_ds": {
+      "intent_zh": 0.275,
+      "sentiment_zh": 0.7,
+      "spam_zh": 0.733,
+      "urgency_zh": 0.6
+    },
+    "heldout_acc": 0.64,
+    "heldout_by_family": {
+      "zh_intent": 0.08,
+      "zh_sentiment": 0.76,
+      "zh_spam": 0.88,
+      "zh_urgency": 0.84
+    },
+    "ece": 0.127,
+    "sft_minutes": 5.4,
+    "pretrain_minutes": 0.0,
+    "pretrain_tokens": 0
+  },
+  "gentle_dapt": {
+    "bench_acc": 0.4307692307692308,
+    "bench_by_ds": {
+      "intent_zh": 0.2,
+      "sentiment_zh": 0.5333,
+      "spam_zh": 0.4667,
+      "urgency_zh": 0.6
+    },
+    "heldout_acc": 0.59,
+    "heldout_by_family": {
+      "zh_intent": 0.36,
+      "zh_sentiment": 0.48,
+      "zh_spam": 0.68,
+      "zh_urgency": 0.84
+    },
+    "ece": 0.1489,
+    "sft_minutes": 5.0,
+    "pretrain_minutes": 30.0,
+    "pretrain_tokens": 7299072,
+    "note": "DAPT lr 5e-5 / 7.3M tok / 1800s hard wall"
+  },
+  "soup_backbone": {
+    "bench_acc": 0.4076923076923077,
+    "bench_by_ds": {
+      "intent_zh": 0.225,
+      "sentiment_zh": 0.4667,
+      "spam_zh": 0.5667,
+      "urgency_zh": 0.4333
+    },
+    "heldout_acc": 0.67,
+    "heldout_by_family": {
+      "zh_intent": 0.48,
+      "zh_sentiment": 0.72,
+      "zh_spam": 0.56,
+      "zh_urgency": 0.92
+    },
+    "ece": 0.0914,
+    "sft_minutes": 4.7,
+    "pretrain_minutes": 0,
+    "pretrain_tokens": 0,
+    "note": "mini01+preB backbone weight average (head retrained)"
+  },
+  "dev_domain_baselines": {
+    "_note": "dev 靶场 97 项(4任务)域差摸底, 全部模型只训过电商域",
+    "rules": {
+      "dev_acc": 0.964,
+      "by_ds": {
+        "dev_route_zh": 0.9583,
+        "cmd_risk_zh": 0.9583,
+        "err_triage": 0.9583,
+        "commit_type": 1.0
+      }
+    },
+    "mini01": {
+      "dev_acc": 0.372,
+      "by_ds": {
+        "dev_route_zh": 0.2917,
+        "cmd_risk_zh": 0.5,
+        "err_triage": 0.4167,
+        "commit_type": 0.28
+      }
+    },
+    "preB": {
+      "dev_acc": 0.301,
+      "by_ds": {
+        "dev_route_zh": 0.4583,
+        "cmd_risk_zh": 0.4167,
+        "err_triage": 0.1667,
+        "commit_type": 0.16
+      }
+    },
+    "preC2": {
+      "dev_acc": 0.32,
+      "by_ds": {
+        "dev_route_zh": 0.1667,
+        "cmd_risk_zh": 0.5417,
+        "err_triage": 0.25,
+        "commit_type": 0.32
+      }
+    },
+    "smoke1_06b": {
+      "dev_acc": 0.711,
+      "by_ds": {
+        "dev_route_zh": 0.75,
+        "cmd_risk_zh": 0.5,
+        "err_triage": 0.8333,
+        "commit_type": 0.76
+      }
+    }
+  },
+  "dev_specialization": {
+    "_note": "P5: dev 146条 Jev 软标签 SFT(101/16/14/15 split, brier, seed17); 验收=dev97+judge-econ130回归+zhft留出100",
+    "teacher": {
+      "name": "jev typesafe",
+      "items": 146,
+      "disagreement": 5
+    },
+    "d1_preB_to_dev": {
+      "dev_acc": 0.5876288659793815,
+      "dev_by_ds": {
+        "dev_route_zh": 0.625,
+        "cmd_risk_zh": 0.5,
+        "err_triage": 0.75,
+        "commit_type": 0.48
+      },
+      "jecon130": 0.45384615384615384,
+      "zhft_heldout": 0.65,
+      "ece": 0.0715
+    },
+    "d3_mini01_to_dev": {
+      "dev_acc": 0.5463917525773195,
+      "dev_by_ds": {
+        "dev_route_zh": 0.4167,
+        "cmd_risk_zh": 0.4583,
+        "err_triage": 0.75,
+        "commit_type": 0.56
+      },
+      "jecon130": 0.4,
+      "zhft_heldout": 0.49,
+      "ece": 0.3644
+    },
+    "d2_smoke1_06b_to_dev": {
+      "dev_acc": 0.9175257731958762,
+      "dev_by_ds": {
+        "dev_route_zh": 0.8333,
+        "cmd_risk_zh": 0.9167,
+        "err_triage": 1.0,
+        "commit_type": 0.92
+      },
+      "jecon130": 0.9,
+      "jecon_by_ds": {
+        "intent_zh": 0.875,
+        "sentiment_zh": 1.0,
+        "spam_zh": 0.7333,
+        "urgency_zh": 1.0
+      },
+      "train": "40 steps, ~50min, 0.6B bf16-serve/fp16-n.a."
+    }
+  },
+  "v2_fair_benchmark": {
+    "_note": "v2 公平靶场 8 数据集 193 题（严格均衡/去关键词/含误导项）；地板=多数类基线均分 34.8%",
+    "floors": {
+      "avg_majority": 0.348,
+      "per_ds": {
+        "route_zh": 0.25,
+        "route_en": 0.25,
+        "gate_en": 0.5,
+        "triage": 0.333,
+        "commit_zh": 0.2,
+        "code_review": 0.25,
+        "num_slo": 0.5,
+        "num_calc": 0.5
+      }
+    },
+    "jev_teacher": {
+      "avg": 0.7264,
+      "excl_numcalc": 0.976,
+      "by_ds": {
+        "route_zh": 0.9583,
+        "route_en": 1.0,
+        "gate_en": 0.9583,
+        "triage_mixed": 0.9583,
+        "commit_zh": 1.0,
+        "code_review": 0.9583,
+        "num_slo": 1.0,
+        "num_calc": 0.4167
+      },
+      "_note": "num_calc 低于地板=前沿教师也算不对算术，数字核验必须走工具/规则"
+    },
+    "zero_shot": {
+      "mix06": 0.658,
+      "dev06": 0.607,
+      "smoke1": 0.539,
+      "mini01": 0.358,
+      "dev01a": 0.348,
+      "preB": 0.322,
+      "_note": "0.1B 三臂全部贴地板=无判断力（用户担心的偏差被证实为真实风险）"
+    }
+  },
+  "mixed_training": {
+    "mix06_06b": {
+      "data": "638=电商352+dev146+dev2新域140",
+      "steps": 80,
+      "v2_fair": 0.6580310880829016,
+      "dev_v1": 0.8350515463917526,
+      "jecon130": 0.8615384615384616,
+      "zhft_heldout100": 0.82,
+      "ece_heldout": 0.1124,
+      "t_fit": 0.8,
+      "ece_fitted": 0.0696,
+      "by_ds_v2": {
+        "route_zh": 0.8333,
+        "route_en": 0.625,
+        "gate_en": 0.8333,
+        "triage": 0.6667,
+        "commit_zh": 0.68,
+        "code_review": 0.625,
+        "num_slo": 0.5,
+        "num_calc": 0.5
+      }
+    },
+    "mix01_01b": {
+      "v2_fair": 0.35233160621761656,
+      "dev_v1": 0.25773195876288657,
+      "jecon130": 0.43846153846153846,
+      "zhft_heldout100": 0.62,
+      "_verdict": "混域抢救失败，0.1B 死刑确认（结构性容量/词表上限）"
+    }
+  },
+  "unified_rich_encoding": {
+    "_note": "eval_pc.py 统一富描述编码（16 数据集 420 题=v2 8+dev1 4+econ 4）；run_bench 裸标签口径系统性低估富训练模型（spam 53.3 vs 80-90）",
+    "pc06_promptconditioned": {
+      "total": 0.7785714285714286,
+      "v2": 0.6632124352331606,
+      "dev1": 0.7731958762886598,
+      "econ130_rich": 0.9538461538461539,
+      "econ_rich_by_ds": {
+        "intent": 0.95,
+        "sentiment": 1.0,
+        "spam": 0.9,
+        "urgency": 0.9667
+      },
+      "zhft_heldout": 0.82,
+      "ece_heldout": 0.0585,
+      "t_fit": 1.8,
+      "no_prefix_control": 0.7833333333333333
+    },
+    "mix06": {
+      "total": 0.7761904761904762,
+      "v2": 0.6580310880829016,
+      "econ130_rich": 0.9076923076923077,
+      "econ_rich_by_ds": {
+        "intent": 0.95,
+        "sentiment": 0.9333,
+        "spam": 0.8,
+        "urgency": 0.9333
+      }
+    },
+    "dev06": {
+      "total": 0.7666666666666667,
+      "v2": 0.607,
+      "econ130_rich": 0.8923076923076924,
+      "econ_rich_by_ds": {
+        "intent": 0.825,
+        "sentiment": 1.0,
+        "spam": 0.8333,
+        "urgency": 0.9333
+      }
+    },
+    "_headline": "本地最佳=pc06: econ 富编码 95.4%（距 Jev 97.7% 仅 2.3 点）+ zhft 留出 82% + v2 66.3%，温度拟合后 ECE 0.074"
+  }
+}

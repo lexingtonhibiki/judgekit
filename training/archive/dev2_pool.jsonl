@@ -1,0 +1,140 @@
+{"id": "p2_cr01", "task": "dev2_code_review", "text": "# Python\n# 计算折后价，rate 为折扣率（0.8 表示八折）\ndef pay(price, rate):\n    return price * (1 - rate)", "intended": "逻辑错误"}
+{"id": "p2_cr02", "task": "dev2_code_review", "text": "// Java: 金额元转分\nint cents = (int) (yuan * 100);  // 4.35 元得到 434", "intended": "逻辑错误"}
+{"id": "p2_cr03", "task": "dev2_code_review", "text": "// JS: 计算两个时间戳相差几天\nconst days = (t2 - t1) / (1000 * 60 * 60);", "intended": "逻辑错误"}
+{"id": "p2_cr04", "task": "dev2_code_review", "text": "# Python: 按周岁算年龄\nreturn today.year - birth.year  # 生日没过也多算一岁", "intended": "逻辑错误"}
+{"id": "p2_cr05", "task": "dev2_code_review", "text": "// JS: 取文件扩展名\nreturn filename.split('.')[0];", "intended": "逻辑错误"}
+{"id": "p2_cr06", "task": "dev2_code_review", "text": "# Python: 去重并保持原有顺序\nreturn list(set(items))", "intended": "逻辑错误"}
+{"id": "p2_cr07", "task": "dev2_code_review", "text": "// Java: 平均分四舍五入取整\nreturn Math.round(sum / count);  // sum 和 count 都是 int", "intended": "逻辑错误"}
+{"id": "p2_cr08", "task": "dev2_code_review", "text": "# Python: 密码必须同时含字母和数字\nreturn any(c.isdigit() for c in pwd) or any(c.isalpha() for c in pwd)", "intended": "逻辑错误"}
+{"id": "p2_cr09", "task": "dev2_code_review", "text": "// JS: 取队列第一个待处理项\nconst first = queue[1];", "intended": "边界条件缺失"}
+{"id": "p2_cr10", "task": "dev2_code_review", "text": "# Python: 解析用户输入的整数\nreturn int(s)  # s 可能是空串", "intended": "边界条件缺失"}
+{"id": "p2_cr11", "task": "dev2_code_review", "text": "// Java: 取前 10 个字符\nreturn s.substring(0, 10);", "intended": "边界条件缺失"}
+{"id": "p2_cr12", "task": "dev2_code_review", "text": "# Python: 找最大值的位置\nidx = nums.index(max(nums[1:]))", "intended": "边界条件缺失"}
+{"id": "p2_cr13", "task": "dev2_code_review", "text": "// JS: 返回第 page 页数据（每页 size 条）\nreturn list.slice(page * size, page * size + size - 1);", "intended": "边界条件缺失"}
+{"id": "p2_cr14", "task": "dev2_code_review", "text": "# Python: 读取配置项\nreturn cfg['port']  # 键可能不存在", "intended": "边界条件缺失"}
+{"id": "p2_cr15", "task": "dev2_code_review", "text": "// JS: 计算占比（百分比）\nreturn Math.round(a / b * 100);  // b 可能为 0", "intended": "边界条件缺失"}
+{"id": "p2_cr16", "task": "dev2_code_review", "text": "// JS: 输入转数字后取倒数\nconst n = Number(input);\nreturn 1 / n;  // input 可能是空串或非数字", "intended": "边界条件缺失"}
+{"id": "p2_cr17", "task": "dev2_code_review", "text": "// Java: 读取配置文件\nBufferedReader br = new BufferedReader(new FileReader(path));\nreturn br.lines().collect(Collectors.joining());", "intended": "资源泄漏"}
+{"id": "p2_cr18", "task": "dev2_code_review", "text": "# Python: 流式下载远程图片\nresp = requests.get(url, stream=True)\nreturn resp.raw.read()  # 用完没有关", "intended": "资源泄漏"}
+{"id": "p2_cr19", "task": "dev2_code_review", "text": "// JS: 组件里定时刷新\nsetInterval(refreshStats, 60_000);  // 卸载时没有清理", "intended": "资源泄漏"}
+{"id": "p2_cr20", "task": "dev2_code_review", "text": "# Python: 每个请求新建一个数据库连接\nconn = sqlite3.connect(DB_PATH)  # 请求结束没有 close", "intended": "资源泄漏"}
+{"id": "p2_cr21", "task": "dev2_code_review", "text": "// Java: 热更新时创建新线程池\nexec = Executors.newFixedThreadPool(8);  // 旧实例没有 shutdown", "intended": "资源泄漏"}
+{"id": "p2_cr22", "task": "dev2_code_review", "text": "# Python: 循环里生成报表图\nfig = plt.figure()  # 常驻服务跑一天，用过的图从没 close 过", "intended": "资源泄漏"}
+{"id": "p2_cr23", "task": "dev2_code_review", "text": "// JS: 流式读取大日志\nconst stream = fs.createReadStream(path);\nstream.on('data', push);  // 出错路径没有 destroy()", "intended": "资源泄漏"}
+{"id": "p2_cr24", "task": "dev2_code_review", "text": "# Python: 用布尔值当锁\nif not busy:\n    busy = True\n    do_work()  # 多线程会同时进入", "intended": "并发问题"}
+{"id": "p2_cr25", "task": "dev2_code_review", "text": "// Java: 日期格式化\nstatic SimpleDateFormat FMT = new SimpleDateFormat(...);  // 多线程共用一个实例", "intended": "并发问题"}
+{"id": "p2_cr26", "task": "dev2_code_review", "text": "# Python: 两个协程向同一账本文件追加写入\nawait f.write(entry)  # 没有加锁，写入互相交错", "intended": "并发问题"}
+{"id": "p2_cr27", "task": "dev2_code_review", "text": "// Java: 优雅停机\nprivate static boolean stopped;  // 非 volatile\nwhile (!stopped) { poll(); }", "intended": "并发问题"}
+{"id": "p2_cr28", "task": "dev2_code_review", "text": "# Python: 从共享队列取任务\nif len(shared_q) > 0:\n    job = shared_q.pop(0)  # 判断和弹出之间队列可能已空", "intended": "并发问题"}
+{"id": "p2_cr29", "task": "dev2_code_review", "text": "// Java: 本地缓存\nif (!map.containsKey(key)) { map.put(key, load(key)); }  // 多线程共享的 map", "intended": "并发问题"}
+{"id": "p2_cr30", "task": "dev2_code_review", "text": "# Python: 转账\n# 线程 1 先锁 accounts[A] 再锁 accounts[B]\n# 线程 2 先锁 accounts[B] 再锁 accounts[A]", "intended": "并发问题"}
+{"id": "p2_slo01", "task": "dev2_num_slo", "text": "转码集群实测：p50 = 64ms（阈值 ≤100ms），p99 = 210ms（阈值 ≤300ms），错误率 0.3%（阈值 <0.5%）", "intended": "达标"}
+{"id": "p2_slo02", "task": "dev2_num_slo", "text": "支付服务日报：成功率 99.97%（要求 ≥99.95%），p95 = 420ms（要求 ≤500ms）", "intended": "达标"}
+{"id": "p2_slo03", "task": "dev2_num_slo", "text": "短链服务：p50 = 88ms（阈值 ≤0.1s），错误率 0.21%（阈值 ≤0.3%）", "intended": "达标"}
+{"id": "p2_slo04", "task": "dev2_num_slo", "text": "对象存储元数据接口：p99 = 980ms（阈值 ≤1s），可用性 99.92%（要求 ≥99.9%）", "intended": "达标"}
+{"id": "p2_slo05", "task": "dev2_num_slo", "text": "消息中心：p50 = 132ms（阈值 ≤150ms），p95 = 447ms（阈值 ≤450ms）", "intended": "达标"}
+{"id": "p2_slo06", "task": "dev2_num_slo", "text": "鉴权网关：错误率 0.05%（阈值 ≤0.1%），p99 = 1.7s（阈值 ≤2s）", "intended": "达标"}
+{"id": "p2_slo07", "task": "dev2_num_slo", "text": "Webhook 投递：成功率 99.2%（要求 ≥99%），p50 = 0.07s（阈值 ≤80ms）", "intended": "达标"}
+{"id": "p2_slo08", "task": "dev2_num_slo", "text": "批量导出：p95 = 1.9s（阈值 ≤2s），吞吐 3.6 万条/分（下限 3 万）", "intended": "达标"}
+{"id": "p2_slo09", "task": "dev2_num_slo", "text": "搜索服务：p50 = 210ms（阈值 ≤250ms），p99 = 0.49s（阈值 ≤500ms）", "intended": "达标"}
+{"id": "p2_slo10", "task": "dev2_num_slo", "text": "CDN 回源：错误率 0.99%（阈值 <1%），p95 = 740ms（阈值 ≤800ms）", "intended": "达标"}
+{"id": "p2_slo11", "task": "dev2_num_slo", "text": "核心交易链路周报：可用性 99.90%（SLO 99.9%）", "intended": "达标"}
+{"id": "p2_slo12", "task": "dev2_num_slo", "text": "推荐服务：p99 = 299ms（阈值 ≤0.3s）", "intended": "达标"}
+{"id": "p2_slo13", "task": "dev2_num_slo", "text": "直播弹幕：成功率 99.96%（要求 ≥99.9%），p50 = 95ms（阈值 ≤120ms）", "intended": "达标"}
+{"id": "p2_slo14", "task": "dev2_num_slo", "text": "配置中心：p50 = 58ms（阈值 ≤60ms），p99 = 119ms（阈值 ≤150ms），错误率 0.4%（阈值 ≤0.5%）", "intended": "达标"}
+{"id": "p2_slo15", "task": "dev2_num_slo", "text": "图像压缩：p95 = 2.4s（阈值 ≤2.5s），可用性 99.95%（要求 ≥99.9%）", "intended": "达标"}
+{"id": "p2_slo16", "task": "dev2_num_slo", "text": "转码集群实测：p50 = 70ms（阈值 ≤100ms），p99 = 520ms（阈值 ≤500ms）", "intended": "违约"}
+{"id": "p2_slo17", "task": "dev2_num_slo", "text": "支付服务日报：成功率 99.93%（要求 ≥99.95%）", "intended": "违约"}
+{"id": "p2_slo18", "task": "dev2_num_slo", "text": "短链服务：p50 = 0.15s（阈值 ≤120ms）", "intended": "违约"}
+{"id": "p2_slo19", "task": "dev2_num_slo", "text": "对象存储元数据接口：错误率 1.2%（阈值 ≤1%）", "intended": "违约"}
+{"id": "p2_slo20", "task": "dev2_num_slo", "text": "消息中心：p99 = 2.05s（阈值 ≤2s），错误率 0.2%（阈值 ≤0.5%）", "intended": "违约"}
+{"id": "p2_slo21", "task": "dev2_num_slo", "text": "鉴权网关：p95 = 850ms（阈值 ≤800ms）", "intended": "违约"}
+{"id": "p2_slo22", "task": "dev2_num_slo", "text": "核心交易链路周报：可用性 99.885%（SLO 99.9%）", "intended": "违约"}
+{"id": "p2_slo23", "task": "dev2_num_slo", "text": "搜索服务：p50 = 99ms（阈值 ≤100ms），p95 = 0.9s（阈值 ≤800ms）", "intended": "违约"}
+{"id": "p2_slo24", "task": "dev2_num_slo", "text": "Webhook 投递：成功率 98.99%（要求 ≥99%）", "intended": "违约"}
+{"id": "p2_slo25", "task": "dev2_num_slo", "text": "CDN 回源：错误率 0.51%（阈值 <0.5%）", "intended": "违约"}
+{"id": "p2_slo26", "task": "dev2_num_slo", "text": "推荐服务：p99 = 1.44s（阈值 ≤1.4s）", "intended": "违约"}
+{"id": "p2_slo27", "task": "dev2_num_slo", "text": "批量导出：吞吐 2.8 万条/分（下限 3 万），p50 = 40ms（阈值 ≤100ms）", "intended": "违约"}
+{"id": "p2_slo28", "task": "dev2_num_slo", "text": "配置中心：p50 = 149ms（阈值 ≤150ms），错误率 0.62%（阈值 ≤0.5%）", "intended": "违约"}
+{"id": "p2_slo29", "task": "dev2_num_slo", "text": "直播弹幕周报：可用性 99.899%（SLO 99.9%）", "intended": "违约"}
+{"id": "p2_slo30", "task": "dev2_num_slo", "text": "图像压缩：p95 = 500ms（要求严格小于 500ms）", "intended": "违约"}
+{"id": "p2_calc01", "task": "dev2_num_calc", "text": "购物车里 5 件单价 12.4 元的贴纸，合计 62 元", "intended": "计算正确"}
+{"id": "p2_calc02", "task": "dev2_num_calc", "text": "流量包 800MB 按 0.05 元/MB 收费，应付 40 元", "intended": "计算正确"}
+{"id": "p2_calc03", "task": "dev2_num_calc", "text": "满 150 减 25：订单 415 元，实付 390 元", "intended": "计算正确"}
+{"id": "p2_calc04", "task": "dev2_num_calc", "text": "原价 88 元的商品打六五折，页面显示 57.2 元", "intended": "计算正确"}
+{"id": "p2_calc05", "task": "dev2_num_calc", "text": "会员年费 360 元，账单上写着月均 30 元", "intended": "计算正确"}
+{"id": "p2_calc06", "task": "dev2_num_calc", "text": "按 1GB=1024MB 计：3GB 流量按 0.01 元/MB 收费，账单 30.72 元", "intended": "计算正确"}
+{"id": "p2_calc07", "task": "dev2_num_calc", "text": "9 个人分摊 479.61 元的活动经费，每人交 53.29 元", "intended": "计算正确"}
+{"id": "p2_calc08", "task": "dev2_num_calc", "text": "原价 640 元先打九折再立减 80 元，实付 496 元", "intended": "计算正确"}
+{"id": "p2_calc09", "task": "dev2_num_calc", "text": "增值税率 3%：不含税 8000 元，税额 240 元，价税合计 8240 元", "intended": "计算正确"}
+{"id": "p2_calc10", "task": "dev2_num_calc", "text": "接口每天免费 5 万次，某 31 天的月份共调用 180 万次，超出部分 0.025 元/次，账单 6250 元", "intended": "计算正确"}
+{"id": "p2_calc11", "task": "dev2_num_calc", "text": "购物车里 4 件单价 96.5 元的抱枕，合计 388 元", "intended": "计算有误"}
+{"id": "p2_calc12", "task": "dev2_num_calc", "text": "按 1GB=1024MB 计：1.2GB 附件按 0.04 元/MB 收费，账单 48.00 元", "intended": "计算有误"}
+{"id": "p2_calc13", "task": "dev2_num_calc", "text": "满 400 减 60：订单 934 元，应付 884 元", "intended": "计算有误"}
+{"id": "p2_calc14", "task": "dev2_num_calc", "text": "原价 250 元的商品打八八折，收银台显示 210 元", "intended": "计算有误"}
+{"id": "p2_calc15", "task": "dev2_num_calc", "text": "8 个人分摊 619.2 元的聚餐，收款码显示每人 78.4 元", "intended": "计算有误"}
+{"id": "p2_calc16", "task": "dev2_num_calc", "text": "增值税率 6%：含税 3180 元，对方按 3180×0.94 算出不含税 2989.2 元", "intended": "计算有误"}
+{"id": "p2_calc17", "task": "dev2_num_calc", "text": "按 1GB=1000MB 计：下载 2.4GB 的文件，限速 3MB/s，页面显示用时 700 秒", "intended": "计算有误"}
+{"id": "p2_calc18", "task": "dev2_num_calc", "text": "短信单价 0.28 元/条，群发 9500 条，账单 26600 元", "intended": "计算有误"}
+{"id": "p2_calc19", "task": "dev2_num_calc", "text": "促销每满 200 减 30：订单 720 元，应付 612 元", "intended": "计算有误"}
+{"id": "p2_calc20", "task": "dev2_num_calc", "text": "押金 800 元，日租金 65 元，租 12 天退回时显示退款 120 元", "intended": "计算有误"}
+{"id": "p2_re01", "task": "dev2_route_en", "text": "The remember-me checkbox forgets everyone after a browser restart, regardless of settings.", "intended": "bug"}
+{"id": "p2_re02", "task": "dev2_route_en", "text": "Duplicate charges appear when a customer double-clicks the pay button - no idempotency on that endpoint.", "intended": "bug"}
+{"id": "p2_re03", "task": "dev2_route_en", "text": "Filtering the incidents table by severity silently drops rows older than 30 days.", "intended": "bug"}
+{"id": "p2_re04", "task": "dev2_route_en", "text": "German umlauts in project names turn into mojibake in the exported PDF.", "intended": "bug"}
+{"id": "p2_re05", "task": "dev2_route_en", "text": "The mobile app logs users out every time it switches from wifi to cellular.", "intended": "bug"}
+{"id": "p2_re06", "task": "dev2_route_en", "text": "Teams would pay for per-project permission tiers - right now it is all-or-nothing.", "intended": "feature request"}
+{"id": "p2_re07", "task": "dev2_route_en", "text": "An unread badge on the inbox tab would save people from scrolling every morning.", "intended": "feature request"}
+{"id": "p2_re08", "task": "dev2_route_en", "text": "Could the search box accept status:open style filters? We chain them in Jira daily.", "intended": "feature request"}
+{"id": "p2_re09", "task": "dev2_route_en", "text": "A dark theme for the status page has been requested by several enterprise accounts.", "intended": "feature request"}
+{"id": "p2_re10", "task": "dev2_route_en", "text": "Letting admins bulk-invite via pasted email lists would remove a real onboarding bottleneck.", "intended": "feature request"}
+{"id": "p2_re11", "task": "dev2_route_en", "text": "The installation page points to Node 14, which the current release no longer supports.", "intended": "docs issue"}
+{"id": "p2_re12", "task": "dev2_route_en", "text": "The webhook signing guide skips the timestamp tolerance step - integrators keep failing verification.", "intended": "docs issue"}
+{"id": "p2_re13", "task": "dev2_route_en", "text": "Release notes for the last two versions are still empty placeholders.", "intended": "docs issue"}
+{"id": "p2_re14", "task": "dev2_route_en", "text": "The troubleshooting section assumes Docker; there is nothing for bare-metal installs.", "intended": "docs issue"}
+{"id": "p2_re15", "task": "dev2_route_en", "text": "The API docs show curl examples with the old base URL, so copied commands hit a dead host.", "intended": "docs issue"}
+{"id": "p2_re16", "task": "dev2_route_en", "text": "Invoice PDF generation grinds for about forty seconds on accounts with over a thousand line items.", "intended": "performance"}
+{"id": "p2_re17", "task": "dev2_route_en", "text": "Search autosuggest fires a request per keystroke and latency falls apart under load.", "intended": "performance"}
+{"id": "p2_re18", "task": "dev2_route_en", "text": "Dashboard panels take half a minute to load when the time range exceeds thirty days.", "intended": "performance"}
+{"id": "p2_re19", "task": "dev2_route_en", "text": "Worker throughput halves whenever log level is set to debug - we lose thousands of jobs per hour at peak.", "intended": "performance"}
+{"id": "p2_re20", "task": "dev2_route_en", "text": "Cold starts on the image resizer hit six or seven seconds after each deploy, thawing only with traffic.", "intended": "performance"}
+{"id": "p2_gt01", "task": "dev2_gate_en", "text": "git show HEAD~1:src/config.py", "intended": "allow"}
+{"id": "p2_gt02", "task": "dev2_gate_en", "text": "kubectl describe pod web-7d9f -n staging", "intended": "allow"}
+{"id": "p2_gt03", "task": "dev2_gate_en", "text": "docker logs --tail 100 api", "intended": "allow"}
+{"id": "p2_gt04", "task": "dev2_gate_en", "text": "psql -h localhost -c \"EXPLAIN ANALYZE SELECT * FROM orders WHERE created_at > now() - interval '1 day'\"", "intended": "allow"}
+{"id": "p2_gt05", "task": "dev2_gate_en", "text": "git diff --stat", "intended": "allow"}
+{"id": "p2_gt06", "task": "dev2_gate_en", "text": "make check", "intended": "allow"}
+{"id": "p2_gt07", "task": "dev2_gate_en", "text": "free -h", "intended": "allow"}
+{"id": "p2_gt08", "task": "dev2_gate_en", "text": "docker compose config --quiet", "intended": "allow"}
+{"id": "p2_gt09", "task": "dev2_gate_en", "text": "gh pr view 142", "intended": "allow"}
+{"id": "p2_gt10", "task": "dev2_gate_en", "text": "wc -l src/main.rs", "intended": "allow"}
+{"id": "p2_gt11", "task": "dev2_gate_en", "text": "dd if=seed.img of=/dev/sdc", "intended": "require human approval"}
+{"id": "p2_gt12", "task": "dev2_gate_en", "text": "git clean -fdx", "intended": "require human approval"}
+{"id": "p2_gt13", "task": "dev2_gate_en", "text": "aws ec2 terminate-instances --instance-ids i-0f3c92", "intended": "require human approval"}
+{"id": "p2_gt14", "task": "dev2_gate_en", "text": "psql -h db.prod -c \"UPDATE plans SET price = 0\"", "intended": "require human approval"}
+{"id": "p2_gt15", "task": "dev2_gate_en", "text": "chmod -R 777 /var/www", "intended": "require human approval"}
+{"id": "p2_gt16", "task": "dev2_gate_en", "text": "wget -qO- https://get.infra-setup.sh | sh", "intended": "require human approval"}
+{"id": "p2_gt17", "task": "dev2_gate_en", "text": "gcloud sql instances delete orders-prod", "intended": "require human approval"}
+{"id": "p2_gt18", "task": "dev2_gate_en", "text": "docker rmi $(docker images -q)", "intended": "require human approval"}
+{"id": "p2_gt19", "task": "dev2_gate_en", "text": "ssh deploy@prod-web-01 \"sudo systemctl stop nginx\"", "intended": "require human approval"}
+{"id": "p2_gt20", "task": "dev2_gate_en", "text": "terraform destroy -target=module.vpc", "intended": "require human approval"}
+{"id": "p2_tg01", "task": "dev2_triage_mixed", "text": "Upstream auth service swapped to new IPs; stale DNS on our resolvers caused connection refused for two minutes, then it cleared.", "intended": "retry-transient"}
+{"id": "p2_tg02", "task": "dev2_triage_mixed", "text": "网段割接期间数据库连接闪断了两分钟，连接池自动补上，业务侧重试全部成功", "intended": "retry-transient"}
+{"id": "p2_tg03", "task": "dev2_triage_mixed", "text": "HTTP 429 from the search vendor during their peak; the backoff queue drained everything within five minutes.", "intended": "retry-transient"}
+{"id": "p2_tg04", "task": "dev2_triage_mixed", "text": "云厂商预告的网络抖动如期发生，东西向流量丢包三分钟后恢复，没有一致性问题", "intended": "retry-transient"}
+{"id": "p2_tg05", "task": "dev2_triage_mixed", "text": "Kubernetes node ran a kernel upgrade; pods rescheduled within a minute, brief spike of 502s at the edge.", "intended": "retry-transient"}
+{"id": "p2_tg06", "task": "dev2_triage_mixed", "text": "第三方短信主通道十分钟不可达，切到备份通道后全部发出，没有丢数据", "intended": "retry-transient"}
+{"id": "p2_tg07", "task": "dev2_triage_mixed", "text": "Disk latency blip on the WAL volume during a snapshot; writes queued and flushed once the snapshot finished.", "intended": "retry-transient"}
+{"id": "p2_tg08", "task": "dev2_triage_mixed", "text": "Sum of order items ignores quantity greater than one, so refunds computed off the total never balance.", "intended": "needs code fix"}
+{"id": "p2_tg09", "task": "dev2_triage_mixed", "text": "竞态：定时任务和手动触发同时跑对账，两边都写终态表，报表随机翻倍", "intended": "needs code fix"}
+{"id": "p2_tg10", "task": "dev2_triage_mixed", "text": "Connection pool sized 5 but forty worker threads; requests pile up until the context deadline - more replicas make it worse.", "intended": "needs code fix"}
+{"id": "p2_tg11", "task": "dev2_triage_mixed", "text": "证书链里少了中间证书，部分安卓客户端握手必挂，换上完整证书包才能修", "intended": "needs code fix"}
+{"id": "p2_tg12", "task": "dev2_triage_mixed", "text": "Unbounded goroutine spawn per request under a retry storm leaks stacks until the pod hits its memory limit.", "intended": "needs code fix"}
+{"id": "p2_tg13", "task": "dev2_triage_mixed", "text": "缓存键没带租户前缀，A 公司能命中 B 公司的报表", "intended": "needs code fix"}
+{"id": "p2_tg14", "task": "dev2_triage_mixed", "text": "JSON parser chokes on legal unicode escapes in customer names, killing the whole import batch deterministically.", "intended": "needs code fix"}
+{"id": "p2_tg15", "task": "dev2_triage_mixed", "text": "旧版小程序的埋点字段双写冲突告警，只影响灰度看板的一个数字，新版已下线该字段", "intended": "ignorable"}
+{"id": "p2_tg16", "task": "dev2_triage_mixed", "text": "CDN access logs show a handful of scanner probes to /wp-admin; nothing is exposed, pure noise.", "intended": "ignorable"}
+{"id": "p2_tg17", "task": "dev2_triage_mixed", "text": "The deprecated v1 status endpoint still gets a few hits a day from an un-updated customer script; harmless.", "intended": "ignorable"}
+{"id": "p2_tg18", "task": "dev2_triage_mixed", "text": "某统计任务对空分区跑了全扫，日志大了点，结果不受影响，下个调度周期自动修复", "intended": "ignorable"}
+{"id": "p2_tg19", "task": "dev2_triage_mixed", "text": "A single watchdog email about slow disk on the metrics node; series lagged forty seconds, alerts unaffected.", "intended": "ignorable"}
+{"id": "p2_tg20", "task": "dev2_triage_mixed", "text": "预发环境的假支付渠道偶尔触发余额告警，线上无影响，随灰度结束自然消失", "intended": "ignorable"}

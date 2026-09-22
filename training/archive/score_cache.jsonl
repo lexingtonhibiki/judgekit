@@ -1,0 +1,414 @@
+{"id": "real_sent_0004", "pass": "B", "payload": {"score": 5.5, "reason": "前台服务好、房间大床好，但烟味重、隔音差，正负相抵，略偏中性"}}
+{"id": "real_sent_0002", "pass": "A", "payload": {"score": 7.8, "reason": "整体正面，房间大干净服务好位置便利，但蚊子与司机不熟悉酒店略有扣分"}}
+{"id": "real_sent_0001", "pass": "B", "payload": {"score": 6, "reason": "仅确认收货转述他人推荐，本人未评效果，按锚点上限6分"}}
+{"id": "real_sent_0001", "pass": "A", "payload": {"score": 6, "reason": "仅确认收货+转述他人试用，本人未评效果，按纯事实陈述上限6分"}}
+{"id": "real_sent_0002", "pass": "B", "payload": {"score": 8.0, "reason": "整体正面，房间大干净服务好位置近，有蚊子和司机不熟的小抱怨但未翻盘"}}
+{"id": "real_sent_0004", "pass": "A", "payload": {"score": 5.5, "reason": "前台服务好、房间大床好，但烟味重、隔音差，褒贬相当，略偏负面"}}
+{"id": "real_sent_0005", "pass": "A", "payload": {"score": 9.0, "reason": "外观配置开机速度键盘均好评，还有摄像头和DVD刻录两个超预期惊喜，细节具体"}}
+{"id": "real_sent_0007", "pass": "A", "payload": {"score": 7.5, "reason": "具体列出铃声、通话、存储、屏幕等使用细节，整体正面，无抱怨"}}
+{"id": "real_sent_0007", "pass": "B", "payload": {"score": 7.5, "reason": "列举多项具体优点：铃声大、通话清晰、存储量大、内屏艳丽，细节具体且整体正面"}}
+{"id": "real_sent_0005", "pass": "B", "payload": {"score": 9.0, "reason": "外观配置、开关机速度、静音键盘均有具体好评，且摄像头和DVD刻录超出预期，正面细节丰富"}}
+{"id": "real_sent_0006", "pass": "A", "payload": {"score": 9.5, "reason": "全家喜爱，细节具体：3岁宝宝专注半小时、记位置、编故事，个人化体验强，高度正面"}}
+{"id": "real_sent_0006", "pass": "B", "payload": {"score": 9.5, "reason": "全家喜爱，宝宝专注半小时，能记位置编故事，细节具体个人化，情感极正面"}}
+{"id": "real_sent_0009", "pass": "A", "payload": {"score": 1.5, "reason": "信任京东却失望，商品没装好全洒了，客服回复慢且不解决问题，强烈负面"}}
+{"id": "real_sent_0010", "pass": "A", "payload": {"score": 5.0, "reason": "指出酒店旧但机场便利，有条件推荐，整体中性偏略负"}}
+{"id": "real_sent_0009", "pass": "B", "payload": {"score": 1.5, "reason": "信任京东却失望，商品没装好全洒了，客服多次询问才回且不解决，负面强烈"}}
+{"id": "real_sent_0010", "pass": "B", "payload": {"score": 5.0, "reason": "指出酒店旧是负面，但机场便利和特价可考虑属中性权衡，整体无强烈情绪"}}
+{"id": "real_sent_0011", "pass": "B", "payload": {"score": 4.5, "reason": "未评商品本身效果，仅担忧发票保修安装，偏疑虑负面"}}
+{"id": "real_sent_0011", "pass": "A", "payload": {"score": 4.5, "reason": "未评商品本身，仅担忧发票保修安装，偏疑虑负面"}}
+{"id": "real_sent_0012", "pass": "B", "payload": {"score": 9.0, "reason": "七点详细好评，涵盖屏幕、价格、功能、可玩性等具体使用体验，个人化细节丰富，态度非常正面"}}
+{"id": "real_sent_0013", "pass": "A", "payload": {"score": 1.5, "reason": "屏幕脆弱易碎，售后换屏收费高，强烈不满"}}
+{"id": "real_sent_0013", "pass": "B", "payload": {"score": 1.5, "reason": "屏幕脆弱易碎，售后收费高，强烈负面情绪，细节具体"}}
+{"id": "real_sent_0014", "pass": "A", "payload": {"score": 2.5, "reason": "抱怨苹果尺寸与描述不符，明确负面，但未涉及其他方面"}}
+{"id": "real_sent_0012", "pass": "A", "payload": {"score": 9.0, "reason": "详细列举屏幕、价格、红外、摄像等多方面优点，个人使用细节丰富，态度非常正面"}}
+{"id": "real_sent_0014", "pass": "B", "payload": {"score": 2.0, "reason": "商品与描述不符，尺寸明显偏小，负面具体但未涉及更严重问题"}}
+{"id": "real_sent_0015", "pass": "A", "payload": {"score": 0.5, "reason": "直指假货、失望、后悔，价格无优势，强烈负面情绪"}}
+{"id": "real_sent_0016", "pass": "A", "payload": {"score": 1.5, "reason": "强烈负面，房间小、气味重、性价比低，仅机场位置勉强算优点"}}
+{"id": "real_sent_0015", "pass": "B", "payload": {"score": 0.5, "reason": "直指假货、价格无优势、后悔，强烈负面情绪，细节明确"}}
+{"id": "real_sent_0016", "pass": "B", "payload": {"score": 1.5, "reason": "仅机场位置尚可，房间小、气味重、性价比低，整体强烈负面"}}
+{"id": "real_sent_0017", "pass": "A", "payload": {"score": 2.0, "reason": "发货快是物流加分，但书是盗版、质量差，强烈负面为主"}}
+{"id": "real_sent_0017", "pass": "B", "payload": {"score": 2.0, "reason": "物流快但书是盗版、质量差，核心商品体验强烈负面"}}
+{"id": "real_sent_0018", "pass": "A", "payload": {"score": 6.5, "reason": "整体正面，快递负责，但仅提个头小缺点，无具体使用细节，偏笼统"}}
+{"id": "real_sent_0020", "pass": "A", "payload": {"score": 7.5, "reason": "位置服务硬件均好评，但房间旧、上网收费扣分，总体满意愿复住"}}
+{"id": "real_sent_0018", "pass": "B", "payload": {"score": 6.5, "reason": "整体认可，快递负责，但仅提个头小缺点，无具体使用细节，偏温和正面"}}
+{"id": "real_sent_0020", "pass": "B", "payload": {"score": 7.5, "reason": "位置服务硬件均好评，扣分项为房间旧、上网收费，总体满意愿复住"}}
+{"id": "real_sent_0021", "pass": "A", "payload": {"score": 6.5, "reason": "提出蓝牙、屏幕宽度、价格等改进期望，属轻度正面带建议，无具体使用好评"}}
+{"id": "real_sent_0021", "pass": "B", "payload": {"score": 5.5, "reason": "提改进期望但无明确使用效果评价，态度中性偏略正面"}}
+{"id": "real_sent_0022", "pass": "A", "payload": {"score": 7.5, "reason": "整体正面，肯定实惠干净位置好，适合背包族；服务一般和需自带用品有小抱怨，不翻盘"}}
+{"id": "real_sent_0023", "pass": "A", "payload": {"score": 5.5, "reason": "整体肯定住宿，但打车不便、服务态度极差且用词激烈，正负相抵偏中性"}}
+{"id": "real_sent_0023", "pass": "B", "payload": {"score": 5.5, "reason": "整体认可酒店位置和房间，但打车不便、商品部态度极差，正负相抵偏中性"}}
+{"id": "real_sent_0024", "pass": "B", "payload": {"score": 1.5, "reason": "房间异味、漏水、走廊长、结账慢，全为具体负面体验，情绪强烈不满"}}
+{"id": "real_sent_0022", "pass": "B", "payload": {"score": 7.5, "reason": "整体正面，具体描述干净、位置好、实惠，适合背包族；但服务一般、无独立卫浴等小缺点扣分"}}
+{"id": "real_sent_0024", "pass": "A", "payload": {"score": 1.5, "reason": "房间异味、漏水、走廊长、结账慢，全为具体负面细节，强烈不满"}}
+{"id": "real_sent_0026", "pass": "A", "payload": {"score": 0, "reason": "全盘否定商品质量，明确差评，快递慢加重负面情绪"}}
+{"id": "real_sent_0027", "pass": "B", "payload": {"score": 2.5, "reason": "位置偏、房间霉味、早餐一般，均为具体负面体验，整体偏负面"}}
+{"id": "real_sent_0026", "pass": "B", "payload": {"score": 0.5, "reason": "全盘否定商品质量，连用差评，情绪极负面；快递慢仅附带提及"}}
+{"id": "real_sent_0027", "pass": "A", "payload": {"score": 2.5, "reason": "位置偏、房间霉味、早餐一般，整体负面，无正面细节"}}
+{"id": "real_sent_0029", "pass": "A", "payload": {"score": 8.0, "reason": "具体使用细节：做工、系统稳定、屏幕、电池3小时，整体正面"}}
+{"id": "real_sent_0030", "pass": "A", "payload": {"score": 0, "reason": "直接辱骂品牌，情绪极端负面，无任何商品使用描述"}}
+{"id": "real_sent_0029", "pass": "B", "payload": {"score": 8.5, "reason": "具体描述做工、系统稳定、屏幕和电池续航，个人体验细节充分，整体正面"}}
+{"id": "real_sent_0031", "pass": "A", "payload": {"score": 8.0, "reason": "整体好评，细节丰富：大堂特色、服务热情、早餐、V吧体验佳，小抱怨客房小但翻不了盘"}}
+{"id": "real_sent_0032", "pass": "A", "payload": {"score": 7.5, "reason": "外观好评具体，指纹缺点被幽默化解，整体正面偏个人化"}}
+{"id": "real_sent_0030", "pass": "B", "payload": {"score": 0, "reason": "直接辱骂品牌，强烈负面情绪，无任何正面内容"}}
+{"id": "real_sent_0031", "pass": "B", "payload": {"score": 8.2, "reason": "整体体验正面，细节丰富：大堂特色、服务热情、酒吧开心、送礼品等；客房小有微词，但总体好评"}}
+{"id": "real_sent_0032", "pass": "B", "payload": {"score": 7.5, "reason": "正面评价外观漂亮，虽指出易留指纹但以幽默方式化解，个人化细节充分，整体满意"}}
+{"id": "real_sent_0033", "pass": "A", "payload": {"score": 3.0, "reason": "抱怨不送软管、赠品无用，负面情绪明确但未涉及商品本身质量"}}
+{"id": "real_sent_0034", "pass": "A", "payload": {"score": 3.5, "reason": "内容立意正面但明确批评书籍编排凌乱拼凑、劝退读者，对商品本身偏负面"}}
+{"id": "real_sent_0034", "pass": "B", "payload": {"score": 6.5, "reason": "认可书籍立意与价值观，但批评章节凌乱、拼凑感强，褒贬参半偏正面"}}
+{"id": "real_sent_0033", "pass": "B", "payload": {"score": 2.5, "reason": "抱怨不送软管却送无用赠品，负面情绪明显但非强烈"}}
+{"id": "real_sent_0037", "pass": "A", "payload": {"score": 1.5, "reason": "三个全烂，质量极差，客服失联，强烈负面"}}
+{"id": "real_sent_0038", "pass": "A", "payload": {"score": 5.5, "reason": "代买给妹妹，未亲测无使用反馈，仅表对芯片组的期待，情绪平淡偏略期待"}}
+{"id": "real_sent_0037", "pass": "B", "payload": {"score": 1.5, "reason": "三个全烂，商品质量严重问题，客服失联，强烈负面"}}
+{"id": "real_sent_0039", "pass": "B", "payload": {"score": 4.0, "reason": "CPU拖后腿、slidebar难用、易没电易磕碰，负面细节多，仅提及其他评分较高"}}
+{"id": "real_sent_0038", "pass": "B", "payload": {"score": 4.5, "reason": "代买未使用，无法评价效果，仅表达对芯片组的期待与不确定，偏中性略失望"}}
+{"id": "real_sent_0040", "pass": "A", "payload": {"score": 8.0, "reason": "整体正面，位置和服务均好评，无具体个人细节，略低于8.5"}}
+{"id": "real_sent_0039", "pass": "A", "payload": {"score": 4.5, "reason": "CPU得分低拖后腿、自带软件难用、易没电易留痕，负面细节多，仅其他评分较高稍缓冲"}}
+{"id": "real_sent_0040", "pass": "B", "payload": {"score": 8.0, "reason": "整体正面，位置和服务具体好评，无抱怨，但细节较简略"}}
+{"id": "real_sent_0043", "pass": "B", "payload": {"score": 3.5, "reason": "客服建议与实际不符导致尺码偏小，只能将就穿，负面体验"}}
+{"id": "real_sent_0043", "pass": "A", "payload": {"score": 3.5, "reason": "客服误导尺码导致偏小，只能将就穿，明显不满"}}
+{"id": "real_sent_0044", "pass": "A", "payload": {"score": 0.5, "reason": "连续列出六大严重缺陷，待机短、换电池重置、阳光下看不清、关机闹钟不响、声音小、拨号问题，强烈负面"}}
+{"id": "real_sent_0045", "pass": "A", "payload": {"score": 2.5, "reason": "内容乏味、感觉上当，仅书质量好，整体负面"}}
+{"id": "real_sent_0046", "pass": "A", "payload": {"score": 0.5, "reason": "强烈负面，直斥垃圾、服务差、房间小、装修旧、无服务意识，细节具体"}}
+{"id": "real_sent_0044", "pass": "B", "payload": {"score": 1.5, "reason": "六项具体缺陷，续航短、阳光下看不清、闹钟不响等，强烈负面"}}
+{"id": "real_sent_0045", "pass": "B", "payload": {"score": 2.0, "reason": "内容乏味、感觉上当，严重负面；仅肯定书籍质量，但整体评价很低。"}}
+{"id": "real_sent_0046", "pass": "B", "payload": {"score": 0.5, "reason": "强烈负面，全面批评酒店设施、服务和装修，情绪极差"}}
+{"id": "real_sent_0048", "pass": "A", "payload": {"score": 3.5, "reason": "以推荐别家开篇、贬低本店，前台服务差，仅餐厅鱼头尚可，整体偏负面"}}
+{"id": "real_sent_0048", "pass": "B", "payload": {"score": 3.5, "reason": "以推荐别家对比贬低本店，仅餐厅勉强认可，前台服务差，整体偏负面"}}
+{"id": "real_sent_0049", "pass": "B", "payload": {"score": 8.5, "reason": "列举多项具体功能细节，结尾强烈肯定，正面情绪明确且具体"}}
+{"id": "real_sent_0050", "pass": "A", "payload": {"score": 1.5, "reason": "强烈负面：无窗房、走廊破旧、早餐断供、服务差，明确表示永不再来"}}
+{"id": "real_sent_0049", "pass": "A", "payload": {"score": 8.5, "reason": "列举多项具体功能细节并高度认可，性价比评价积极，情感正面"}}
+{"id": "real_sent_0050", "pass": "B", "payload": {"score": 1.5, "reason": "强烈负面：无窗房、走廊破旧、早餐缺失、服务差，明确表示不再光顾"}}
+{"id": "real_sent_0051", "pass": "A", "payload": {"score": 5.5, "reason": "商品本身评价为'还行'，属中性偏正面；主要不满在物流，但物流权重低，整体略低于中性"}}
+{"id": "real_sent_0052", "pass": "A", "payload": {"score": 7.5, "reason": "整体正面，房间新装修干净隔音好，但有空调声大、插座不便、温泉水滑等具体抱怨"}}
+{"id": "real_sent_0051", "pass": "B", "payload": {"score": 5.5, "reason": "商品评价为'还行'偏中性，物流差评权重低，整体略低于中性"}}
+{"id": "real_sent_0053", "pass": "B", "payload": {"score": 4.0, "reason": "设施陈旧、面积不足、入住慢、价贵，整体偏负面，仅卫生间水压和早餐略加分"}}
+{"id": "real_sent_0052", "pass": "B", "payload": {"score": 7.5, "reason": "整体正面，房间新净隔音好，但插座不便和温泉水质感有具体抱怨，扣分后仍偏正面。"}}
+{"id": "real_sent_0053", "pass": "A", "payload": {"score": 3.5, "reason": "整体负面：设施陈旧、未达五星、入住慢、房价贵，仅卫生间和早餐略有肯定"}}
+{"id": "real_sent_0055", "pass": "A", "payload": {"score": 5.0, "reason": "纯事实陈述，未拆封未使用，无效果评价，态度中性"}}
+{"id": "real_sent_0054", "pass": "B", "payload": {"score": 3.5, "reason": "书内容认可但包装差、封底折痕，影响收藏心情，整体偏负面"}}
+{"id": "real_sent_0054", "pass": "A", "payload": {"score": 4.5, "reason": "书内容认可但收藏体验差，无包装、非全新、封底折痕，负面情绪明显"}}
+{"id": "real_sent_0055", "pass": "B", "payload": {"score": 5.0, "reason": "纯事实陈述，未拆封未使用，因浴室未装好无法评价，无正面情绪"}}
+{"id": "real_sent_0057", "pass": "A", "payload": {"score": 5.0, "reason": "纯文学解读，未评价商品或服务，无情感倾向"}}
+{"id": "real_sent_0056", "pass": "B", "payload": {"score": 8.0, "reason": "整体正面，交通便利、整洁干净，价格合理，仅走廊闷热小抱怨，不翻盘"}}
+{"id": "real_sent_0056", "pass": "A", "payload": {"score": 7.5, "reason": "整体正面，交通便利、整洁干净，性价比认可；走廊闷热是小抱怨，扣分但翻不了盘"}}
+{"id": "real_sent_0057", "pass": "B", "payload": {"score": 5.0, "reason": "纯文学分析，无商品/服务态度，属客观陈述"}}
+{"id": "real_sent_0058", "pass": "B", "payload": {"score": 1.5, "reason": "明确不推荐且买回来就是坏的，强烈负面但细节较少"}}
+{"id": "real_sent_0060", "pass": "A", "payload": {"score": 0.5, "reason": "强烈负面，列举死机、摔后失灵、无彩信等多项具体缺陷，称垃圾中的垃圾"}}
+{"id": "real_sent_0060", "pass": "B", "payload": {"score": 0, "reason": "列举死机、无信号、自动关机等多处质量问题，直言垃圾中的垃圾，强烈负面"}}
+{"id": "real_sent_0058", "pass": "A", "payload": {"score": 1.0, "reason": "明确不推荐且收到即坏，属强烈负面购物体验"}}
+{"id": "real_sent_0061", "pass": "B", "payload": {"score": 2.0, "reason": "地域偏见+品牌负面，表态不喜欢，无具体细节但情绪明确负面"}}
+{"id": "real_sent_0061", "pass": "A", "payload": {"score": 2.0, "reason": "表达对蒙牛品牌/产品的负面态度，明确不喜欢，情绪偏负面"}}
+{"id": "real_sent_0063", "pass": "A", "payload": {"score": 5.5, "reason": "仅'还可以'加未使用的客观陈述，无具体效果，属中性偏轻正面"}}
+{"id": "real_sent_0062", "pass": "A", "payload": {"score": 6.5, "reason": "列举多个常喝品牌并提到家人也喝，属真实认可但无具体效果细节，偏正面"}}
+{"id": "real_sent_0062", "pass": "B", "payload": {"score": 6.5, "reason": "列举常喝品牌含本品，表达认可，但无具体使用效果细节，偏日常陈述"}}
+{"id": "real_sent_0063", "pass": "B", "payload": {"score": 5.5, "reason": "仅说还可以，已安装但未使用，等入住再试，无实际效果评价，偏中性"}}
+{"id": "real_sent_0064", "pass": "B", "payload": {"score": 7.5, "reason": "对比T400有具体细节，朋友喜欢，认可性价比，正面偏具体"}}
+{"id": "real_sent_0066", "pass": "A", "payload": {"score": 2.5, "reason": "型号不合、太大，明显失望，虽无强烈攻击但属负面体验"}}
+{"id": "real_sent_0065", "pass": "B", "payload": {"score": 6.5, "reason": "接机服务好评、房间尚可，但抱怨不含早餐，整体偏正面带小不满"}}
+{"id": "real_sent_0065", "pass": "A", "payload": {"score": 7.0, "reason": "整体偏正面，接机服务和房间基本满意，但抱怨不含早餐，略有扣分"}}
+{"id": "real_sent_0064", "pass": "A", "payload": {"score": 7.5, "reason": "有具体对比细节（与T400对比、稍厚），朋友喜欢，肯定性价比，正面但非极强"}}
+{"id": "real_sent_0066", "pass": "B", "payload": {"score": 2.5, "reason": "型号不合穿着太大，明显负面体验，仅一句抱怨无其他正面内容"}}
+{"id": "real_sent_0067", "pass": "A", "payload": {"score": 2.0, "reason": "老客六次复购，本次货小不新鲜疑以次充好，失望给一星，仅物流获肯定"}}
+{"id": "real_sent_0068", "pass": "B", "payload": {"score": 3.5, "reason": "多处抱怨录音铃声小、待机画面小，且劝退他人，整体偏负面"}}
+{"id": "real_sent_0068", "pass": "A", "payload": {"score": 3.5, "reason": "多处抱怨录音声音小、待机画面小、日期占屏，明确劝退，仅结尾表情缓和，整体偏负面"}}
+{"id": "real_sent_0067", "pass": "B", "payload": {"score": 2.0, "reason": "老客首次差评，明确指货不对板、又小又不新鲜，失望强烈，仅物流获肯定"}}
+{"id": "real_sent_0069", "pass": "A", "payload": {"score": 1.5, "reason": "怀疑非正品，用后头痒起白粒，明确后悔，负面具体"}}
+{"id": "real_sent_0069", "pass": "B", "payload": {"score": 2.0, "reason": "怀疑非正品，用后头痒起白粒，明确后悔，负面具体"}}
+{"id": "real_sent_0070", "pass": "A", "payload": {"score": 1.5, "reason": "强烈负面，指认假货，香味、洗感、柔顺度均不符，点名官网售假"}}
+{"id": "real_sent_0072", "pass": "A", "payload": {"score": 3.5, "reason": "三条具体缺点：传输差、内存小、外观旧、反应慢，整体偏负面，但非强烈恶评"}}
+{"id": "real_sent_0071", "pass": "B", "payload": {"score": 8.5, "reason": "安装服务具体正面，收费合理，已使用满意，细节充分"}}
+{"id": "real_sent_0072", "pass": "B", "payload": {"score": 3.0, "reason": "列举三项具体缺点，整体偏负面，但语气客观无强烈情绪"}}
+{"id": "real_sent_0071", "pass": "A", "payload": {"score": 8.5, "reason": "安装服务细节具体，收费合理，已使用且满意，正面情绪明确"}}
+{"id": "real_sent_0070", "pass": "B", "payload": {"score": 1.5, "reason": "明确指认假货，香味、柔顺度、使用感均负面，信任崩塌，情绪强烈负面"}}
+{"id": "real_sent_0073", "pass": "A", "payload": {"score": 7.5, "reason": "整体正面：免费升级房间、服务改善；早餐种类少扣分但翻不了盘"}}
+{"id": "real_sent_0073", "pass": "B", "payload": {"score": 7.5, "reason": "整体正面：免费升级房间、服务改善，仅早餐种类少的小抱怨，未翻盘"}}
+{"id": "real_sent_0076", "pass": "A", "payload": {"score": 6.5, "reason": "整体正面但夹杂窗户缝隙等具体抱怨，性价比认可，情感中等偏上"}}
+{"id": "real_sent_0077", "pass": "B", "payload": {"score": 3.5, "reason": "反馈偶尔蓝屏问题，虽未确定原因但属负面使用体验，情绪偏负面"}}
+{"id": "real_sent_0077", "pass": "A", "payload": {"score": 3.5, "reason": "反馈偶发蓝屏问题，属具体负面使用体验，但语气不确定、未强烈指责"}}
+{"id": "real_sent_0076", "pass": "B", "payload": {"score": 6.5, "reason": "整体正面，价格实惠早餐不错，但窗户缝隙等细节扣分，且含事实陈述与调侃"}}
+{"id": "real_sent_0079", "pass": "A", "payload": {"score": 1.5, "reason": "未收到货却显示交易完成，用户强烈不满和质疑，负面情绪明显"}}
+{"id": "real_sent_0078", "pass": "A", "payload": {"score": 9.2, "reason": "多次强调划算成功，具体提到不褪色、好看、有弹性、质量好，细节充分，情绪极正面"}}
+{"id": "real_sent_0078", "pass": "B", "payload": {"score": 8.5, "reason": "具体细节：手扣不褪色、好看、有弹性、质量好，情绪强烈正面，仅略偏模板化"}}
+{"id": "real_sent_0079", "pass": "B", "payload": {"score": 1.5, "reason": "未收到货却显示交易完成，用户质疑被骗，情绪强烈负面"}}
+{"id": "real_sent_0080", "pass": "A", "payload": {"score": 7.2, "reason": "价格便宜、牌子认可、赠品加分，物流快；未提具体使用效果，吹风机没抢到略遗憾"}}
+{"id": "real_sent_0080", "pass": "B", "payload": {"score": 7.5, "reason": "价格便宜、品牌认可、赠品加分，物流快；仅电吹风没抢到略遗憾，整体正面"}}
+{"id": "real_sent_0081", "pass": "A", "payload": {"score": 7.5, "reason": "外观漂亮、键盘大方便、驱动安装顺利，有具体使用细节，整体正面"}}
+{"id": "real_sent_0082", "pass": "B", "payload": {"score": 0.5, "reason": "强烈负面，商品为翻新二手机无法使用，对平台信任崩塌"}}
+{"id": "real_sent_0082", "pass": "A", "payload": {"score": 0.5, "reason": "强烈负面，商品无法使用且为翻修二手机，明确表示不再信任平台"}}
+{"id": "real_sent_0081", "pass": "B", "payload": {"score": 7.5, "reason": "外观漂亮、键盘大方便、驱动安装顺利，有具体使用细节，整体正面"}}
+{"id": "real_sent_0083", "pass": "A", "payload": {"score": 2.5, "reason": "期待高但实际内容差，中英夹杂令人反感，翻两页即弃，明确否定效果"}}
+{"id": "real_sent_0083", "pass": "B", "payload": {"score": 2.5, "reason": "期待高但实际内容差，中英夹杂形式令人反感，才翻两页就不想继续，明确否定效果"}}
+{"id": "real_sent_0084", "pass": "A", "payload": {"score": 1.5, "reason": "强烈负面：蚊子多、吵得受不了，要求改进，体验极差"}}
+{"id": "real_sent_0084", "pass": "B", "payload": {"score": 1.5, "reason": "强烈负面：蚊子极多、嘈杂无法忍受，体验极差，明确要求整改"}}
+{"id": "real_sent_0085", "pass": "B", "payload": {"score": 7.0, "reason": "正面评价，肯定反应快，指出像素略差但可接受，有具体使用细节"}}
+{"id": "real_sent_0085", "pass": "A", "payload": {"score": 7.0, "reason": "肯定好用反应快，指出像素略差但可接受，有具体使用细节，整体偏正面"}}
+{"id": "real_sent_0086", "pass": "A", "payload": {"score": 1.5, "reason": "强烈负面，色差、起毛、起球多重质量问题，对平台失望，情绪激烈"}}
+{"id": "real_sent_0086", "pass": "B", "payload": {"score": 1.5, "reason": "强烈负面，色差、起毛、起球多重质量问题，对平台失望不信任"}}
+{"id": "real_sent_0087", "pass": "A", "payload": {"score": 4.5, "reason": "对像素和运行速度明确不满，但出于孝心勉强接受，整体偏负面"}}
+{"id": "real_sent_0088", "pass": "B", "payload": {"score": 5.5, "reason": "仅签收后主观预期，无具体使用细节，略偏正面但未验证效果"}}
+{"id": "real_sent_0088", "pass": "A", "payload": {"score": 5.5, "reason": "仅签收后主观感觉不错，无具体使用细节，情绪略正面但有限"}}
+{"id": "real_sent_0089", "pass": "A", "payload": {"score": 2.5, "reason": "总台服务尚可，但房间差、空调吵、床不平、性价比低，明确表示不再选择，整体偏负面"}}
+{"id": "real_sent_0090", "pass": "A", "payload": {"score": 3.5, "reason": "明确说商品太差、华为产品一般，仅价格认可，整体偏负面"}}
+{"id": "real_sent_0087", "pass": "B", "payload": {"score": 4.5, "reason": "像素和运行速度均未达预期，有具体不满，但最终迁就老爸使用，情绪偏负面但不强烈"}}
+{"id": "real_sent_0089", "pass": "B", "payload": {"score": 2.5, "reason": "肯定总台服务，但房间空调吵、床不平、性价比差，明确表示不再选择，整体偏负面"}}
+{"id": "real_sent_0091", "pass": "A", "payload": {"score": 2.0, "reason": "床单脏且价贵，双重负面，无正面细节，情绪明显不满"}}
+{"id": "real_sent_0091", "pass": "B", "payload": {"score": 1.5, "reason": "批评床单脏且价格贵，双重负面，无任何正面细节"}}
+{"id": "real_sent_0090", "pass": "B", "payload": {"score": 2.5, "reason": "明确说商品太差、华为产品一般，仅价格认可，整体负面情绪明显"}}
+{"id": "real_sent_0092", "pass": "A", "payload": {"score": 8.5, "reason": "整体正面，房间整洁、交通便利、服务好，按摩椅有特色且实用，细节具体"}}
+{"id": "real_sent_0093", "pass": "A", "payload": {"score": 2.5, "reason": "批评内容浮夸、印刷敷衍，页面仅2/3有字，负面具体，仅非极端差评"}}
+{"id": "real_sent_0092", "pass": "B", "payload": {"score": 8.5, "reason": "房间整洁、交通便利、服务好，按摩椅有特色且实用，具体好评细节充分，整体很正面。"}}
+{"id": "real_sent_0094", "pass": "A", "payload": {"score": 1.5, "reason": "明确差评，个头小且不甜，表示以后不再购买，负面情绪强烈"}}
+{"id": "real_sent_0093", "pass": "B", "payload": {"score": 2.5, "reason": "批评内容浮夸、印刷糊弄，页面留白多，负面具体但未到极端"}}
+{"id": "real_sent_0094", "pass": "B", "payload": {"score": 1.5, "reason": "明确差评：个头小、不甜、不好吃，表态以后不再买，负面情绪强烈且具体"}}
+{"id": "real_sent_0095", "pass": "A", "payload": {"score": 3.5, "reason": "电池续航差且初始无电，安装XP还需改IDE，负面细节具体，整体偏负面"}}
+{"id": "real_sent_0096", "pass": "A", "payload": {"score": 8.5, "reason": "物流快+自营信任，明确说明给老妈斗地主且老人喜欢，有具体使用场景和效果"}}
+{"id": "real_sent_0096", "pass": "B", "payload": {"score": 8.5, "reason": "物流极快+自营信任，且老妈使用喜欢，有具体使用对象和反馈，正面情绪强"}}
+{"id": "real_sent_0097", "pass": "A", "payload": {"score": 2.5, "reason": "明确负面：早餐简陋、房间异味，要求改进，无正面细节"}}
+{"id": "real_sent_0095", "pass": "B", "payload": {"score": 3.5, "reason": "电池续航差、初次无虚电，安装XP需改IDE较麻烦，整体偏负面"}}
+{"id": "real_sent_0097", "pass": "B", "payload": {"score": 2.5, "reason": "明确负面：早餐简陋、房间异味，要求改进，无正面细节"}}
+{"id": "real_sent_0098", "pass": "A", "payload": {"score": 4.0, "reason": "抱怨位置偏、房间小，虽提及有巴士但整体偏负面"}}
+{"id": "real_sent_0099", "pass": "B", "payload": {"score": 1.5, "reason": "质疑买到假货且量少，情绪强烈负面，缺乏正面信息"}}
+{"id": "real_sent_0098", "pass": "B", "payload": {"score": 4.0, "reason": "偏负面：位置偏远、房间小如旅馆，仅巴士一项算便利，整体体验不佳"}}
+{"id": "real_sent_0100", "pass": "B", "payload": {"score": 6.5, "reason": "提到酸奶便宜，但无具体口感评价，更多是个人心情分享，正面情绪有限"}}
+{"id": "real_sent_0100", "pass": "A", "payload": {"score": 6.5, "reason": "提到三元酸奶便宜、买得起，有正面情绪，但无具体口感效果，主要是个人感慨和吃喝记录。"}}
+{"id": "real_sent_0101", "pass": "A", "payload": {"score": 7.5, "reason": "对新包装设计明确赞赏，有具体细节（换头像、易区分品牌），态度正面"}}
+{"id": "real_sent_0099", "pass": "A", "payload": {"score": 1.5, "reason": "质疑商品为假货，护发素到手仅半瓶，强烈负面情绪"}}
+{"id": "real_sent_0101", "pass": "B", "payload": {"score": 7.5, "reason": "明确称赞新包装，认为便于区分品牌，属具体正面评价"}}
+{"id": "real_sent_0102", "pass": "A", "payload": {"score": 7.5, "reason": "明确肯定适合入门读者，有个人判断和具体定位，虽提泛泛但整体正面"}}
+{"id": "real_sent_0103", "pass": "A", "payload": {"score": 1.5, "reason": "强烈负面，直斥设施服务都很差，仅机场近一个优点，整体评价极低"}}
+{"id": "real_sent_0102", "pass": "B", "payload": {"score": 7.5, "reason": "明确认可对初学中医者是好书，有具体受众分析，整体正面但略有保留"}}
+{"id": "real_sent_0103", "pass": "B", "payload": {"score": 1.5, "reason": "强烈负面，直斥酒店垃圾、设施服务都差，仅承认位置近机场这唯一优点"}}
+{"id": "real_sent_0104", "pass": "A", "payload": {"score": 2.5, "reason": "多次入住体验下滑，服务降级、早餐取消、菜量减少，明确表示考虑换店，负面具体"}}
+{"id": "real_sent_0106", "pass": "A", "payload": {"score": 4.5, "reason": "认可商品'挺好'，但发票金额少100元导致实际损失，负面细节具体，整体偏负面"}}
+{"id": "real_sent_0107", "pass": "A", "payload": {"score": 0.5, "reason": "严重掉色染裤、穿几天就破洞，明确指为假货，强烈负面"}}
+{"id": "real_sent_0104", "pass": "B", "payload": {"score": 3.0, "reason": "老客户抱怨服务与早餐缩水、菜量变少，明确表示要换别家，整体负面"}}
+{"id": "real_sent_0107", "pass": "B", "payload": {"score": 0.5, "reason": "严重掉色染裤、穿几天破洞，斥为假货，强烈负面"}}
+{"id": "real_sent_0106", "pass": "B", "payload": {"score": 4.5, "reason": "认可商品但发票金额不符，导致代购收款纠纷，负面情绪明显"}}
+{"id": "real_sent_0108", "pass": "A", "payload": {"score": 2.0, "reason": "通话质量差且双卡验证，评价负面，仅外观好看被称花瓶，情绪明显不满"}}
+{"id": "real_sent_0108", "pass": "B", "payload": {"score": 1.5, "reason": "通话质量差，两卡都试过仍不行，嘲讽其为花瓶还挨骂，强烈负面"}}
+{"id": "real_sent_0111", "pass": "A", "payload": {"score": 3.5, "reason": "发现是蒙牛后表示不喝了，明显负面态度，但整体语气平淡"}}
+{"id": "real_sent_0110", "pass": "B", "payload": {"score": 0.5, "reason": "强烈负面，房间差、无水压无法洗澡，明确表示不会再住"}}
+{"id": "real_sent_0110", "pass": "A", "payload": {"score": 1.0, "reason": "强烈负面：房间差、无水压无法洗澡、比作90年代招待所、绝不再住"}}
+{"id": "real_sent_0111", "pass": "B", "payload": {"score": 3.5, "reason": "对赠品为蒙牛表示抵触拒喝，隐含负面态度，但整体情绪不强烈"}}
+{"id": "real_sent_0112", "pass": "A", "payload": {"score": 9.5, "reason": "高度满意，多维度具体细节：环境、房间、服务、贴心设施、烧烤，情绪非常正面"}}
+{"id": "real_sent_0112", "pass": "B", "payload": {"score": 9.5, "reason": "高度好评，多具体细节：房间宽大设施新、服务员热心、电热毯贴心、烧烤送木瓜，情绪非常正面"}}
+{"id": "real_sent_0113", "pass": "B", "payload": {"score": 0.5, "reason": "两周即坏需换主板、维修一个月、多次死机、售后推诿，强烈负面且细节凿实"}}
+{"id": "real_sent_0113", "pass": "A", "payload": {"score": 0.5, "reason": "强烈负面：两周坏主板、维修一月、死机、售后推诿，细节具体，情绪愤怒"}}
+{"id": "real_sent_0114", "pass": "B", "payload": {"score": 5.5, "reason": "原评偏负面，补充纠正后地点便利，但宽带收费、早餐一般等仍扣分，整体中性略偏下"}}
+{"id": "real_sent_0114", "pass": "A", "payload": {"score": 6.2, "reason": "补充更正后地点便利，房间尚可，但宽带收费、早餐一般等负面仍多，整体略偏正面"}}
+{"id": "real_sent_0115", "pass": "A", "payload": {"score": 3.0, "reason": "整体评价一般，不如莫泰，交通不便，明确表示不会再住，偏负面"}}
+{"id": "real_sent_0115", "pass": "B", "payload": {"score": 3.0, "reason": "总体评价一般，不及莫泰，交通不便，明确表示不会再住，偏负面"}}
+{"id": "real_sent_0116", "pass": "A", "payload": {"score": 1.5, "reason": "预定房型到店无房，酒店还反馈不实信息，强烈负面，明确表示不再考虑"}}
+{"id": "real_sent_0116", "pass": "B", "payload": {"score": 0.5, "reason": "到店无房、反馈不实信息，强烈负面，明确表示不再考虑"}}
+{"id": "real_sent_0117", "pass": "B", "payload": {"score": 1.5, "reason": "多项强烈负面：门面差、房间小、隔音差、难找、前台指错路，仅房间干净略加分"}}
+{"id": "real_sent_0117", "pass": "A", "payload": {"score": 2.0, "reason": "门面差、房间小、隔音差、难找、前台指路错，强烈负面；仅房间干净稍加分"}}
+{"id": "real_sent_0118", "pass": "B", "payload": {"score": 9.0, "reason": "具体描述新鲜带水珠、香甜多汁，细节丰富且高度正面，物流包装也好"}}
+{"id": "real_sent_0119", "pass": "B", "payload": {"score": 1.0, "reason": "配音是日本的，直斥烂货，强烈负面情绪，无正面细节"}}
+{"id": "real_sent_0118", "pass": "A", "payload": {"score": 9.0, "reason": "多维度具体好评：新鲜带水珠、香甜水分足、包装好、快递态度好，正面细节丰富"}}
+{"id": "real_sent_0119", "pass": "A", "payload": {"score": 1.2, "reason": "强烈负面，直言烂货，对配音产地不满，情绪激烈"}}
+{"id": "real_sent_0120", "pass": "B", "payload": {"score": 8.5, "reason": "从一般预期到惊喜，具体赞人物丰满、情节跌宕、结局合理，女主设定独特，细节个人化"}}
+{"id": "real_sent_0120", "pass": "A", "payload": {"score": 8.5, "reason": "从一般预期到惊喜，具体称赞人物丰满、情节跌宕、结局合理、女主形象独特，个人化细节充分，正面强烈"}}
+{"id": "real_sent_0122", "pass": "A", "payload": {"score": 6.5, "reason": "提到伊利味可滋不错并回购，但无具体口感细节，属轻度正面"}}
+{"id": "real_sent_0122", "pass": "B", "payload": {"score": 6.5, "reason": "提到伊利味可滋不错，但最终买的是味可滋，对蒙牛新品仅价格对比，无具体效果细节"}}
+{"id": "real_sent_0121", "pass": "A", "payload": {"score": 8.5, "reason": "具体好评：功能、信号、待机三周、按键手感均正面，仅外壳颜色与预期有出入的小疑问"}}
+{"id": "real_sent_0121", "pass": "B", "payload": {"score": 8.5, "reason": "价格实惠，功能齐全信号好，待机三周按键手感佳，细节具体；仅对外壳颜色有疑问"}}
+{"id": "real_sent_0123", "pass": "A", "payload": {"score": 5.5, "reason": "对豪华间名不副实有具体抱怨，但换房后体验改善，整体中性略偏负"}}
+{"id": "real_sent_0124", "pass": "B", "payload": {"score": 9.0, "reason": "使用一年多的长期好评，具体肯定音质、通话、影像，个人化体验强，态度非常正面"}}
+{"id": "real_sent_0124", "pass": "A", "payload": {"score": 8.5, "reason": "使用一年多长期体验，音质通话影像具体好评，个人化高，明确推荐"}}
+{"id": "real_sent_0123", "pass": "B", "payload": {"score": 4.5, "reason": "抱怨豪华间名不副实，房间床都小；虽换房后好转，但整体偏负面"}}
+{"id": "real_sent_0125", "pass": "A", "payload": {"score": 1.5, "reason": "强烈抱怨紧邻马路高架、非常吵闹影响休息，虽商家回复已改善，但用户核心态度仍很负面"}}
+{"id": "real_sent_0125", "pass": "B", "payload": {"score": 2.0, "reason": "用户主诉紧邻马路高架非常吵闹、严重影响休息，属强烈负面；商家回复是补救，不改变用户原评情绪。"}}
+{"id": "real_sent_0126", "pass": "A", "payload": {"score": 5.5, "reason": "设施尚可但服务诱导消费、次日取消赠品，位置不便，负面细节较多，整体偏中性略低"}}
+{"id": "real_sent_0126", "pass": "B", "payload": {"score": 4.5, "reason": "设施尚可但服务差，诱导消费且次日停送赠品，交通不便，负面细节多"}}
+{"id": "real_sent_0129", "pass": "A", "payload": {"score": 6.0, "reason": "转述同事好评，本人未评效果，仅过签收关"}}
+{"id": "real_sent_0128", "pass": "A", "payload": {"score": 8.5, "reason": "多细节正面评价：现代简洁干净舒适，情侣适宜，卫生间设计具体，仅隐含小限制"}}
+{"id": "real_sent_0128", "pass": "B", "payload": {"score": 8.5, "reason": "整体高度正面，具体描述现代简洁干净舒适，情侣氛围和透明卫生间细节个人化，无负面"}}
+{"id": "real_sent_0131", "pass": "A", "payload": {"score": 8.5, "reason": "多维度具体好评：散热、手感、客服、外观、价格优势，正面情绪明确且细节充分"}}
+{"id": "real_sent_0129", "pass": "B", "payload": {"score": 6.5, "reason": "转述同事好评，本人未使用，无具体细节，略高于纯事实陈述"}}
+{"id": "real_sent_0131", "pass": "B", "payload": {"score": 8.5, "reason": "多维度具体好评：散热、键盘、客服、外观、价格优势，细节丰富且个人化"}}
+{"id": "real_sent_0132", "pass": "B", "payload": {"score": 1.5, "reason": "快递不派送需自取，且发错款式（要厚款却寄棉袄），双重问题，明显负面"}}
+{"id": "real_sent_0132", "pass": "A", "payload": {"score": 2.5, "reason": "快递不下派需自取，且发错款式，厚款变棉袄，体验差"}}
+{"id": "real_sent_0135", "pass": "A", "payload": {"score": 6.5, "reason": "整体正面但早餐差、位置偏，抱怨具体，正面略压过负面"}}
+{"id": "real_sent_0133", "pass": "A", "payload": {"score": 6.5, "reason": "本人仅称不错、疑似正品，无具体使用效果，转述亲戚说划算，属轻度正面"}}
+{"id": "real_sent_0133", "pass": "B", "payload": {"score": 6.0, "reason": "仅确认收货+初步认可正品，本人未用出效果，送人待追评，属浅度好评"}}
+{"id": "real_sent_0135", "pass": "B", "payload": {"score": 6.5, "reason": "整体肯定设施环境服务，但早餐差、位置偏交通不便，负面具体，正面被削弱"}}
+{"id": "real_sent_0138", "pass": "B", "payload": {"score": 6.5, "reason": "肯定位置近、环境服务好，但价格贵、配套缺失，正负相抵略偏正面"}}
+{"id": "real_sent_0138", "pass": "A", "payload": {"score": 5.5, "reason": "位置近机场是优点，但价格贵、配套缺失，末尾好评笼统偏模板，整体中性略偏正"}}
+{"id": "real_sent_0139", "pass": "A", "payload": {"score": 7.0, "reason": "有具体穿着效果细节，正面为主；物流略慢小抱怨，扣分有限"}}
+{"id": "real_sent_0140", "pass": "A", "payload": {"score": 7.5, "reason": "正面体验，街尾吃冰淇淋很悠闲，虽没买到想吃的老冰淇淋略遗憾，但整体情绪愉快带调侃"}}
+{"id": "real_sent_0141", "pass": "A", "payload": {"score": 1.5, "reason": "强烈负面：指酒店缺乏诚信、谎报未入住、随意调换房间，明确劝退"}}
+{"id": "real_sent_0139", "pass": "B", "payload": {"score": 7.2, "reason": "具体提到弹性和舒适度，属正面效果；物流略慢小幅扣分"}}
+{"id": "real_sent_0141", "pass": "B", "payload": {"score": 1.5, "reason": "强烈负面：指责酒店缺乏诚信、谎报未入住、随意调换房间，建议他人不要预订"}}
+{"id": "real_sent_0140", "pass": "B", "payload": {"score": 6.5, "reason": "个人化场景描述，对蒙牛冰淇淋态度偏正面，但未评具体口感，且遗憾没买到其他品牌"}}
+{"id": "real_sent_0142", "pass": "A", "payload": {"score": 8.2, "reason": "整体正面：环境不错、房间宽敞、服务耐心令人感动且愿推荐；仅工地小瑕疵，不翻盘"}}
+{"id": "real_sent_0142", "pass": "B", "payload": {"score": 7.5, "reason": "整体正面，房间宽敞、服务耐心感动，愿推荐；但提及工地和未来展望，略扣分"}}
+{"id": "real_sent_0143", "pass": "B", "payload": {"score": 3.0, "reason": "阴阳怪气讽刺牛奶像广告吹嘘，真实情绪偏负面，仅未直接骂产品"}}
+{"id": "real_sent_0143", "pass": "A", "payload": {"score": 5.5, "reason": "疑似调侃广告语，未评价实际牛奶品质，态度中性偏正面但信息不足"}}
+{"id": "real_sent_0144", "pass": "A", "payload": {"score": 1.5, "reason": "强烈负面，明确抵制蒙牛旗下产品，无任何正面表述"}}
+{"id": "real_sent_0144", "pass": "B", "payload": {"score": 0.5, "reason": "明确表达鄙视和抵制，情绪强烈负面，无任何正面细节。"}}
+{"id": "real_sent_0145", "pass": "B", "payload": {"score": 3.0, "reason": "同款同码唯独白色越穿越小，其他颜色正常，具体负面体验，偏不满"}}
+{"id": "real_sent_0148", "pass": "A", "payload": {"score": 6.5, "reason": "认可质量但嫌价格偏贵，正面中带明确抱怨，整体略偏正面"}}
+{"id": "real_sent_0147", "pass": "B", "payload": {"score": 4.2, "reason": "房间卫生差、设施缺失、服务不专业，虽餐厅尚可，但整体体验偏负面"}}
+{"id": "real_sent_0145", "pass": "A", "payload": {"score": 3.5, "reason": "同款白色越穿越小，其他颜色正常，指向该件质量缺陷，负面具体但未情绪化"}}
+{"id": "real_sent_0147", "pass": "A", "payload": {"score": 3.5, "reason": "房间卫生差有鞋印、缺电源线、服务不专业，仅餐厅尚可，整体偏负面"}}
+{"id": "real_sent_0148", "pass": "B", "payload": {"score": 5.5, "reason": "认可质量但抱怨价格偏高，正负情绪相抵，略偏中性"}}
+{"id": "real_sent_0149", "pass": "B", "payload": {"score": 1.5, "reason": "房间霉味重、机器噪声整夜不停，体验极差，强烈负面"}}
+{"id": "real_sent_0150", "pass": "B", "payload": {"score": 2.5, "reason": "包装差导致漏液，商品受损，明显负面，但未涉及使用效果"}}
+{"id": "real_sent_0150", "pass": "A", "payload": {"score": 2.0, "reason": "包装差导致漏液，属商品/服务负面，无正面细节"}}
+{"id": "real_sent_0149", "pass": "A", "payload": {"score": 1.5, "reason": "底楼最远、霉味重、整夜噪声，全是具体负面体验，仅推测与便宜有关，情绪明确负面"}}
+{"id": "real_sent_0151", "pass": "A", "payload": {"score": 6.5, "reason": "签收后表达超值、赚到的正面预期，但未实际使用，质量未知，上限6分左右"}}
+{"id": "real_sent_0151", "pass": "B", "payload": {"score": 6.5, "reason": "认可超值并信任平台，但未用未评质量，属预判性好评"}}
+{"id": "real_sent_0155", "pass": "A", "payload": {"score": 8.2, "reason": "具体称赞工艺设计、轻薄便携，有个人使用感受，正面细节充分"}}
+{"id": "real_sent_0152", "pass": "A", "payload": {"score": 8.5, "reason": "整体高度好评，细节丰富具体，仅房价略贵、健身房失修、频道少等小抱怨，不影响正面基调"}}
+{"id": "real_sent_0152", "pass": "B", "payload": {"score": 8.5, "reason": "整体非常正面，细节丰富，仅价格略贵、健身房失修、频道少等小抱怨，翻不了盘"}}
+{"id": "real_sent_0154", "pass": "A", "payload": {"score": 9.0, "reason": "多次入住获免费升级，房间服务均好，明确表示下次还会住，个人化正面细节充分"}}
+{"id": "real_sent_0155", "pass": "B", "payload": {"score": 8.5, "reason": "具体肯定工艺、设计、轻薄和品牌风范，个人化细节充分，几乎无负面"}}
+{"id": "real_sent_0154", "pass": "B", "payload": {"score": 9.0, "reason": "多次入住获免费升级，房间服务均好评，明确表示会再住，正面情绪强烈"}}
+{"id": "real_sent_0156", "pass": "B", "payload": {"score": 5.5, "reason": "优缺点并存：交通方便服务尚可，但地毯异味、空气差、环境乱，整体略偏中性"}}
+{"id": "real_sent_0156", "pass": "A", "payload": {"score": 5.5, "reason": "交通方便、服务还行是正面，但地毯异味、空气差、环境乱、价贵，褒贬相当偏中性"}}
+{"id": "real_sent_0158", "pass": "A", "payload": {"score": 7.5, "reason": "肯定正品质量与实惠价格，仅安装费偏贵的小抱怨，整体正面"}}
+{"id": "real_sent_0157", "pass": "B", "payload": {"score": 8.0, "reason": "具体个人阅读收获细节，正面推荐，仅结尾小抱怨文笔，扣分有限"}}
+{"id": "real_sent_0157", "pass": "A", "payload": {"score": 8.0, "reason": "具体阅读感受+个人收获，正面推荐，仅结尾小抱怨文笔，翻不了盘"}}
+{"id": "real_sent_0159", "pass": "A", "payload": {"score": 7.5, "reason": "整体正面，房间干净宽敞舒适、服务热情、愿再住；仅吃饭不便小抱怨，扣分有限"}}
+{"id": "real_sent_0158", "pass": "B", "payload": {"score": 7.0, "reason": "肯定正品质量与实惠价格，仅抱怨安装费偏贵，整体偏正面"}}
+{"id": "real_sent_0160", "pass": "B", "payload": {"score": 6.5, "reason": "整体正面肯定干净安静，但价格偏高且对比别家更便宜，抱怨明显拉低分数"}}
+{"id": "real_sent_0159", "pass": "B", "payload": {"score": 7.5, "reason": "整体正面，房间干净宽敞舒适、服务热情并愿再住，但周边吃饭不便扣分"}}
+{"id": "real_sent_0160", "pass": "A", "payload": {"score": 6.5, "reason": "整体正面肯定干净安静，但价格偏高且对比别家更便宜，略拉低评价"}}
+{"id": "real_sent_0004", "pass": "C", "payload": {"final_score": 5.5, "band": "中性", "reason": "前台服务好、房间大床好，但烟味重、隔音差，正负相抵，略偏中性。", "action": "通过"}}
+{"id": "real_sent_0001", "pass": "C", "payload": {"final_score": 6.0, "band": "中性", "reason": "双方均判6分，分差0，取平均6.0；仅确认收货并转述他人试用，本人未评效果，属纯事实陈述。", "action": "通过"}}
+{"id": "real_sent_0005", "pass": "C", "payload": {"final_score": 9.0, "band": "正面", "reason": "外观配置、开关机速度、静音键盘均好评，摄像头和DVD刻录超出预期，细节具体", "action": "通过"}}
+{"id": "real_sent_0007", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "双方均7.5分，理由一致：列举铃声、通话、存储、屏幕等具体优点，整体正面。", "action": "通过"}}
+{"id": "real_sent_0002", "pass": "C", "payload": {"final_score": 7.9, "band": "正面", "reason": "整体正面，房间大干净服务好位置便利，蚊子和司机不熟酒店属小抱怨未翻盘。", "action": "通过"}}
+{"id": "real_sent_0006", "pass": "C", "payload": {"final_score": 9.5, "band": "正面", "reason": "双方均9.5分，理由一致：全家喜爱、宝宝专注半小时、记位置编故事，细节具体，情感极正面。", "action": "通过"}}
+{"id": "real_sent_0010", "pass": "C", "payload": {"final_score": 5.0, "band": "中性", "reason": "指出酒店旧但机场便利，特价可考虑，属中性权衡，无强烈情绪。", "action": "通过"}}
+{"id": "real_sent_0009", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "信任京东却失望，商品未装好全洒，客服回复慢且不解决问题，负面强烈", "action": "通过"}}
+{"id": "real_sent_0013", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "屏幕脆弱易碎，售后换屏收费高，强烈不满，细节具体", "action": "通过"}}
+{"id": "real_sent_0012", "pass": "C", "payload": {"final_score": 9.0, "band": "正面", "reason": "双方均给9.0分，理由一致：七点详细好评，涵盖屏幕、价格、功能等具体体验，态度正面。", "action": "通过"}}
+{"id": "real_sent_0011", "pass": "C", "payload": {"final_score": 4.5, "band": "中性", "reason": "双方均4.5分，取平均4.5；仅担忧发票保修安装，未评商品本身，属中性疑虑。", "action": "通过"}}
+{"id": "real_sent_0015", "pass": "C", "payload": {"final_score": 0.5, "band": "负面", "reason": "双方均判0.5分，直指假货、价格无优势、后悔，强烈负面情绪，细节明确。", "action": "通过"}}
+{"id": "real_sent_0014", "pass": "C", "payload": {"final_score": 2.3, "band": "负面", "reason": "抱怨苹果尺寸与描述不符，明显偏小，负面具体但未涉及更严重问题。", "action": "通过"}}
+{"id": "real_sent_0016", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "双方一致认为仅机场位置尚可，房间小、气味重、性价比低，整体强烈负面。", "action": "通过"}}
+{"id": "real_sent_0017", "pass": "C", "payload": {"final_score": 2.0, "band": "负面", "reason": "物流快但书为盗版、质量差，核心商品体验强烈负面，双方一致", "action": "通过"}}
+{"id": "real_sent_0018", "pass": "C", "payload": {"final_score": 6.5, "band": "中性", "reason": "双方分差≤2，取平均6.5；整体温和正面，快递负责，仅提个头小缺点，无具体细节。", "action": "通过"}}
+{"id": "real_sent_0020", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "位置服务硬件均好评，房间旧、上网收费扣分，总体满意愿复住", "action": "通过"}}
+{"id": "real_sent_0023", "pass": "C", "payload": {"final_score": 5.5, "band": "中性", "reason": "双方分差为0，取平均值5.5；整体肯定住宿，但打车不便、服务态度差，正负相抵偏中性。", "action": "通过"}}
+{"id": "real_sent_0022", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "整体正面，肯定实惠干净位置好适合背包族，服务一般等小缺点不翻盘", "action": "通过"}}
+{"id": "real_sent_0024", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "房间异味、漏水、走廊长、结账慢，均为具体负面细节，情绪强烈不满。", "action": "通过"}}
+{"id": "real_sent_0021", "pass": "C", "payload": {"final_score": 6.0, "band": "中性", "reason": "双方分差1分取均值；提蓝牙、屏幕宽度、价格改进期望，无具体使用好评，中性偏略正面。", "action": "通过"}}
+{"id": "real_sent_0026", "pass": "C", "payload": {"final_score": 0.3, "band": "负面", "reason": "全盘否定商品质量并连用差评，快递慢加重负面情绪，双方均判负面，取均值。", "action": "通过"}}
+{"id": "real_sent_0032", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "外观好评具体，指纹缺点以幽默化解，个人化细节充分，整体正面满意。", "action": "通过"}}
+{"id": "real_sent_0027", "pass": "C", "payload": {"final_score": 2.5, "band": "负面", "reason": "位置偏、房间霉味、早餐一般，均为具体负面体验，整体偏负面", "action": "通过"}}
+{"id": "real_sent_0029", "pass": "C", "payload": {"final_score": 8.3, "band": "正面", "reason": "双方均认可做工、系统、屏幕、电池等具体正面体验，分差0.5取均值。", "action": "通过"}}
+{"id": "real_sent_0030", "pass": "C", "payload": {"final_score": 0, "band": "负面", "reason": "双方均为0分，直接辱骂品牌，情绪极端负面，无商品使用描述。", "action": "通过"}}
+{"id": "real_sent_0031", "pass": "C", "payload": {"final_score": 8.1, "band": "正面", "reason": "整体好评，细节丰富：大堂特色、服务热情、早餐、酒吧体验佳，客房小有微词但总体正面", "action": "通过"}}
+{"id": "real_sent_0033", "pass": "C", "payload": {"final_score": 2.8, "band": "负面", "reason": "抱怨不送软管却送无用赠品，负面情绪明确，双方分差小取均值。", "action": "通过"}}
+{"id": "real_sent_0034", "pass": "C", "payload": {"final_score": 5.0, "band": "中性", "reason": "褒贬参半：肯定立意与价值观，但批评章节凌乱拼凑、劝退读者，整体中性。", "action": "通过"}}
+{"id": "real_sent_0038", "pass": "C", "payload": {"final_score": 5.0, "band": "中性", "reason": "代买未亲测，仅表达对芯片组的期待与不确定，情绪中性略期待", "action": "通过"}}
+{"id": "real_sent_0037", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "商品全烂且客服失联，双方理由一致，强烈负面", "action": "通过"}}
+{"id": "real_sent_0040", "pass": "C", "payload": {"final_score": 8.0, "band": "正面", "reason": "双方均给8.0，整体正面，位置服务好评，无抱怨，细节简略。", "action": "通过"}}
+{"id": "real_sent_0039", "pass": "C", "payload": {"final_score": 4.3, "band": "中性", "reason": "CPU拖后腿、slidebar难用、易没电易磕碰，负面细节多，仅其他评分较高稍缓冲", "action": "通过"}}
+{"id": "real_sent_0043", "pass": "C", "payload": {"final_score": 3.5, "band": "负面", "reason": "客服误导尺码导致偏小，只能将就穿，负面体验", "action": "通过"}}
+{"id": "real_sent_0044", "pass": "C", "payload": {"final_score": 1.0, "band": "负面", "reason": "六项具体缺陷均为强烈负面，双方分差1分取均值。", "action": "通过"}}
+{"id": "real_sent_0046", "pass": "C", "payload": {"final_score": 0.5, "band": "负面", "reason": "双方一致强烈负面，细节具体，情绪极差，取平均0.5分。", "action": "通过"}}
+{"id": "real_sent_0045", "pass": "C", "payload": {"final_score": 2.3, "band": "负面", "reason": "内容乏味、感觉上当，仅书质量好，整体负面，双方分差小取均值。", "action": "通过"}}
+{"id": "real_sent_0048", "pass": "C", "payload": {"final_score": 3.5, "band": "负面", "reason": "推荐别家贬低本店，仅餐厅鱼头尚可，前台服务差，整体偏负面。", "action": "通过"}}
+{"id": "real_sent_0049", "pass": "C", "payload": {"final_score": 8.5, "band": "正面", "reason": "双方均认可多项功能细节与性价比，情感正面，分差为0取均值。", "action": "通过"}}
+{"id": "real_sent_0050", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "双方均判强烈负面，分差为0，取平均1.5分；无窗房、走廊破旧、早餐断供、服务差且永不再来。", "action": "通过"}}
+{"id": "real_sent_0051", "pass": "C", "payload": {"final_score": 5.5, "band": "中性", "reason": "商品评价'还行'偏中性，物流差评权重低，整体略低于中性，双方一致。", "action": "通过"}}
+{"id": "real_sent_0052", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "双方分差为0，取平均值7.5；整体正面，房间新净隔音好，但插座不便、空调声大、温泉水滑有具体抱怨。", "action": "通过"}}
+{"id": "real_sent_0053", "pass": "C", "payload": {"final_score": 3.8, "band": "负面", "reason": "设施陈旧、面积不足、入住慢、房价贵，整体偏负面，仅卫生间和早餐略加分。", "action": "通过"}}
+{"id": "real_sent_0054", "pass": "C", "payload": {"final_score": 4.0, "band": "中性", "reason": "书内容认可但包装差、非全新、封底折痕，收藏体验受损，负面情绪明显", "action": "通过"}}
+{"id": "real_sent_0055", "pass": "C", "payload": {"final_score": 5.0, "band": "中性", "reason": "双方均判5.0，纯事实陈述，未拆封未使用，无效果评价，态度中性", "action": "通过"}}
+{"id": "real_sent_0056", "pass": "C", "payload": {"final_score": 7.8, "band": "正面", "reason": "整体正面，交通便利、整洁干净、价格合理，仅走廊闷热小抱怨，不翻盘。", "action": "通过"}}
+{"id": "real_sent_0058", "pass": "C", "payload": {"final_score": 1.3, "band": "负面", "reason": "明确不推荐且收到即坏，强烈负面购物体验，双方理由一致。", "action": "通过"}}
+{"id": "real_sent_0057", "pass": "C", "payload": {"final_score": 5.0, "band": "中性", "reason": "双方均判5.0，纯文学解读，无商品服务评价，属客观陈述。", "action": "通过"}}
+{"id": "real_sent_0061", "pass": "C", "payload": {"final_score": 2.0, "band": "负面", "reason": "双方均判2.0，分差为0，取平均值2.0；表达对蒙牛品牌及HK人的负面情绪，态度明确。", "action": "通过"}}
+{"id": "real_sent_0060", "pass": "C", "payload": {"final_score": 0.3, "band": "负面", "reason": "双方均判强烈负面，分差0.5取均值0.3，列举死机、无信号、自动关机等多项缺陷。", "action": "通过"}}
+{"id": "real_sent_0062", "pass": "C", "payload": {"final_score": 6.5, "band": "中性", "reason": "双方均给6.5，分差为0，取平均值；列举常喝品牌并提及家人饮用，属真实认可但无具体效果细节。", "action": "通过"}}
+{"id": "real_sent_0063", "pass": "C", "payload": {"final_score": 5.5, "band": "中性", "reason": "双方均判5.5，分差为0，取平均值；仅'还可以'加未使用陈述，无具体效果，属中性偏轻正面。", "action": "通过"}}
+{"id": "real_sent_0064", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "双方分差≤2，取平均7.5；有T400对比、稍厚等细节，朋友喜欢且认可性价比，正面偏具体。", "action": "通过"}}
+{"id": "real_sent_0065", "pass": "C", "payload": {"final_score": 6.8, "band": "正面", "reason": "接机服务好评、房间尚可，仅抱怨不含早餐，整体偏正面带小不满，取双方均值。", "action": "通过"}}
+{"id": "real_sent_0066", "pass": "C", "payload": {"final_score": 2.5, "band": "负面", "reason": "型号不合且偏大，表达失望，属明显负面体验，无正面内容。", "action": "通过"}}
+{"id": "real_sent_0068", "pass": "C", "payload": {"final_score": 3.5, "band": "负面", "reason": "双方均判3.5分，分差为0，取平均值3.5；多处抱怨录音小、待机画面小并劝退，整体偏负面。", "action": "通过"}}
+{"id": "real_sent_0067", "pass": "C", "payload": {"final_score": 2.0, "band": "负面", "reason": "老客六次复购，本次货小不新鲜疑以次充好，失望给一星，仅物流获肯定", "action": "通过"}}
+{"id": "real_sent_0069", "pass": "C", "payload": {"final_score": 1.8, "band": "负面", "reason": "怀疑非正品，用后头痒起白粒，明确后悔，负面具体", "action": "通过"}}
+{"id": "real_sent_0071", "pass": "C", "payload": {"final_score": 8.5, "band": "正面", "reason": "安装服务细节具体，收费合理，已使用且满意，正面情绪明确。", "action": "通过"}}
+{"id": "real_sent_0070", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "双方均判1.5分，指认假货且香味、柔顺度、使用感全负面，情绪强烈，取平均维持1.5分。", "action": "通过"}}
+{"id": "real_sent_0073", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "整体正面：免费升级、服务改善；早餐种类少为小抱怨，未翻盘。", "action": "通过"}}
+{"id": "real_sent_0076", "pass": "C", "payload": {"final_score": 6.5, "band": "中性", "reason": "双方分差为0，取平均值6.5；整体正面但含窗户缝隙等具体抱怨，性价比认可。", "action": "通过"}}
+{"id": "real_sent_0072", "pass": "C", "payload": {"final_score": 3.3, "band": "负面", "reason": "双方分差0.5，取均值3.3；三条具体缺点，语气客观，整体偏负面。", "action": "通过"}}
+{"id": "real_sent_0078", "pass": "C", "payload": {"final_score": 8.9, "band": "正面", "reason": "双方分差0.7，取平均；细节充分、情绪极正面，仅略偏模板化。", "action": "通过"}}
+{"id": "real_sent_0080", "pass": "C", "payload": {"final_score": 7.4, "band": "正面", "reason": "价格便宜、品牌认可、赠品加分、物流快，仅电吹风未抢到略遗憾，整体正面。", "action": "通过"}}
+{"id": "real_sent_0077", "pass": "C", "payload": {"final_score": 3.5, "band": "负面", "reason": "双方均判3.5分，反馈偶发蓝屏属具体负面使用体验，语气不确定但情绪偏负面。", "action": "通过"}}
+{"id": "real_sent_0081", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "外观漂亮、键盘大方便、驱动安装顺利，有具体使用细节，整体正面", "action": "通过"}}
+{"id": "real_sent_0079", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "未收到货却显示交易完成，用户质疑被骗，情绪强烈负面", "action": "通过"}}
+{"id": "real_sent_0082", "pass": "C", "payload": {"final_score": 0.5, "band": "负面", "reason": "双方均判强烈负面，商品无法使用且为翻新二手机，对平台信任崩塌，取平均值。", "action": "通过"}}
+{"id": "real_sent_0083", "pass": "C", "payload": {"final_score": 2.5, "band": "负面", "reason": "期待高但内容差，中英夹杂令人反感，翻两页即弃，明确否定效果", "action": "通过"}}
+{"id": "real_sent_0086", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "强烈负面，色差、起毛、起球多重质量问题，对平台失望不信任", "action": "通过"}}
+{"id": "real_sent_0085", "pass": "C", "payload": {"final_score": 7.0, "band": "正面", "reason": "双方均7.0分，肯定好用反应快，指出像素略差但可接受，有具体使用细节，整体偏正面。", "action": "通过"}}
+{"id": "real_sent_0084", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "双方一致认定强烈负面：蚊子多、嘈杂难忍，要求整改，体验极差。", "action": "通过"}}
+{"id": "real_sent_0087", "pass": "C", "payload": {"final_score": 4.5, "band": "中性", "reason": "像素与运行未达预期有具体不满，但最终迁就老爸使用，情绪偏负面但不强烈。", "action": "通过"}}
+{"id": "real_sent_0088", "pass": "C", "payload": {"final_score": 5.5, "band": "中性", "reason": "双方均判5.5分，仅签收后主观预期，无使用细节，情绪略偏正面但未验证。", "action": "通过"}}
+{"id": "real_sent_0091", "pass": "C", "payload": {"final_score": 1.8, "band": "负面", "reason": "双方均指出床单脏且价格贵，双重负面且无正面细节，取平均分。", "action": "通过"}}
+{"id": "real_sent_0093", "pass": "C", "payload": {"final_score": 2.5, "band": "负面", "reason": "批评内容浮夸、印刷糊弄，页面仅2/3有字，负面具体但未到极端", "action": "通过"}}
+{"id": "real_sent_0089", "pass": "C", "payload": {"final_score": 2.5, "band": "负面", "reason": "总台服务尚可，但房间差、空调吵、床不平、性价比低，明确表示不再选择，整体偏负面。", "action": "通过"}}
+{"id": "real_sent_0092", "pass": "C", "payload": {"final_score": 8.5, "band": "正面", "reason": "双方均给8.5分，理由一致：房间整洁、交通便利、服务好，按摩椅有特色且实用，细节充分。", "action": "通过"}}
+{"id": "real_sent_0090", "pass": "C", "payload": {"final_score": 3.0, "band": "负面", "reason": "商品太差、华为产品一般，仅价格认可，整体负面情绪明显。", "action": "通过"}}
+{"id": "real_sent_0094", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "明确差评，个头小、不甜、不好吃，且表示不再购买，负面情绪强烈具体。", "action": "通过"}}
+{"id": "real_sent_0096", "pass": "C", "payload": {"final_score": 8.5, "band": "正面", "reason": "物流快、自营信任，老妈斗地主使用喜欢，场景具体，正面情绪强。", "action": "通过"}}
+{"id": "real_sent_0095", "pass": "C", "payload": {"final_score": 3.5, "band": "负面", "reason": "电池续航差且初始无电，安装XP需改IDE，负面细节具体，整体偏负面", "action": "通过"}}
+{"id": "real_sent_0098", "pass": "C", "payload": {"final_score": 4.0, "band": "中性", "reason": "位置偏远、房间小如旅馆，仅酒店巴士算便利，整体偏负面但未极差", "action": "通过"}}
+{"id": "real_sent_0097", "pass": "C", "payload": {"final_score": 2.5, "band": "负面", "reason": "双方一致认定早餐简陋、房间异味且要求改进，无正面细节，维持负面评分。", "action": "通过"}}
+{"id": "real_sent_0099", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "双方均判1.5分，质疑假货且量少，情绪强烈负面，无正面信息。", "action": "通过"}}
+{"id": "real_sent_0100", "pass": "C", "payload": {"final_score": 6.5, "band": "中性", "reason": "双方均6.5分，无分差，取平均值；提及酸奶便宜但无具体口感，以个人心情记录为主。", "action": "通过"}}
+{"id": "real_sent_0101", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "双方均认可对新包装的明确赞赏及品牌易区分细节，态度正面，取平均分。", "action": "通过"}}
+{"id": "real_sent_0102", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "双方一致认可对入门读者是好书，有受众分析，整体正面略有保留，取平均。", "action": "通过"}}
+{"id": "real_sent_0104", "pass": "C", "payload": {"final_score": 2.8, "band": "负面", "reason": "老客户抱怨服务下滑、早餐取消、菜量减少，明确考虑换店，整体负面具体", "action": "通过"}}
+{"id": "real_sent_0106", "pass": "C", "payload": {"final_score": 4.5, "band": "中性", "reason": "认可商品但发票金额少100元，导致代购收款纠纷，负面情绪明显", "action": "通过"}}
+{"id": "real_sent_0103", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "双方一致强烈负面，仅位置近机场为优点，设施服务均差，整体评价极低。", "action": "通过"}}
+{"id": "real_sent_0107", "pass": "C", "payload": {"final_score": 0.5, "band": "负面", "reason": "严重掉色染裤、穿几天破洞，斥为假货，双方一致强烈负面", "action": "通过"}}
+{"id": "real_sent_0111", "pass": "C", "payload": {"final_score": 3.5, "band": "负面", "reason": "双方均判3.5分，分差为0，取平均值3.5；发现是蒙牛后拒喝，隐含负面态度但语气平淡。", "action": "通过"}}
+{"id": "real_sent_0113", "pass": "C", "payload": {"final_score": 0.5, "band": "负面", "reason": "两周坏主板、维修一月、多次死机、售后推诿，强烈负面且细节具体", "action": "通过"}}
+{"id": "real_sent_0110", "pass": "C", "payload": {"final_score": 0.8, "band": "负面", "reason": "双方均为强烈负面，分差0.5取平均，房间差、无水压无法洗澡、绝不再住", "action": "通过"}}
+{"id": "real_sent_0108", "pass": "C", "payload": {"final_score": 1.8, "band": "负面", "reason": "通话质量差且双卡验证无效，被称花瓶并挨骂，情绪强烈负面，双方理由一致。", "action": "通过"}}
+{"id": "real_sent_0112", "pass": "C", "payload": {"final_score": 9.5, "band": "正面", "reason": "双方均给9.5分，理由一致：环境、房间、服务、电热毯、烧烤等多维度具体好评，情绪高度正面。", "action": "通过"}}
+{"id": "real_sent_0114", "pass": "C", "payload": {"final_score": 5.9, "band": "中性", "reason": "补充更正后地点便利、房间尚可，但宽带收费、早餐一般等负面仍存，整体中性略偏下。", "action": "通过"}}
+{"id": "real_sent_0115", "pass": "C", "payload": {"final_score": 3.0, "band": "负面", "reason": "双方均评3.0，分差为0，取平均值3.0；评价一般、不及莫泰、交通不便、不再入住，偏负面。", "action": "通过"}}
+{"id": "real_sent_0118", "pass": "C", "payload": {"final_score": 9.0, "band": "正面", "reason": "双方均给9.0，多维度具体好评：新鲜带水珠、香甜多汁、包装好、快递态度好，细节丰富。", "action": "通过"}}
+{"id": "real_sent_0117", "pass": "C", "payload": {"final_score": 1.8, "band": "负面", "reason": "多项强烈负面：门面差、房间小、隔音差、难找、前台指错路，仅房间干净略加分", "action": "通过"}}
+{"id": "real_sent_0119", "pass": "C", "payload": {"final_score": 1.1, "band": "负面", "reason": "强烈负面，直言烂货，对配音产地不满，情绪激烈，无正面细节。", "action": "通过"}}
+{"id": "real_sent_0116", "pass": "C", "payload": {"final_score": 1.0, "band": "负面", "reason": "双方分差1分取均值，到店无房且反馈不实，强烈负面，明确不再考虑", "action": "通过"}}
+{"id": "real_sent_0120", "pass": "C", "payload": {"final_score": 8.5, "band": "正面", "reason": "双方均8.5分且理由一致，取平均8.5分；评论从一般预期转为惊喜，赞人物、情节、结局及女主设定独特。", "action": "通过"}}
+{"id": "real_sent_0123", "pass": "C", "payload": {"final_score": 5.0, "band": "中性", "reason": "抱怨豪华间名不副实，但换房后体验改善，整体中性略偏负", "action": "通过"}}
+{"id": "real_sent_0121", "pass": "C", "payload": {"final_score": 8.5, "band": "正面", "reason": "双方均给8.5分，理由一致：功能、信号、待机、按键好评，仅外壳颜色有小疑问。", "action": "通过"}}
+{"id": "real_sent_0122", "pass": "C", "payload": {"final_score": 6.5, "band": "中性", "reason": "双方均给6.5，分差为0，取平均值6.5；评论提及伊利味可滋不错并回购，但无具体口感细节，属轻度正面。", "action": "通过"}}
+{"id": "real_sent_0125", "pass": "C", "payload": {"final_score": 1.8, "band": "负面", "reason": "双方分差0.5，取平均；用户强烈抱怨噪音影响休息，商家补救不改变原评负面情绪。", "action": "通过"}}
+{"id": "real_sent_0124", "pass": "C", "payload": {"final_score": 8.8, "band": "正面", "reason": "长期使用好评，音质通话影像具体肯定，个人化强，态度非常正面", "action": "通过"}}
+{"id": "real_sent_0129", "pass": "C", "payload": {"final_score": 6.3, "band": "中性", "reason": "双方均认可转述同事好评、本人未使用无细节，取均值6.3，属中性偏事实陈述", "action": "通过"}}
+{"id": "real_sent_0126", "pass": "C", "payload": {"final_score": 5.0, "band": "中性", "reason": "设施尚可但服务诱导消费、次日停送赠品，交通不便，负面细节多，整体中性略低", "action": "通过"}}
+{"id": "real_sent_0128", "pass": "C", "payload": {"final_score": 8.5, "band": "正面", "reason": "双方均8.5分，无分歧；多细节正面评价，仅隐含小限制，整体高度正面。", "action": "通过"}}
+{"id": "real_sent_0132", "pass": "C", "payload": {"final_score": 2.0, "band": "负面", "reason": "快递不派送需自取，且发错款式，厚款变棉袄，双重问题体验差", "action": "通过"}}
+{"id": "real_sent_0131", "pass": "C", "payload": {"final_score": 8.5, "band": "正面", "reason": "双方分差为0，取平均值8.5；多维度具体好评，散热、手感、客服、外观、价格优势，正面情绪明确。", "action": "通过"}}
+{"id": "real_sent_0133", "pass": "C", "payload": {"final_score": 6.3, "band": "中性", "reason": "双方分差0.5取均值，本人初步认可正品但无使用效果，转述亲戚好评，属浅度正面", "action": "通过"}}
+{"id": "real_sent_0135", "pass": "C", "payload": {"final_score": 6.5, "band": "中性", "reason": "双方分差为0，取平均6.5；整体肯定设施环境服务，但早餐差、位置偏交通不便，正负相抵。", "action": "通过"}}
+{"id": "real_sent_0138", "pass": "C", "payload": {"final_score": 6.0, "band": "中性", "reason": "位置近、环境服务好为正面，价格贵、配套缺失为负面，正负相抵，整体中性略偏正。", "action": "通过"}}
+{"id": "real_sent_0139", "pass": "C", "payload": {"final_score": 7.1, "band": "正面", "reason": "有弹性、穿着舒服等正面细节，物流略慢小幅扣分，综合取均值。", "action": "通过"}}
+{"id": "real_sent_0142", "pass": "C", "payload": {"final_score": 7.9, "band": "正面", "reason": "整体正面，环境好、房间宽敞、服务耐心感动且愿推荐；工地小瑕疵不翻盘。", "action": "通过"}}
+{"id": "real_sent_0141", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "双方一致认定强烈负面：指责酒店缺乏诚信、谎报未入住、随意调换房间并劝退。", "action": "通过"}}
+{"id": "real_sent_0140", "pass": "C", "payload": {"final_score": 7.0, "band": "正面", "reason": "悠闲吃冰淇淋情绪愉快，未买到老冰淇淋略遗憾但带调侃，整体偏正面", "action": "通过"}}
+{"id": "real_sent_0143", "pass": "C", "payload": {"final_score": 3.0, "band": "负面", "reason": "原文为反讽广告吹嘘，真实情绪偏负面，B判断更准确，A忽略讽刺语气。", "action": "需人工复核"}}
+{"id": "real_sent_0148", "pass": "C", "payload": {"final_score": 6.0, "band": "中性", "reason": "认可质量但嫌价格偏贵，正负情绪相抵，略偏中性", "action": "通过"}}
+{"id": "real_sent_0145", "pass": "C", "payload": {"final_score": 3.3, "band": "负面", "reason": "同款同码白色越穿越小，其他颜色正常，具体质量缺陷，负面体验明确", "action": "通过"}}
+{"id": "real_sent_0149", "pass": "C", "payload": {"final_score": 1.5, "band": "负面", "reason": "底楼最远、霉味重、整夜噪声，具体负面体验明确，双方一致", "action": "通过"}}
+{"id": "real_sent_0147", "pass": "C", "payload": {"final_score": 3.9, "band": "中性", "reason": "房间卫生差、设施缺失、服务不专业，仅餐厅尚可，整体偏负面", "action": "通过"}}
+{"id": "real_sent_0144", "pass": "C", "payload": {"final_score": 1.0, "band": "负面", "reason": "双方均判负面，分差1分取均值；明确鄙视并抵制蒙牛产品，情绪强烈负面。", "action": "通过"}}
+{"id": "real_sent_0151", "pass": "C", "payload": {"final_score": 6.5, "band": "中性", "reason": "双方分差为0，取平均值6.5；认可超值并信任平台，但未实际使用，属预判性好评。", "action": "通过"}}
+{"id": "real_sent_0150", "pass": "C", "payload": {"final_score": 2.3, "band": "负面", "reason": "包装差导致漏液，商品受损，明显负面，未涉及使用效果。", "action": "通过"}}
+{"id": "real_sent_0152", "pass": "C", "payload": {"final_score": 8.5, "band": "正面", "reason": "双方均8.5分，分差为0，取平均值8.5；整体高度好评，仅房价略贵、健身房失修、频道少等小抱怨。", "action": "通过"}}
+{"id": "real_sent_0154", "pass": "C", "payload": {"final_score": 9.0, "band": "正面", "reason": "多次入住获免费升级，房间服务均好，明确表示会再住，正面细节充分。", "action": "通过"}}
+{"id": "real_sent_0158", "pass": "C", "payload": {"final_score": 7.3, "band": "正面", "reason": "肯定正品质量与实惠价格，仅安装费偏贵的小抱怨，整体正面", "action": "通过"}}
+{"id": "real_sent_0156", "pass": "C", "payload": {"final_score": 5.5, "band": "中性", "reason": "交通方便、服务尚可，但地毯异味、空气差、环境乱、价贵，优缺点并存，整体中性", "action": "通过"}}
+{"id": "real_sent_0155", "pass": "C", "payload": {"final_score": 8.4, "band": "正面", "reason": "双方均肯定工艺、设计、轻薄与品牌风范，细节充分，取平均分。", "action": "通过"}}
+{"id": "real_sent_0157", "pass": "C", "payload": {"final_score": 8.0, "band": "正面", "reason": "双方均8.0分，分差为0，取平均值；具体阅读收获与正面推荐，结尾小抱怨文笔扣分有限。", "action": "通过"}}
+{"id": "real_sent_0160", "pass": "C", "payload": {"final_score": 6.5, "band": "中性", "reason": "整体肯定干净安静，但价格偏高且对比别家更便宜，抱怨拉低评价。", "action": "通过"}}
+{"id": "real_sent_0159", "pass": "C", "payload": {"final_score": 7.5, "band": "正面", "reason": "双方均判7.5，整体正面：房间干净宽敞舒适、服务热情、愿再住，仅周边吃饭不便小抱怨。", "action": "通过"}}

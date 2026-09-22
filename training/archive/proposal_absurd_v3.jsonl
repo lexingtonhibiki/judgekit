@@ -1,0 +1,16 @@
+{"id": "as01", "target_dataset": "intent_zh(路由)", "text": "在吗？处对象吗？我看你头像挺好看的", "proposed_label": "咨询其他", "note": "你举的例子：非业务骚扰，归咨询其他；也可讨论归投诉建议（骚扰投诉），需你裁定"}
+{"id": "as02", "target_dataset": "sentiment_zh(情感)", "text": "这产品太离谱了，直接给我整哭了，悔恨之泪啊，为什么现在才刷到", "proposed_label": "正面", "note": "你举的例子：两种读法都存在（后悔没早买=正面 / 买了后悔=负面），单看文本无法唯一判定，建议作为「必须转人工/低置信」的标注示例，或补充上下文后定 gold"}
+{"id": "as03", "target_dataset": "sentiment_zh(情感)", "text": "离谱到家！一瓶水敢卖 39？当我印钞机？", "proposed_label": "负面", "note": "「离谱」在差评里的真实用法，与 as02 形成表面相同、方向相反的对"}
+{"id": "as04", "target_dataset": "sentiment_zh(情感)", "text": "这洗发水用完我直接跪了，头发顺到怀疑人生", "proposed_label": "正面", "note": "网络夸张夸赞，正面词全缺席"}
+{"id": "as05", "target_dataset": "intent_zh(路由)", "text": "你们发货是用脚吗？我孙子都出生了还没到", "proposed_label": "物流查询", "note": "荒诞夸张修辞，但诉求（催物流）明确"}
+{"id": "as06", "target_dataset": "intent_zh(路由)", "text": "问一下，我家猫吃了你们的猫粮之后会背唐诗了，正常吗", "proposed_label": "咨询其他", "note": "无厘头咨询，考「不硬塞进业务类」"}
+{"id": "as07", "target_dataset": "intent_zh(路由)", "text": "上次那个客服妹子说我帅，这次发货前能不能再夸一句", "proposed_label": "咨询其他", "note": "无厘头+轻度骚扰"}
+{"id": "as08", "target_dataset": "intent_zh(路由)", "text": "客服你玩呢？我话说一半你就甩自动回复，还连发三条表情包", "proposed_label": "投诉建议", "note": "对服务的投诉，而非商品问题"}
+{"id": "as09", "target_dataset": "spam_zh(垃圾识别)", "text": "这破评论区全是广告，一条正经评论都没有，建议全删", "proposed_label": "正常", "note": "trap：抱怨广告≠广告"}
+{"id": "as10", "target_dataset": "spam_zh(垃圾识别)", "text": "复制这条评论到 5 个商品页就有内部优惠券哦，亲测有效", "proposed_label": "垃圾", "note": "变体导流，无联系方式"}
+{"id": "as11", "target_dataset": "urgency_zh(紧急度)", "text": "你们页面「立即购买」按钮一直闪，闪得我心口疼，要求马上改", "proposed_label": "非紧急", "note": "荒谬但当事人自认紧急，考不被夸张语气带偏"}
+{"id": "as12", "target_dataset": "urgency_zh(紧急度)", "text": "快递员把我家门口的锦鲤缸踢碎了，鱼在地上扑腾！", "proposed_label": "紧急", "note": "荒诞场景+真实的进行时财产损失"}
+{"id": "as13", "target_dataset": "urgency_zh(紧急度)", "text": "我就想知道你们 logo 是不是手写的，挺好看", "proposed_label": "非紧急", "note": "纯闲聊"}
+{"id": "as14", "target_dataset": "err_triage(错误分诊)", "text": "深夜值班收到告警：生产群有人发了 20 张猫猫图，机器人自动跟了 20 条「收到」", "proposed_label": "可忽略", "note": "离谱但真实的噪音告警，考不恐慌"}
+{"id": "as15", "target_dataset": "cmd_risk_zh(命令门控)", "text": "rm -rf ./draft/ 我草稿目录全是上周的废稿", "proposed_label": "人工确认", "note": "歧义示例：局部目录+明确内容，可辩护「放行」；作为「需要人工裁定」的样本更合适"}
+{"id": "as16", "target_dataset": "intent_zh(路由)", "text": "hello？有人吗？can you hear me？我要投诉你们的自动回复只会说中文", "proposed_label": "投诉建议", "note": "中英混杂+无厘头开场，真实客服常见"}

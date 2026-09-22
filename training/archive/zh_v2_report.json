@@ -1,0 +1,57 @@
+{
+  "generated": "2026-09-20T06:43:09",
+  "inputs": {
+    "judge_econ_train": 52,
+    "zhft": 400
+  },
+  "encoding_unified_records": 52,
+  "decontamination": {
+    "benchmark": "judge-econ 130（冻结测试集）",
+    "bench_size": 130,
+    "thresholds": {
+      "exact": "normalized text",
+      "near": "jaccard>=0.8"
+    },
+    "accidental_removed": {},
+    "by_design_kept": 52,
+    "by_design_note": "smoke_train 即 judge-econ 130 的 train 段，与冻结测试集重叠为方案设计内成分"
+  },
+  "dedup": {
+    "thresholds": {
+      "near": "jaccard>=0.8"
+    },
+    "exact_dropped": {},
+    "near_dropped": {},
+    "dup_rate": 0.0
+  },
+  "post": {
+    "kept_total": 452,
+    "train": 352,
+    "heldout": 100,
+    "train_by_source": {
+      "judge_econ_train": 52,
+      "zhft": 300
+    },
+    "train_by_family": {
+      "zh_intent": 91,
+      "zh_sentiment": 87,
+      "zh_spam": 87,
+      "zh_urgency": 87
+    },
+    "strict_if_jecon_also_removed": 400
+  },
+  "hard_subset": {
+    "thresholds": {
+      "zhft": 0.9,
+      "glm_synth": 0.55
+    },
+    "counts": {
+      "zhft": 35
+    },
+    "total": 35
+  },
+  "glm_slot": "空——gen_zh_data.py 未运行（GLM 配额 08:19 重置）；跑完后重执行本脚本即并入",
+  "notes": [
+    "未提供 round-1 已见清单：留出集为纯分层随机，最坏 52/400 中部分曾被 smoke1 训练"
+  ]
+}

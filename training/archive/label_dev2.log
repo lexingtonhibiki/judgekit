@@ -1,0 +1,18 @@
+DIS p2_cr09 teacher=逻辑错误 intended=边界条件缺失 conf=0.84
+DIS p2_cr12 teacher=逻辑错误 intended=边界条件缺失 conf=0.60
+DIS p2_cr13 teacher=逻辑错误 intended=边界条件缺失 conf=0.85
+progress 25/140 ok=25 disagreement=3
+progress 50/140 ok=50 disagreement=3
+DIS p2_calc11 teacher=计算正确 intended=计算有误 conf=0.98
+DIS p2_calc12 teacher=计算正确 intended=计算有误 conf=0.78
+DIS p2_calc13 teacher=计算正确 intended=计算有误 conf=0.55
+DIS p2_calc15 teacher=计算正确 intended=计算有误 conf=0.90
+progress 75/140 ok=75 disagreement=7
+DIS p2_calc16 teacher=计算正确 intended=计算有误 conf=0.77
+DIS p2_calc17 teacher=计算正确 intended=计算有误 conf=0.62
+DIS p2_calc18 teacher=计算正确 intended=计算有误 conf=0.86
+DIS p2_calc19 teacher=计算正确 intended=计算有误 conf=0.90
+progress 100/140 ok=100 disagreement=11
+progress 125/140 ok=125 disagreement=11
+DIS p2_tg19 teacher=retry-transient intended=ignorable conf=0.52
+DONE ok=140/140 disagreement=12

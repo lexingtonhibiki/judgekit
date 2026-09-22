@@ -1,0 +1,146 @@
+{"id": "dp_r01", "task": "dev_route_zh", "probs": {"功能请求": 0.0, "缺陷修复": 1.0, "性能问题": 0.0, "文档问题": 0.0}}
+{"id": "dp_r02", "task": "dev_route_zh", "probs": {"缺陷修复": 0.98, "性能问题": 0.02, "文档问题": 0.0, "功能请求": 0.0}}
+{"id": "dp_r03", "task": "dev_route_zh", "probs": {"缺陷修复": 1.0, "文档问题": 0.0, "性能问题": 0.0, "功能请求": 0.0}}
+{"id": "dp_r04", "task": "dev_route_zh", "probs": {"缺陷修复": 1.0, "性能问题": 0.0, "文档问题": 0.0, "功能请求": 0.0}}
+{"id": "dp_r05", "task": "dev_route_zh", "probs": {"功能请求": 0.0, "文档问题": 0.0, "缺陷修复": 1.0, "性能问题": 0.0}}
+{"id": "dp_r06", "task": "dev_route_zh", "probs": {"缺陷修复": 1.0, "性能问题": 0.0, "文档问题": 0.0, "功能请求": 0.0}}
+{"id": "dp_r07", "task": "dev_route_zh", "probs": {"功能请求": 0.0, "缺陷修复": 1.0, "性能问题": 0.0, "文档问题": 0.0}}
+{"id": "dp_r08", "task": "dev_route_zh", "probs": {"性能问题": 0.0, "缺陷修复": 1.0, "文档问题": 0.0, "功能请求": 0.0}}
+{"id": "dp_r09", "task": "dev_route_zh", "probs": {"功能请求": 1.0, "文档问题": 0.0, "缺陷修复": 0.0, "性能问题": 0.0}}
+{"id": "dp_r10", "task": "dev_route_zh", "probs": {"文档问题": 0.0, "性能问题": 0.0, "缺陷修复": 0.0, "功能请求": 1.0}}
+{"id": "dp_r11", "task": "dev_route_zh", "probs": {"性能问题": 0.0, "功能请求": 1.0, "缺陷修复": 0.0, "文档问题": 0.0}}
+{"id": "dp_r12", "task": "dev_route_zh", "probs": {"文档问题": 0.0, "性能问题": 0.0, "功能请求": 1.0, "缺陷修复": 0.0}}
+{"id": "dp_r13", "task": "dev_route_zh", "probs": {"文档问题": 0.0, "功能请求": 0.97, "性能问题": 0.0, "缺陷修复": 0.03}}
+{"id": "dp_r14", "task": "dev_route_zh", "probs": {"功能请求": 1.0, "缺陷修复": 0.0, "文档问题": 0.0, "性能问题": 0.0}}
+{"id": "dp_r15", "task": "dev_route_zh", "probs": {"文档问题": 0.0, "功能请求": 1.0, "性能问题": 0.0, "缺陷修复": 0.0}}
+{"id": "dp_r16", "task": "dev_route_zh", "probs": {"功能请求": 1.0, "性能问题": 0.0, "文档问题": 0.0, "缺陷修复": 0.0}}
+{"id": "dp_r17", "task": "dev_route_zh", "probs": {"功能请求": 0.0, "缺陷修复": 0.22, "性能问题": 0.0, "文档问题": 0.78}}
+{"id": "dp_r18", "task": "dev_route_zh", "probs": {"性能问题": 0.0, "缺陷修复": 0.48, "功能请求": 0.0, "文档问题": 0.52}}
+{"id": "dp_r19", "task": "dev_route_zh", "probs": {"文档问题": 1.0, "性能问题": 0.0, "功能请求": 0.0, "缺陷修复": 0.0}}
+{"id": "dp_r20", "task": "dev_route_zh", "probs": {"性能问题": 0.0, "文档问题": 0.99, "功能请求": 0.0, "缺陷修复": 0.01}}
+{"id": "dp_r21", "task": "dev_route_zh", "probs": {"缺陷修复": 0.0, "功能请求": 0.0, "文档问题": 1.0, "性能问题": 0.0}}
+{"id": "dp_r22", "task": "dev_route_zh", "probs": {"功能请求": 0.0, "缺陷修复": 0.02, "性能问题": 0.0, "文档问题": 0.98}}
+{"id": "dp_r23", "task": "dev_route_zh", "probs": {"性能问题": 0.77, "缺陷修复": 0.23, "文档问题": 0.0, "功能请求": 0.0}}
+{"id": "dp_r24", "task": "dev_route_zh", "probs": {"文档问题": 0.0, "缺陷修复": 0.0, "功能请求": 0.0, "性能问题": 1.0}}
+{"id": "dp_r25", "task": "dev_route_zh", "probs": {"功能请求": 0.0, "缺陷修复": 0.0, "文档问题": 0.0, "性能问题": 1.0}}
+{"id": "dp_r26", "task": "dev_route_zh", "probs": {"缺陷修复": 0.0, "性能问题": 1.0, "文档问题": 0.0, "功能请求": 0.0}}
+{"id": "dp_r27", "task": "dev_route_zh", "probs": {"缺陷修复": 0.0, "功能请求": 0.0, "性能问题": 1.0, "文档问题": 0.0}}
+{"id": "dp_r28", "task": "dev_route_zh", "probs": {"功能请求": 0.0, "文档问题": 0.0, "缺陷修复": 0.0, "性能问题": 1.0}}
+{"id": "dp_c01", "task": "cmd_risk_zh", "probs": {"放行": 0.82, "人工确认": 0.18}}
+{"id": "dp_c02", "task": "cmd_risk_zh", "probs": {"人工确认": 0.04, "放行": 0.96}}
+{"id": "dp_c03", "task": "cmd_risk_zh", "probs": {"放行": 1.0, "人工确认": 0.0}}
+{"id": "dp_c04", "task": "cmd_risk_zh", "probs": {"放行": 0.75, "人工确认": 0.25}}
+{"id": "dp_c05", "task": "cmd_risk_zh", "probs": {"人工确认": 0.01, "放行": 0.99}}
+{"id": "dp_c06", "task": "cmd_risk_zh", "probs": {"放行": 1.0, "人工确认": 0.0}}
+{"id": "dp_c07", "task": "cmd_risk_zh", "probs": {"人工确认": 0.0, "放行": 1.0}}
+{"id": "dp_c08", "task": "cmd_risk_zh", "probs": {"放行": 0.38, "人工确认": 0.62}}
+{"id": "dp_c09", "task": "cmd_risk_zh", "probs": {"人工确认": 0.02, "放行": 0.98}}
+{"id": "dp_c10", "task": "cmd_risk_zh", "probs": {"人工确认": 0.0, "放行": 1.0}}
+{"id": "dp_c11", "task": "cmd_risk_zh", "probs": {"放行": 1.0, "人工确认": 0.0}}
+{"id": "dp_c12", "task": "cmd_risk_zh", "probs": {"放行": 1.0, "人工确认": 0.0}}
+{"id": "dp_c13", "task": "cmd_risk_zh", "probs": {"人工确认": 0.03, "放行": 0.97}}
+{"id": "dp_c14", "task": "cmd_risk_zh", "probs": {"放行": 1.0, "人工确认": 0.0}}
+{"id": "dp_c15", "task": "cmd_risk_zh", "probs": {"人工确认": 0.0, "放行": 1.0}}
+{"id": "dp_c16", "task": "cmd_risk_zh", "probs": {"人工确认": 0.0, "放行": 1.0}}
+{"id": "dp_c17", "task": "cmd_risk_zh", "probs": {"人工确认": 0.0, "放行": 1.0}}
+{"id": "dp_c18", "task": "cmd_risk_zh", "probs": {"人工确认": 0.03, "放行": 0.97}}
+{"id": "dp_c19", "task": "cmd_risk_zh", "probs": {"放行": 1.0, "人工确认": 0.0}}
+{"id": "dp_c20", "task": "cmd_risk_zh", "probs": {"放行": 1.0, "人工确认": 0.0}}
+{"id": "dp_c21", "task": "cmd_risk_zh", "probs": {"人工确认": 1.0, "放行": 0.0}}
+{"id": "dp_c22", "task": "cmd_risk_zh", "probs": {"放行": 0.0, "人工确认": 1.0}}
+{"id": "dp_c23", "task": "cmd_risk_zh", "probs": {"放行": 0.0, "人工确认": 1.0}}
+{"id": "dp_c24", "task": "cmd_risk_zh", "probs": {"放行": 0.02, "人工确认": 0.98}}
+{"id": "dp_c25", "task": "cmd_risk_zh", "probs": {"放行": 0.0, "人工确认": 1.0}}
+{"id": "dp_c26", "task": "cmd_risk_zh", "probs": {"人工确认": 1.0, "放行": 0.0}}
+{"id": "dp_c27", "task": "cmd_risk_zh", "probs": {"人工确认": 1.0, "放行": 0.0}}
+{"id": "dp_c28", "task": "cmd_risk_zh", "probs": {"人工确认": 1.0, "放行": 0.0}}
+{"id": "dp_c29", "task": "cmd_risk_zh", "probs": {"放行": 0.01, "人工确认": 0.99}}
+{"id": "dp_c30", "task": "cmd_risk_zh", "probs": {"人工确认": 0.99, "放行": 0.01}}
+{"id": "dp_c31", "task": "cmd_risk_zh", "probs": {"放行": 0.0, "人工确认": 1.0}}
+{"id": "dp_c32", "task": "cmd_risk_zh", "probs": {"人工确认": 1.0, "放行": 0.0}}
+{"id": "dp_c33", "task": "cmd_risk_zh", "probs": {"人工确认": 1.0, "放行": 0.0}}
+{"id": "dp_c34", "task": "cmd_risk_zh", "probs": {"放行": 0.0, "人工确认": 1.0}}
+{"id": "dp_c35", "task": "cmd_risk_zh", "probs": {"人工确认": 0.98, "放行": 0.02}}
+{"id": "dp_c36", "task": "cmd_risk_zh", "probs": {"放行": 0.03, "人工确认": 0.97}}
+{"id": "dp_e01", "task": "err_triage", "probs": {"需要改代码": 0.01, "重试可恢复": 0.99, "可忽略": 0.0}}
+{"id": "dp_e02", "task": "err_triage", "probs": {"可忽略": 0.0, "重试可恢复": 1.0, "需要改代码": 0.0}}
+{"id": "dp_e03", "task": "err_triage", "probs": {"重试可恢复": 0.98, "可忽略": 0.0, "需要改代码": 0.02}}
+{"id": "dp_e04", "task": "err_triage", "probs": {"可忽略": 0.0, "重试可恢复": 1.0, "需要改代码": 0.0}}
+{"id": "dp_e05", "task": "err_triage", "probs": {"重试可恢复": 0.91, "需要改代码": 0.09, "可忽略": 0.0}}
+{"id": "dp_e06", "task": "err_triage", "probs": {"需要改代码": 0.0, "重试可恢复": 1.0, "可忽略": 0.0}}
+{"id": "dp_e07", "task": "err_triage", "probs": {"重试可恢复": 1.0, "需要改代码": 0.0, "可忽略": 0.0}}
+{"id": "dp_e08", "task": "err_triage", "probs": {"重试可恢复": 1.0, "可忽略": 0.0, "需要改代码": 0.0}}
+{"id": "dp_e09", "task": "err_triage", "probs": {"重试可恢复": 1.0, "可忽略": 0.0, "需要改代码": 0.0}}
+{"id": "dp_e10", "task": "err_triage", "probs": {"重试可恢复": 0.99, "可忽略": 0.0, "需要改代码": 0.01}}
+{"id": "dp_e11", "task": "err_triage", "probs": {"需要改代码": 0.11, "可忽略": 0.01, "重试可恢复": 0.88}}
+{"id": "dp_e12", "task": "err_triage", "probs": {"需要改代码": 0.0, "可忽略": 0.0, "重试可恢复": 1.0}}
+{"id": "dp_e13", "task": "err_triage", "probs": {"需要改代码": 1.0, "可忽略": 0.0, "重试可恢复": 0.0}}
+{"id": "dp_e14", "task": "err_triage", "probs": {"可忽略": 0.0, "重试可恢复": 0.0, "需要改代码": 1.0}}
+{"id": "dp_e15", "task": "err_triage", "probs": {"可忽略": 0.0, "需要改代码": 1.0, "重试可恢复": 0.0}}
+{"id": "dp_e16", "task": "err_triage", "probs": {"需要改代码": 1.0, "重试可恢复": 0.0, "可忽略": 0.0}}
+{"id": "dp_e17", "task": "err_triage", "probs": {"重试可恢复": 0.0, "可忽略": 0.0, "需要改代码": 1.0}}
+{"id": "dp_e18", "task": "err_triage", "probs": {"需要改代码": 1.0, "可忽略": 0.0, "重试可恢复": 0.0}}
+{"id": "dp_e19", "task": "err_triage", "probs": {"需要改代码": 1.0, "重试可恢复": 0.0, "可忽略": 0.0}}
+{"id": "dp_e20", "task": "err_triage", "probs": {"需要改代码": 0.99, "可忽略": 0.0, "重试可恢复": 0.01}}
+{"id": "dp_e21", "task": "err_triage", "probs": {"重试可恢复": 0.0, "可忽略": 0.0, "需要改代码": 1.0}}
+{"id": "dp_e22", "task": "err_triage", "probs": {"需要改代码": 1.0, "可忽略": 0.0, "重试可恢复": 0.0}}
+{"id": "dp_e23", "task": "err_triage", "probs": {"可忽略": 0.99, "需要改代码": 0.0, "重试可恢复": 0.01}}
+{"id": "dp_e24", "task": "err_triage", "probs": {"重试可恢复": 0.01, "需要改代码": 0.07, "可忽略": 0.92}}
+{"id": "dp_e25", "task": "err_triage", "probs": {"可忽略": 0.94, "需要改代码": 0.06, "重试可恢复": 0.0}}
+{"id": "dp_e26", "task": "err_triage", "probs": {"需要改代码": 0.04, "可忽略": 0.13, "重试可恢复": 0.83}}
+{"id": "dp_e27", "task": "err_triage", "probs": {"需要改代码": 0.57, "重试可恢复": 0.0, "可忽略": 0.43}}
+{"id": "dp_e28", "task": "err_triage", "probs": {"可忽略": 0.87, "重试可恢复": 0.01, "需要改代码": 0.12}}
+{"id": "dp_e29", "task": "err_triage", "probs": {"重试可恢复": 0.02, "可忽略": 0.97, "需要改代码": 0.01}}
+{"id": "dp_e30", "task": "err_triage", "probs": {"重试可恢复": 0.07, "需要改代码": 0.36, "可忽略": 0.57}}
+{"id": "dp_e31", "task": "err_triage", "probs": {"重试可恢复": 0.2, "需要改代码": 0.44, "可忽略": 0.36}}
+{"id": "dp_e32", "task": "err_triage", "probs": {"重试可恢复": 0.0, "需要改代码": 0.15, "可忽略": 0.85}}
+{"id": "dp_t01", "task": "commit_type", "probs": {"fix": 0.0, "refactor": 0.0, "test": 0.0, "docs": 0.0, "feat": 1.0}}
+{"id": "dp_t02", "task": "commit_type", "probs": {"test": 0.0, "docs": 0.0, "feat": 1.0, "fix": 0.0, "refactor": 0.0}}
+{"id": "dp_t03", "task": "commit_type", "probs": {"refactor": 0.0, "feat": 1.0, "docs": 0.0, "fix": 0.0, "test": 0.0}}
+{"id": "dp_t04", "task": "commit_type", "probs": {"docs": 0.0, "fix": 0.06, "feat": 0.94, "test": 0.0, "refactor": 0.0}}
+{"id": "dp_t05", "task": "commit_type", "probs": {"test": 0.0, "refactor": 0.0, "fix": 0.0, "feat": 1.0, "docs": 0.0}}
+{"id": "dp_t06", "task": "commit_type", "probs": {"test": 0.0, "refactor": 0.0, "docs": 0.0, "fix": 0.0, "feat": 1.0}}
+{"id": "dp_t07", "task": "commit_type", "probs": {"test": 0.0, "refactor": 0.0, "fix": 0.0, "feat": 1.0, "docs": 0.0}}
+{"id": "dp_t08", "task": "commit_type", "probs": {"test": 0.0, "feat": 1.0, "fix": 0.0, "docs": 0.0, "refactor": 0.0}}
+{"id": "dp_t09", "task": "commit_type", "probs": {"test": 0.0, "docs": 0.0, "refactor": 0.0, "feat": 1.0, "fix": 0.0}}
+{"id": "dp_t10", "task": "commit_type", "probs": {"docs": 0.0, "refactor": 0.0, "feat": 1.0, "fix": 0.0, "test": 0.0}}
+{"id": "dp_t11", "task": "commit_type", "probs": {"docs": 0.0, "fix": 1.0, "feat": 0.0, "test": 0.0, "refactor": 0.0}}
+{"id": "dp_t12", "task": "commit_type", "probs": {"fix": 1.0, "refactor": 0.0, "test": 0.0, "feat": 0.0, "docs": 0.0}}
+{"id": "dp_t13", "task": "commit_type", "probs": {"refactor": 0.0, "docs": 0.0, "feat": 0.0, "fix": 1.0, "test": 0.0}}
+{"id": "dp_t14", "task": "commit_type", "probs": {"test": 0.0, "feat": 0.0, "fix": 1.0, "docs": 0.0, "refactor": 0.0}}
+{"id": "dp_t15", "task": "commit_type", "probs": {"docs": 0.0, "test": 0.0, "feat": 0.0, "refactor": 0.0, "fix": 1.0}}
+{"id": "dp_t16", "task": "commit_type", "probs": {"test": 0.0, "refactor": 0.0, "fix": 1.0, "feat": 0.0, "docs": 0.0}}
+{"id": "dp_t17", "task": "commit_type", "probs": {"test": 0.0, "docs": 0.0, "refactor": 0.0, "feat": 0.0, "fix": 1.0}}
+{"id": "dp_t18", "task": "commit_type", "probs": {"refactor": 0.0, "docs": 0.0, "feat": 0.0, "test": 0.0, "fix": 1.0}}
+{"id": "dp_t19", "task": "commit_type", "probs": {"refactor": 0.0, "docs": 0.0, "feat": 0.0, "fix": 1.0, "test": 0.0}}
+{"id": "dp_t20", "task": "commit_type", "probs": {"fix": 1.0, "docs": 0.0, "test": 0.0, "refactor": 0.0, "feat": 0.0}}
+{"id": "dp_t21", "task": "commit_type", "probs": {"test": 0.0, "docs": 1.0, "fix": 0.0, "feat": 0.0, "refactor": 0.0}}
+{"id": "dp_t22", "task": "commit_type", "probs": {"fix": 0.0, "docs": 1.0, "refactor": 0.0, "test": 0.0, "feat": 0.0}}
+{"id": "dp_t23", "task": "commit_type", "probs": {"fix": 0.0, "refactor": 0.0, "test": 0.0, "docs": 1.0, "feat": 0.0}}
+{"id": "dp_t24", "task": "commit_type", "probs": {"refactor": 0.0, "test": 0.0, "docs": 0.99, "feat": 0.01, "fix": 0.0}}
+{"id": "dp_t25", "task": "commit_type", "probs": {"docs": 0.38, "fix": 0.0, "test": 0.0, "refactor": 0.08, "feat": 0.54}}
+{"id": "dp_t26", "task": "commit_type", "probs": {"fix": 0.0, "docs": 1.0, "test": 0.0, "feat": 0.0, "refactor": 0.0}}
+{"id": "dp_t27", "task": "commit_type", "probs": {"fix": 0.0, "docs": 1.0, "test": 0.0, "refactor": 0.0, "feat": 0.0}}
+{"id": "dp_t28", "task": "commit_type", "probs": {"test": 0.0, "docs": 1.0, "refactor": 0.0, "feat": 0.0, "fix": 0.0}}
+{"id": "dp_t29", "task": "commit_type", "probs": {"fix": 0.0, "feat": 0.0, "test": 0.0, "docs": 1.0, "refactor": 0.0}}
+{"id": "dp_t30", "task": "commit_type", "probs": {"docs": 1.0, "test": 0.0, "fix": 0.0, "refactor": 0.0, "feat": 0.0}}
+{"id": "dp_t31", "task": "commit_type", "probs": {"refactor": 0.0, "feat": 0.0, "docs": 0.0, "test": 1.0, "fix": 0.0}}
+{"id": "dp_t32", "task": "commit_type", "probs": {"fix": 0.0, "test": 1.0, "docs": 0.0, "feat": 0.0, "refactor": 0.0}}
+{"id": "dp_t33", "task": "commit_type", "probs": {"docs": 0.0, "fix": 0.0, "feat": 0.0, "test": 1.0, "refactor": 0.0}}
+{"id": "dp_t34", "task": "commit_type", "probs": {"refactor": 0.0, "feat": 0.0, "test": 1.0, "fix": 0.0, "docs": 0.0}}
+{"id": "dp_t35", "task": "commit_type", "probs": {"fix": 0.0, "docs": 0.0, "test": 0.99, "refactor": 0.0, "feat": 0.01}}
+{"id": "dp_t36", "task": "commit_type", "probs": {"refactor": 0.0, "docs": 0.0, "feat": 0.0, "test": 1.0, "fix": 0.0}}
+{"id": "dp_t37", "task": "commit_type", "probs": {"docs": 0.0, "feat": 0.0, "test": 1.0, "refactor": 0.0, "fix": 0.0}}
+{"id": "dp_t38", "task": "commit_type", "probs": {"docs": 0.0, "refactor": 0.0, "test": 0.99, "feat": 0.01, "fix": 0.0}}
+{"id": "dp_t39", "task": "commit_type", "probs": {"fix": 0.0, "test": 1.0, "refactor": 0.0, "docs": 0.0, "feat": 0.0}}
+{"id": "dp_t40", "task": "commit_type", "probs": {"test": 0.97, "refactor": 0.0, "docs": 0.0, "feat": 0.03, "fix": 0.0}}
+{"id": "dp_t41", "task": "commit_type", "probs": {"docs": 0.0, "fix": 0.0, "feat": 0.0, "test": 0.0, "refactor": 1.0}}
+{"id": "dp_t42", "task": "commit_type", "probs": {"refactor": 1.0, "fix": 0.0, "feat": 0.0, "docs": 0.0, "test": 0.0}}
+{"id": "dp_t43", "task": "commit_type", "probs": {"fix": 0.0, "docs": 0.0, "test": 0.0, "refactor": 1.0, "feat": 0.0}}
+{"id": "dp_t44", "task": "commit_type", "probs": {"docs": 0.0, "fix": 0.0, "feat": 0.0, "test": 0.0, "refactor": 1.0}}
+{"id": "dp_t45", "task": "commit_type", "probs": {"docs": 0.0, "test": 0.0, "fix": 0.0, "feat": 0.01, "refactor": 0.99}}
+{"id": "dp_t46", "task": "commit_type", "probs": {"docs": 0.0, "test": 0.0, "feat": 0.0, "fix": 0.0, "refactor": 1.0}}
+{"id": "dp_t47", "task": "commit_type", "probs": {"docs": 0.0, "fix": 0.0, "feat": 0.0, "test": 0.0, "refactor": 1.0}}
+{"id": "dp_t48", "task": "commit_type", "probs": {"refactor": 1.0, "feat": 0.0, "test": 0.0, "fix": 0.0, "docs": 0.0}}
+{"id": "dp_t49", "task": "commit_type", "probs": {"fix": 0.0, "docs": 0.0, "refactor": 1.0, "test": 0.0, "feat": 0.0}}
+{"id": "dp_t50", "task": "commit_type", "probs": {"feat": 0.0, "refactor": 1.0, "fix": 0.0, "test": 0.0, "docs": 0.0}}

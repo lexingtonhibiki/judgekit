@@ -1,0 +1,11 @@
+progress 25/146 ok=25 disagreement=0
+DIS dp_c08 teacher=人工确认 intended=放行 conf=0.62
+progress 50/146 ok=50 disagreement=1
+progress 75/146 ok=75 disagreement=1
+DIS dp_e26 teacher=重试可恢复 intended=可忽略 conf=0.83
+DIS dp_e27 teacher=需要改代码 intended=可忽略 conf=0.57
+DIS dp_e31 teacher=需要改代码 intended=可忽略 conf=0.44
+progress 100/146 ok=100 disagreement=4
+DIS dp_t25 teacher=feat intended=docs conf=0.54
+progress 125/146 ok=125 disagreement=5
+DONE ok=146/146 teacher-intent-disagreement=5

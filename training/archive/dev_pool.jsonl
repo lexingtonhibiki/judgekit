@@ -1,0 +1,146 @@
+{"id": "dp_r01", "task": "dev_route_zh", "text": "小程序支付回调偶发签名校验失败，用户付了钱订单没生成", "intended": "缺陷修复"}
+{"id": "dp_r02", "task": "dev_route_zh", "text": "CI 昨晚开始构建全红，没人动过配置", "intended": "缺陷修复"}
+{"id": "dp_r03", "task": "dev_route_zh", "text": "上传头像后显示的还是旧头像，刷新也没用", "intended": "缺陷修复"}
+{"id": "dp_r04", "task": "dev_route_zh", "text": "导出的 PDF 中文全变成方框", "intended": "缺陷修复"}
+{"id": "dp_r05", "task": "dev_route_zh", "text": "表格排序点第二下顺序就乱了", "intended": "缺陷修复"}
+{"id": "dp_r06", "task": "dev_route_zh", "text": "接口偶尔返回重复的订单号，主键冲突", "intended": "缺陷修复"}
+{"id": "dp_r07", "task": "dev_route_zh", "text": "Safari 上日历控件弹不出来，Chrome 正常", "intended": "缺陷修复"}
+{"id": "dp_r08", "task": "dev_route_zh", "text": "退出登录后再进，个人页还显示上一个用户的数据", "intended": "缺陷修复"}
+{"id": "dp_r09", "task": "dev_route_zh", "text": "能不能给仓库加个 Webhook 通知到钉钉群", "intended": "功能请求"}
+{"id": "dp_r10", "task": "dev_route_zh", "text": "希望搜索支持拼音首字母", "intended": "功能请求"}
+{"id": "dp_r11", "task": "dev_route_zh", "text": "建议导出功能加个进度条", "intended": "功能请求"}
+{"id": "dp_r12", "task": "dev_route_zh", "text": "API 能不能加个沙箱环境", "intended": "功能请求"}
+{"id": "dp_r13", "task": "dev_route_zh", "text": "移动端想要手势返回", "intended": "功能请求"}
+{"id": "dp_r14", "task": "dev_route_zh", "text": "报表希望可以自定义列", "intended": "功能请求"}
+{"id": "dp_r15", "task": "dev_route_zh", "text": "希望消息支持已读回执", "intended": "功能请求"}
+{"id": "dp_r16", "task": "dev_route_zh", "text": "建议支持企业微信扫码登录", "intended": "功能请求"}
+{"id": "dp_r17", "task": "dev_route_zh", "text": "部署手册的 Docker 镜像 tag 已经不存在了", "intended": "文档问题"}
+{"id": "dp_r18", "task": "dev_route_zh", "text": "接口文档里鉴权方式和实际实现的 header 名不一致", "intended": "文档问题"}
+{"id": "dp_r19", "task": "dev_route_zh", "text": "新同事按 onboarding 文档走不通，缺了一步依赖安装", "intended": "文档问题"}
+{"id": "dp_r20", "task": "dev_route_zh", "text": "CHANGELOG 里说的新开关在配置文件里找不到说明", "intended": "文档问题"}
+{"id": "dp_r21", "task": "dev_route_zh", "text": "wiki 上的架构图还是三个服务前的老架构", "intended": "文档问题"}
+{"id": "dp_r22", "task": "dev_route_zh", "text": "示例项目里 .env.example 漏了两个必填变量", "intended": "文档问题"}
+{"id": "dp_r23", "task": "dev_route_zh", "text": "列表页一翻页就白屏两三秒", "intended": "性能问题"}
+{"id": "dp_r24", "task": "dev_route_zh", "text": "定时任务跑一次要 40 分钟，以前只要 5 分钟", "intended": "性能问题"}
+{"id": "dp_r25", "task": "dev_route_zh", "text": "网关高峰期 P99 延迟突破 3 秒", "intended": "性能问题"}
+{"id": "dp_r26", "task": "dev_route_zh", "text": "打包产物从 8M 涨到 40M，首屏下载慢", "intended": "性能问题"}
+{"id": "dp_r27", "task": "dev_route_zh", "text": "Mongo 连接数常年顶满上限，频繁重建连接", "intended": "性能问题"}
+{"id": "dp_r28", "task": "dev_route_zh", "text": "全文检索接口 QPS 上 200 就开始丢请求", "intended": "性能问题"}
+{"id": "dp_c01", "task": "cmd_risk_zh", "text": "mv tmp/a.log logs/a.log", "intended": "放行"}
+{"id": "dp_c02", "task": "cmd_risk_zh", "text": "cp config.example.yaml config.yaml", "intended": "放行"}
+{"id": "dp_c03", "task": "cmd_risk_zh", "text": "mkdir -p build/cache", "intended": "放行"}
+{"id": "dp_c04", "task": "cmd_risk_zh", "text": "git add src/ && git commit -m 'wip'", "intended": "放行"}
+{"id": "dp_c05", "task": "cmd_risk_zh", "text": "git checkout -b feat/search", "intended": "放行"}
+{"id": "dp_c06", "task": "cmd_risk_zh", "text": "docker logs api-server --tail 100", "intended": "放行"}
+{"id": "dp_c07", "task": "cmd_risk_zh", "text": "kubectl get pods -n staging", "intended": "放行"}
+{"id": "dp_c08", "task": "cmd_risk_zh", "text": "tar -xzf dist.tar.gz -C /tmp/build", "intended": "放行"}
+{"id": "dp_c09", "task": "cmd_risk_zh", "text": "make test", "intended": "放行"}
+{"id": "dp_c10", "task": "cmd_risk_zh", "text": "go test ./...", "intended": "放行"}
+{"id": "dp_c11", "task": "cmd_risk_zh", "text": "psql -c 'SELECT count(*) FROM orders'", "intended": "放行"}
+{"id": "dp_c12", "task": "cmd_risk_zh", "text": "echo $PATH", "intended": "放行"}
+{"id": "dp_c13", "task": "cmd_risk_zh", "text": "touch .gitignore", "intended": "放行"}
+{"id": "dp_c14", "task": "cmd_risk_zh", "text": "head -50 requirements.txt", "intended": "放行"}
+{"id": "dp_c15", "task": "cmd_risk_zh", "text": "df -h", "intended": "放行"}
+{"id": "dp_c16", "task": "cmd_risk_zh", "text": "aws s3 ls s3://dev-artifacts/", "intended": "放行"}
+{"id": "dp_c17", "task": "cmd_risk_zh", "text": "whoami", "intended": "放行"}
+{"id": "dp_c18", "task": "cmd_risk_zh", "text": "python -m venv .venv", "intended": "放行"}
+{"id": "dp_c19", "task": "cmd_risk_zh", "text": "npm outdated", "intended": "放行"}
+{"id": "dp_c20", "task": "cmd_risk_zh", "text": "git stash list", "intended": "放行"}
+{"id": "dp_c21", "task": "cmd_risk_zh", "text": "dd if=/dev/zero of=/dev/sda", "intended": "人工确认"}
+{"id": "dp_c22", "task": "cmd_risk_zh", "text": "shutdown -h now", "intended": "人工确认"}
+{"id": "dp_c23", "task": "cmd_risk_zh", "text": "kubectl delete namespace prod", "intended": "人工确认"}
+{"id": "dp_c24", "task": "cmd_risk_zh", "text": "aws s3 rb s3://prod-backups", "intended": "人工确认"}
+{"id": "dp_c25", "task": "cmd_risk_zh", "text": "helm uninstall prod-release -n production", "intended": "人工确认"}
+{"id": "dp_c26", "task": "cmd_risk_zh", "text": "terraform destroy", "intended": "人工确认"}
+{"id": "dp_c27", "task": "cmd_risk_zh", "text": "git filter-branch --force --all", "intended": "人工确认"}
+{"id": "dp_c28", "task": "cmd_risk_zh", "text": "chown -R www-data /srv", "intended": "人工确认"}
+{"id": "dp_c29", "task": "cmd_risk_zh", "text": "systemctl stop firewalld", "intended": "人工确认"}
+{"id": "dp_c30", "task": "cmd_risk_zh", "text": "iptables -F", "intended": "人工确认"}
+{"id": "dp_c31", "task": "cmd_risk_zh", "text": "export DATABASE_URL=prod && python manage.py migrate", "intended": "人工确认"}
+{"id": "dp_c32", "task": "cmd_risk_zh", "text": "gpg --delete-secret-keys build@internal", "intended": "人工确认"}
+{"id": "dp_c33", "task": "cmd_risk_zh", "text": "yes | rm -r ~/Projects", "intended": "人工确认"}
+{"id": "dp_c34", "task": "cmd_risk_zh", "text": "wget http://mirror.example.com/tool.tgz -O /usr/local/bin/tool && chmod +x /usr/local/bin/tool", "intended": "人工确认"}
+{"id": "dp_c35", "task": "cmd_risk_zh", "text": "truncate -s 0 /var/log/app.log", "intended": "人工确认"}
+{"id": "dp_c36", "task": "cmd_risk_zh", "text": "vagrant destroy -f", "intended": "人工确认"}
+{"id": "dp_e01", "task": "err_triage", "text": "ConnectionResetError: [Errno 104] Connection reset by peer", "intended": "重试可恢复"}
+{"id": "dp_e02", "task": "err_triage", "text": "HTTP 504 Gateway Timeout", "intended": "重试可恢复"}
+{"id": "dp_e03", "task": "err_triage", "text": "socket.gaierror: [Errno -3] Temporary failure in name resolution", "intended": "重试可恢复"}
+{"id": "dp_e04", "task": "err_triage", "text": "HTTP 408 Request Timeout", "intended": "重试可恢复"}
+{"id": "dp_e05", "task": "err_triage", "text": "sqlalchemy.exc.OperationalError: connection pool exhausted, retrying", "intended": "重试可恢复"}
+{"id": "dp_e06", "task": "err_triage", "text": "Cloudflare 522 Connection timed out to origin", "intended": "重试可恢复"}
+{"id": "dp_e07", "task": "err_triage", "text": "boto3: ThrottlingException on sqs SendMessage", "intended": "重试可恢复"}
+{"id": "dp_e08", "task": "err_triage", "text": "ETIMEDOUT connecting to smtp.example.com:587", "intended": "重试可恢复"}
+{"id": "dp_e09", "task": "err_triage", "text": "grpc: transient failure, channel is in TRANSIENT_FAILURE state", "intended": "重试可恢复"}
+{"id": "dp_e10", "task": "err_triage", "text": "HTTP 525 SSL Handshake Failed with upstream (occasionally)", "intended": "重试可恢复"}
+{"id": "dp_e11", "task": "err_triage", "text": "aiohttp.ServerDisconnectedError on long-lived request", "intended": "重试可恢复"}
+{"id": "dp_e12", "task": "err_triage", "text": "elasticsearch: unable to revive connection, will retry in 5s", "intended": "重试可恢复"}
+{"id": "dp_e13", "task": "err_triage", "text": "ValueError: could not convert string to float: '12.3.4'", "intended": "需要改代码"}
+{"id": "dp_e14", "task": "err_triage", "text": "ZeroDivisionError: division by zero", "intended": "需要改代码"}
+{"id": "dp_e15", "task": "err_triage", "text": "UnboundLocalError: local variable 'result' referenced before assignment", "intended": "需要改代码"}
+{"id": "dp_e16", "task": "err_triage", "text": "java.lang.NullPointerException at OrderService.calc(OrderService.java:88)", "intended": "需要改代码"}
+{"id": "dp_e17", "task": "err_triage", "text": "Segmentation fault (core dumped) in native parser", "intended": "需要改代码"}
+{"id": "dp_e18", "task": "err_triage", "text": "TypeError: Cannot read property 'id' of undefined", "intended": "需要改代码"}
+{"id": "dp_e19", "task": "err_triage", "text": "UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0", "intended": "需要改代码"}
+{"id": "dp_e20", "task": "err_triage", "text": "ModuleNotFoundError: No module named 'sklearn'", "intended": "需要改代码"}
+{"id": "dp_e21", "task": "err_triage", "text": "FileNotFoundError: required template 'emails/reset.html' not found", "intended": "需要改代码"}
+{"id": "dp_e22", "task": "err_triage", "text": "AssertionError in test_checkout: expected 3 items, got 2", "intended": "需要改代码"}
+{"id": "dp_e23", "task": "err_triage", "text": "外部扫描器探测 /admin 返回 401，属于正常防护", "intended": "可忽略"}
+{"id": "dp_e24", "task": "err_triage", "text": "source map not found for bundle.js", "intended": "可忽略"}
+{"id": "dp_e25", "task": "err_triage", "text": "可选字体 brand.woff2 加载 404，已回退系统字体", "intended": "可忽略"}
+{"id": "dp_e26", "task": "err_triage", "text": "telemetry 上报失败，本批数据丢弃", "intended": "可忽略"}
+{"id": "dp_e27", "task": "err_triage", "text": "DeprecationWarning: implicit conversion will change in Python 3.12", "intended": "可忽略"}
+{"id": "dp_e28", "task": "err_triage", "text": "ad blocker 挡掉了推荐位的第三方脚本", "intended": "可忽略"}
+{"id": "dp_e29", "task": "err_triage", "text": "service worker 检测到新版本，已按策略延后更新", "intended": "可忽略"}
+{"id": "dp_e30", "task": "err_triage", "text": "robots.txt 404，搜索引擎按默认规则抓取", "intended": "可忽略"}
+{"id": "dp_e31", "task": "err_triage", "text": "git lfs smudge 跳过了 docs/ 下的大文件", "intended": "可忽略"}
+{"id": "dp_e32", "task": "err_triage", "text": "Stylelint 提示颜色值建议用变量", "intended": "可忽略"}
+{"id": "dp_t01", "task": "commit_type", "text": "feat: webhook notifications for pipeline events", "intended": "feat"}
+{"id": "dp_t02", "task": "commit_type", "text": "add --json output flag to CLI", "intended": "feat"}
+{"id": "dp_t03", "task": "commit_type", "text": "feat(i18n): scaffold zh-CN locale", "intended": "feat"}
+{"id": "dp_t04", "task": "commit_type", "text": "upload progress bar in file picker", "intended": "feat"}
+{"id": "dp_t05", "task": "commit_type", "text": "introduce retry queue for notification delivery", "intended": "feat"}
+{"id": "dp_t06", "task": "commit_type", "text": "feat: rate-limited public API keys", "intended": "feat"}
+{"id": "dp_t07", "task": "commit_type", "text": "support SAML SSO for enterprise plans", "intended": "feat"}
+{"id": "dp_t08", "task": "commit_type", "text": "feat(search): fuzzy matching toggle", "intended": "feat"}
+{"id": "dp_t09", "task": "commit_type", "text": "add template variables to email builder", "intended": "feat"}
+{"id": "dp_t10", "task": "commit_type", "text": "feat: per-workspace audit log page", "intended": "feat"}
+{"id": "dp_t11", "task": "commit_type", "text": "fix: off-by-one in pagination total", "intended": "fix"}
+{"id": "dp_t12", "task": "commit_type", "text": "guard against null optional config in initializer", "intended": "fix"}
+{"id": "dp_t13", "task": "commit_type", "text": "fix: remove event listener leak in dashboard", "intended": "fix"}
+{"id": "dp_t14", "task": "commit_type", "text": "fix wrong currency rounding on refunds", "intended": "fix"}
+{"id": "dp_t15", "task": "commit_type", "text": "hotfix: escape user input in notification titles", "intended": "fix"}
+{"id": "dp_t16", "task": "commit_type", "text": "fix: debounce resize handler to stop layout thrash", "intended": "fix"}
+{"id": "dp_t17", "task": "commit_type", "text": "repair broken webhook signature check", "intended": "fix"}
+{"id": "dp_t18", "task": "commit_type", "text": "fix: stop double-submit on slow networks", "intended": "fix"}
+{"id": "dp_t19", "task": "commit_type", "text": "patch timezone bug in cron expression parser", "intended": "fix"}
+{"id": "dp_t20", "task": "commit_type", "text": "fix: keep scroll position after list refresh", "intended": "fix"}
+{"id": "dp_t21", "task": "commit_type", "text": "docs: add architecture overview diagram", "intended": "docs"}
+{"id": "dp_t22", "task": "commit_type", "text": "write migration guide for v3 API", "intended": "docs"}
+{"id": "dp_t23", "task": "commit_type", "text": "docs: glossary for billing terms", "intended": "docs"}
+{"id": "dp_t24", "task": "commit_type", "text": "document rate limit headers", "intended": "docs"}
+{"id": "dp_t25", "task": "commit_type", "text": "add swagger annotations for user endpoints", "intended": "docs"}
+{"id": "dp_t26", "task": "commit_type", "text": "docs: expand troubleshooting section", "intended": "docs"}
+{"id": "dp_t27", "task": "commit_type", "text": "revise CONTRIBUTING with release process", "intended": "docs"}
+{"id": "dp_t28", "task": "commit_type", "text": "docs(auth): sequence diagram for SSO", "intended": "docs"}
+{"id": "dp_t29", "task": "commit_type", "text": "clarify error codes table in reference", "intended": "docs"}
+{"id": "dp_t30", "task": "commit_type", "text": "update changelog for 2.4.0", "intended": "docs"}
+{"id": "dp_t31", "task": "commit_type", "text": "test: golden files for parser output", "intended": "test"}
+{"id": "dp_t32", "task": "commit_type", "text": "property-based tests for date utils", "intended": "test"}
+{"id": "dp_t33", "task": "commit_type", "text": "e2e smoke test for login flow", "intended": "test"}
+{"id": "dp_t34", "task": "commit_type", "text": "test: coverage config and thresholds", "intended": "test"}
+{"id": "dp_t35", "task": "commit_type", "text": "add test data factory for workspaces", "intended": "test"}
+{"id": "dp_t36", "task": "commit_type", "text": "mock stripe webhook in checkout tests", "intended": "test"}
+{"id": "dp_t37", "task": "commit_type", "text": "test: snapshot tests for report rendering", "intended": "test"}
+{"id": "dp_t38", "task": "commit_type", "text": "seed script for integration test database", "intended": "test"}
+{"id": "dp_t39", "task": "commit_type", "text": "test(api): contract tests for public SDK", "intended": "test"}
+{"id": "dp_t40", "task": "commit_type", "text": "add load test scenario for export endpoint", "intended": "test"}
+{"id": "dp_t41", "task": "commit_type", "text": "refactor: split settings into domain modules", "intended": "refactor"}
+{"id": "dp_t42", "task": "commit_type", "text": "replace global singletons with DI container", "intended": "refactor"}
+{"id": "dp_t43", "task": "commit_type", "text": "deduplicate validation logic across forms", "intended": "refactor"}
+{"id": "dp_t44", "task": "commit_type", "text": "move string helpers into lib/text", "intended": "refactor"}
+{"id": "dp_t45", "task": "commit_type", "text": "add type hints across core modules", "intended": "refactor"}
+{"id": "dp_t46", "task": "commit_type", "text": "refactor: unify error response shape", "intended": "refactor"}
+{"id": "dp_t47", "task": "commit_type", "text": "extract retry logic into shared decorator", "intended": "refactor"}
+{"id": "dp_t48", "task": "commit_type", "text": "reorganize frontend store by feature", "intended": "refactor"}
+{"id": "dp_t49", "task": "commit_type", "text": "refactor(db): move raw SQL into repositories", "intended": "refactor"}
+{"id": "dp_t50", "task": "commit_type", "text": "internal cleanup: drop dead code paths", "intended": "refactor"}

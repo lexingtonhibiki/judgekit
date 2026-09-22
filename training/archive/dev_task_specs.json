@@ -1,0 +1,44 @@
+{
+  "dev_route_zh": {
+    "family": "dev_route",
+    "qid": "route",
+    "instructions": "判断这条开发团队消息应流转到哪个处理队列",
+    "criteria": {
+      "缺陷修复": "程序报错、行为与预期不符、崩溃、界面异常",
+      "功能请求": "新增能力、增强、需求建议",
+      "文档问题": "文档缺失、过时、示例错误、截图不符",
+      "性能问题": "慢、卡顿、资源占用高、扩容性差"
+    }
+  },
+  "cmd_risk_zh": {
+    "family": "dev_cmdrisk",
+    "qid": "risk",
+    "instructions": "判断这条 agent 拟自动执行的命令应该放行还是需要人工确认",
+    "criteria": {
+      "放行": "常规只读、检查或低风险可逆操作",
+      "人工确认": "破坏性、不可逆、影响面大、触碰生产或来源不可信"
+    }
+  },
+  "err_triage": {
+    "family": "dev_errtriage",
+    "qid": "triage",
+    "instructions": "判断这个程序错误的正确处置方式",
+    "criteria": {
+      "重试可恢复": "网络抖动、限流、超时等临时性故障，等待或重试即可",
+      "需要改代码": "代码缺陷、类型错误、逻辑错误，必须修改程序",
+      "可忽略": "不影响主流程的可选部分失败或风格警告"
+    }
+  },
+  "commit_type": {
+    "family": "dev_committype",
+    "qid": "ctype",
+    "instructions": "判断这条 git 提交信息的类型",
+    "criteria": {
+      "feat": "新功能",
+      "fix": "修复缺陷",
+      "docs": "仅文档变更",
+      "refactor": "既非新增也非修复的代码重构",
+      "test": "测试相关"
+    }
+  }
+}
