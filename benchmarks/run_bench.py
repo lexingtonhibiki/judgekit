@@ -26,6 +26,25 @@ from judgekit.engine import Task, rules_fallback, run_task   # noqa: E402
 from judgekit.providers import load_providers                # noqa: E402
 
 
+def find_data_file(ds: str) -> Path:
+    """数据集名 → jsonl 路径。
+
+    解析顺序：先找 data/{ds}.jsonl（兼容旧布局/旧命令），找不到再递归搜
+    data/**/{ds}.jsonl；同名文件同时出现在正式目录、历史快照（deprecated_*）与
+    草稿目录（drafts/）时，优先正式版，其次 deprecated，最后 drafts，同级按字典序。
+    rules.yaml / task.yaml 与 jsonl 同目录解析（见 main）。
+    """
+    flat = ROOT / "benchmarks" / "data" / f"{ds}.jsonl"
+    if flat.exists():
+        return flat
+    hits = sorted((ROOT / "benchmarks" / "data").glob(f"**/{ds}.jsonl"))
+    if not hits:
+        sys.exit(f"找不到数据集 {ds}：benchmarks/data/ 下（含子目录）没有 {ds}.jsonl")
+    excluded = ("deprecated", "drafts")
+    live = [p for p in hits if not any(part.startswith(excluded) for part in p.parts)]
+    return (live or hits)[0]
+
+
 def load_dataset(path: Path, limit: int) -> tuple[list[str], list[dict]]:
     labels, rows = [], []
     with open(path, encoding="utf-8") as f:
@@ -74,11 +93,18 @@ def main() -> None:
     tasks_rows: dict[str, list] = {}
     import yaml
     for ds in [d.strip() for d in args.datasets.split(",")]:
-        labels, rows = load_dataset(ROOT / "benchmarks" / "data" / f"{ds}.jsonl", args.limit)
-        rules_p = ROOT / "benchmarks" / "data" / f"{ds}.rules.yaml"
+        data_p = find_data_file(ds)
+        labels, rows = load_dataset(data_p, args.limit)
+        # rules.yaml / task.yaml 与 jsonl 同目录解析（子目录数据集自动跟随）
+        rules_p = data_p.with_name(f"{ds}.rules.yaml")
         fb = yaml.safe_load(open(rules_p, encoding="utf-8"))["fallback_rules"] if rules_p.exists() else {}
+        task_p = data_p.with_name(f"{ds}.task.yaml")
+        meta = yaml.safe_load(open(task_p, encoding="utf-8")) if task_p.exists() else {}
         tasks[ds] = Task(name=f"bench-{ds}", primitive="classify", labels=labels,
-                         instruction="中文分类基准测评。", fallback_rules=fb)
+                         label_descriptions=meta.get("label_descriptions", {}),
+                         criteria=meta.get("criteria", ""),
+                         instruction=meta.get("instruction", "中文分类基准测评。"),
+                         fallback_rules=fb)
         tasks_rows[ds] = rows
 
     for name in names:
