@@ -89,10 +89,10 @@ pip install -e .              # 唯一硬依赖 pyyaml；装好后有 judgekit �
 cp .env.example .env          # 可选：填 TYPESAFE_API_KEY（不填走规则兜底，0 成本）
 
 # ⓪ 10 秒试用——不要数据文件、不要 key（规则兜底 0 成本）；退出码 0/1 可直接做 shell 门
-judgekit judge judgekit/examples/triage.yaml "我的订单三天了还没发货，再不处理就投诉"
+judgekit judge judgekit/examples/triage.yaml "我的订单三天了还没发货，再不处理就投诉了"
 
 # ① 一份 YAML，跑一个派单判断（无 key 自动规则兜底）
-judgekit run judgekit/examples/triage.yaml --input benchmarks/data/intent_zh.jsonl --limit 3
+judgekit run judgekit/examples/triage.yaml --input benchmarks/data/econ_zh/intent_zh.jsonl --limit 3
 
 # ⓪b 工作流管道与 CI 门禁：stdin 读入；ok 率低于 80% 退出码 2
 cat tickets.jsonl | judgekit run judgekit/examples/triage.yaml --input - --fail-under 80
@@ -100,7 +100,7 @@ cat tickets.jsonl | judgekit run judgekit/examples/triage.yaml --input - --fail-
 # ② 同一份 YAML 原生跑 Jev（choice/score/noul，全量概率分布）
 export TYPESAFE_API_KEY=...
 judgekit run judgekit/examples/triage.yaml --providers benchmarks/models.yaml --provider typesafe \
-  --input benchmarks/data/intent_zh.jsonl --limit 3
+  --input benchmarks/data/econ_zh/intent_zh.jsonl --limit 3
 
 # ③ 全量评测 + Pareto 报告
 python benchmarks/run_bench.py --models rules,typesafe --limit 0 \
@@ -151,7 +151,7 @@ fallback_rules:               # 供应商失败/无 key 时的零成本兜底
 
 ```bash
 pip install -e .[dev]
-pytest               # 38 个离线单元测试
+pytest               # 124 个离线单元测试（1 个 live-ping 默认跳过）
 ```
 
 CI 在 Ubuntu/Windows × Python 3.10/3.12 上跑测试 + 零成本烟测。

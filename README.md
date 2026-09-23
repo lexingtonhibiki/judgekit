@@ -101,14 +101,14 @@ cp .env.example .env          # optional: TYPESAFE_API_KEY (works keyless via ru
 # ⓪ 10-second trial — no data file, no key (rule fallback, 0 cost); exit 0 = judged, exit 1 = no-hit/failed (shell gate)
 judgekit judge judgekit/examples/triage.yaml "我的订单三天了还没发货，再不处理就投诉了"
 # ① One YAML, one routing decision (rule fallback when no key → 0 cost)
-judgekit run judgekit/examples/triage.yaml --input benchmarks/data/intent_zh.jsonl --limit 3
+judgekit run judgekit/examples/triage.yaml --input benchmarks/data/econ_zh/intent_zh.jsonl --limit 3
 # ⓪b Workflow pipes & CI gate: read stdin, exit 2 when ok-rate < 80%
 cat tickets.jsonl | judgekit run judgekit/examples/triage.yaml --input - --fail-under 80
 
 # ② Same YAML natively on Jev (choice/score/noul, full probability distribution)
 export TYPESAFE_API_KEY=...
 judgekit run judgekit/examples/triage.yaml --providers benchmarks/models.yaml --provider typesafe \
-  --input benchmarks/data/intent_zh.jsonl --limit 3
+  --input benchmarks/data/econ_zh/intent_zh.jsonl --limit 3
 
 # ③ Full benchmark + Pareto report
 python benchmarks/run_bench.py --models rules,typesafe --limit 0 \
@@ -163,7 +163,7 @@ GLM, DeepSeek, OpenRouter…) runs the full pipeline; Jev is one provider among 
 
 ```bash
 pip install -e .[dev]
-pytest               # 38 offline unit tests
+pytest               # 124 offline unit tests (1 live-ping skipped by default)
 ```
 
 CI runs tests + zero-cost smoke on Ubuntu/Windows × Python 3.10/3.12.

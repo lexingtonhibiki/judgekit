@@ -1,4 +1,4 @@
-# Jev v4 规范报告（备推版）
+# Jev v4 规范报告（公开版）
 
 > 口径声明：本报告数字只抄各任务已验证值（task-13~18 报告），不新算。
 > 金标以 `gold_frozen190`（spam120/handoff70）与 `gold_spam120`（120直标）为准。
@@ -14,7 +14,7 @@
   标点即答案（带"！/？"基本是"紧急"）。v1-on-v1 复现 119/130 证明原数字含泄题成分。
 - v2（当前公开榜单，`benchmarks/data/econ_zh/`，130 条）：逐条去泄题重写（intent 改 23 /
   urgency 改 12 / spam 改 3 / sentiment 保留；紧急题一半平静语气、非紧急一半夸张语气）。
-  审计（`training/audit_leakage.py`）：标签词泄漏 0%、标点差 13pp 反转 PASS。
+  审计（`training/archive/audit_leakage.py`）：标签词泄漏 0%、标点差 13pp 反转 PASS。
   规则基线 91.5% → 82.3%（挤出泄题水分的健康回落）。
 - v4（本报告口径）：探针 T6 扩采（150 新采 + 旧 40 去重 = 190 行：FakeReview60/JD60/CSDS70，
   即 spam120/handoff70）+ 异构 ABC 打分（A/B 同 temp 0.95，C 恒 0.2）+ 用户终审冻结
@@ -27,7 +27,7 @@
 采样：urllib 直连 + UA，hf-mirror 302 签名直跟，decode 全部 utf-8-sig，重试 4 次，未调用
 任何付费 API。归一化：NFKC + opencc 繁→简 + 去首尾空白 + 空白折叠 + 小写；去重键 =
 归一化 sha256。污染基：`training/real_pools/clean/real_sentiment.jsonl` +
-`benchmarks/data/econ_zh/*.jsonl`，共 268 条（归一化 hash）；命中即弃并补采。
+`benchmarks/data/econ_zh/*.jsonl`，共 268 条（归一化 hash）；命中即弃并补采（内部污染基，未随库发布）。
 详见 `benchmarks/data/external/external_SAMPLING_REPORT.md`（随提交入库）。
 
 | 数据集 | 条数 | 候选池 | 去重弃数 | 污染命中 | 许可（原文照抄） |
