@@ -77,6 +77,7 @@ judge-econ 测的是**成本-准确率**，不是聪明程度：同一批任务�
 
  可引用成绩（120 直标，`gold_spam120`）：
  - argmax 60.0%（72/120，95% CI [51.1%, 68.3%]）/ τ=0.10 68.3%（82/120，Youden最优，in-sample，无留出）。
+ - 概率阈值实验说明：[docs/release-post-v0.3.md](docs/release-post-v0.3.md)——argmax 会丢弃概率分布中的分离信号；阈值校准是零重训杠杆。
  - 其余探索口径（190 系混合 gold，已被取代）见报告附录 `docs/jev-v4-report.md` §5.2，不引用。
 
  上方 judge-econ 头条数字不变。

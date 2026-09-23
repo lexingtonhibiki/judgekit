@@ -87,6 +87,7 @@ as spam — all genuinely borderline, all low-confidence.
 
  Quotable result only (120 directly-labeled spam, `gold_spam120`):
  - argmax 60.0% (72/120, 95% CI [51.1%, 68.3%]) / τ=0.10 68.3% in-sample (82/120, Youden-optimal, no holdout).
+ - Probability-threshold write-up: [docs/release-post-v0.3.md](docs/release-post-v0.3.md) (zh) — argmax discards the distribution's separation signal; τ recalibration is a zero-retrain lever.
  - Other exploratory calibers (190-series mixed gold, superseded) see appendix in `docs/jev-v4-report.md` §5.2 — not quotable.
 
  The headline judge-econ numbers above are unchanged.
