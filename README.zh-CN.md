@@ -75,16 +75,9 @@ judge-econ 测的是**成本-准确率**，不是聪明程度：同一批任务�
 
 ### 外部候选集 v4（冻结中）
 
- 只报口径与状态，不是榜单：
- - 口径：190 行冻结 gold（`training/abc_out/gold_frozen.jsonl`）= 125 自动通过
-   （gold=C 终判）+ 65 终审（改标 48 取反 + ✓通过 17 认同 + 删除 0）。gold 以
-   `training/abc_out/数据审核_v4_full.xlsx`（06 待审汇总「我的最终」列）为准。
- - 状态：B 冻结（v4）；内部总览通过 190 / 待定 0。榜单数字未定——以下不是基准成绩。
- - 三源 pending 率（相对冻结 gold 的翻转诊断，非准确率）：JD刷单 26.7% /
-   FakeReview 30.0% / CSDS 20.0%（T8 verdict 照抄；JD/FK 回炉，CSDS 仅 13 行
-   AB 双错列候选复核）。
- - 对比 few-shot 重跑为负结果（CSDS 一致 81.4%→55.7%），不合入 rubric；
-   `--calib` 保持默认 off。
+ 可引用成绩（120 直标，`gold_spam120`）：
+ - argmax 60.0%（72/120，95% CI [51.1%, 68.3%]）/ τ=0.10 68.3%（82/120，in-sample，无留出）。
+ - 其余探索口径（190 系混合 gold，已被取代）见报告附录 `docs/jev-v4-report.md` §5.2，不引用。
 
  上方 judge-econ 头条数字不变。
 
@@ -95,16 +88,24 @@ git clone https://github.com/lexingtonhibiki/judgekit && cd judgekit
 pip install -e .              # 唯一硬依赖 pyyaml；装好后有 judgekit 命令
 cp .env.example .env          # 可选：填 TYPESAFE_API_KEY（不填走规则兜底，0 成本）
 
+# ⓪ 10 秒试用——不要数据文件、不要 key（规则兜底 0 成本）；退出码 0/1 可直接做 shell 门
+judgekit judge judgekit/examples/triage.yaml "我的订单三天了还没发货，再不处理就投诉"
+
 # ① 一份 YAML，跑一个派单判断（无 key 自动规则兜底）
 judgekit run judgekit/examples/triage.yaml --input benchmarks/data/intent_zh.jsonl --limit 3
 
+# ⓪b 工作流管道与 CI 门禁：stdin 读入；ok 率低于 80% 退出码 2
+cat tickets.jsonl | judgekit run judgekit/examples/triage.yaml --input - --fail-under 80
+
 # ② 同一份 YAML 原生跑 Jev（choice/score/noul，全量概率分布）
 export TYPESAFE_API_KEY=...
-judgekit run judgekit/examples/triage.yaml --input benchmarks/data/intent_zh.jsonl --limit 3
+judgekit run judgekit/examples/triage.yaml --providers benchmarks/models.yaml --provider typesafe \
+  --input benchmarks/data/intent_zh.jsonl --limit 3
 
 # ③ 全量评测 + Pareto 报告
-python benchmarks/run_bench.py --models rules,typesafe --limit 0
-python benchmarks/report.py   # → benchmarks/results/report.md + docs/pareto.png
+python benchmarks/run_bench.py --models rules,typesafe --limit 0 \
+  --datasets intent_zh,sentiment_zh,spam_zh,urgency_zh    # n=130，头条数字的同款配方
+python benchmarks/report.py   # → benchmarks/results/（发布时手工拷贝到 docs/）
 
 # ④ 配方（默认本地启发式 0 成本；--model 开判官精排）
 python recipes/learn_next/next.py --model typesafe --top 3
@@ -128,7 +129,10 @@ fallback_rules:               # 供应商失败/无 key 时的零成本兜底
 - **typesafe 后端**：原生 choice criteria、score 刻度（归一化到 0-1）、verify→noul，
   返回全量概率分布与 confidence
 - **openai 后端**：同一份 YAML 自动翻译成「只输出 JSON」的提示词（含刻度锚点），响应解析+标签校验
-- **rules 后端**：关键词匹配，永远免费
+- **rules 后端**：在任务声明的 `input_field`（默认 `text`）上做关键词匹配，永远免费；
+  兜底只对 classify/route 生效——score/verify 供应商失败即失败
+- **单输入字段白名单**：规则匹配与 LLM 提示词只看声明字段，jsonl 里的金标/元数据
+  不会泄漏进提示词，也不会虚增命中率
 
 ## 供应商（bring your own）
 
@@ -147,7 +151,7 @@ fallback_rules:               # 供应商失败/无 key 时的零成本兜底
 
 ```bash
 pip install -e .[dev]
-pytest               # 22 个离线单元测试
+pytest               # 38 个离线单元测试
 ```
 
 CI 在 Ubuntu/Windows × Python 3.10/3.12 上跑测试 + 零成本烟测。

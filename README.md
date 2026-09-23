@@ -83,21 +83,11 @@ Misjudgment details ([errors.json](docs/errors.json)): 1 ambiguous
 label (warranty-policy inquiry), 1 soft-ad undetected, 1 negative review flagged
 as spam — all genuinely borderline, all low-confidence.
 
-### External candidate set v4 (frozen, pending)
+### External candidate set v4 (frozen)
 
- Caliber and status only — not a leaderboard:
- - Caliber: 190-row frozen gold (`training/abc_out/gold_frozen.jsonl`) = 125
-   auto-pass (gold = model-C final) + 65 human-adjudicated (48 flips +
-   17 confirms + 0 drops). Authoritative source for gold:
-   `training/abc_out/数据审核_v4_full.xlsx` (sheet 06, "我的最终" column).
- - Status: B-frozen (v4); internal overview counts pass 190 / pending 0.
-   Leaderboard numbers are NOT final — nothing below is a benchmark claim.
- - Per-source pending rates (diagnostic flip-vs-frozen-gold, NOT accuracy):
-   JD-brush 26.7% / FakeReview 30.0% / CSDS 20.0% (T8 verdict, copied;
-   JD/FK flagged for rubric rework, CSDS lists 13 AB-double-miss rows as
-   rework candidates only).
- - Contrastive few-shot rerun was negative (CSDS agreement 81.4% → 55.7%)
-   and is NOT merged; `--calib` stays default-off.
+ Quotable result only (120 directly-labeled spam, `gold_spam120`):
+ - argmax 60.0% (72/120, 95% CI [51.1%, 68.3%]) / τ=0.10 68.3% in-sample (82/120, Youden-optimal, no holdout).
+ - Other exploratory calibers (190-series mixed gold, superseded) see appendix in `docs/jev-v4-report.md` §5.2 — not quotable.
 
  The headline judge-econ numbers above are unchanged.
 
@@ -108,16 +98,22 @@ git clone https://github.com/lexingtonhibiki/judgekit && cd judgekit
 pip install -e .              # only hard dep is pyyaml; installs `judgekit` CLI
 cp .env.example .env          # optional: TYPESAFE_API_KEY (works keyless via rule fallback)
 
+# ⓪ 10-second trial — no data file, no key (rule fallback, 0 cost); exit 0 = judged, exit 1 = no-hit/failed (shell gate)
+judgekit judge judgekit/examples/triage.yaml "我的订单三天了还没发货，再不处理就投诉了"
 # ① One YAML, one routing decision (rule fallback when no key → 0 cost)
 judgekit run judgekit/examples/triage.yaml --input benchmarks/data/intent_zh.jsonl --limit 3
+# ⓪b Workflow pipes & CI gate: read stdin, exit 2 when ok-rate < 80%
+cat tickets.jsonl | judgekit run judgekit/examples/triage.yaml --input - --fail-under 80
 
 # ② Same YAML natively on Jev (choice/score/noul, full probability distribution)
 export TYPESAFE_API_KEY=...
-judgekit run judgekit/examples/triage.yaml --input benchmarks/data/intent_zh.jsonl --limit 3
+judgekit run judgekit/examples/triage.yaml --providers benchmarks/models.yaml --provider typesafe \
+  --input benchmarks/data/intent_zh.jsonl --limit 3
 
 # ③ Full benchmark + Pareto report
-python benchmarks/run_bench.py --models rules,typesafe --limit 0
-python benchmarks/report.py   # → benchmarks/results/report.md + docs/pareto.png
+python benchmarks/run_bench.py --models rules,typesafe --limit 0 \
+  --datasets intent_zh,sentiment_zh,spam_zh,urgency_zh    # n=130 — the headline numbers' exact recipe
+python benchmarks/report.py   # → benchmarks/results/ (copy artifacts to docs/ when publishing)
 
 # ④ Recipes (heuristic mode is free; --model enables judge rescoring)
 python recipes/learn_next/next.py --model typesafe --top 3
@@ -142,7 +138,10 @@ fallback_rules:               # zero-cost fallback when provider fails / no key
   0–1), noul → verify; returns full probability distribution + confidence
 - **openai backend**: same YAML auto-translated to a JSON-only prompt (with
   level anchors); response parsed and label-validated
-- **rules backend**: keyword matching, always free
+- **rules backend**: keyword matching on the declared `input_field` (default `text`),
+  always free; fallback applies to classify/route only — score/verify fail straight
+- **one input field per task**: rules matching and LLM prompts only see the declared field,
+  so gold labels / metadata in your jsonl never leak into prompts or inflate hit rates
 
 ## Providers (bring your own)
 
@@ -164,7 +163,7 @@ GLM, DeepSeek, OpenRouter…) runs the full pipeline; Jev is one provider among 
 
 ```bash
 pip install -e .[dev]
-pytest               # 22 offline unit tests
+pytest               # 38 offline unit tests
 ```
 
 CI runs tests + zero-cost smoke on Ubuntu/Windows × Python 3.10/3.12.
