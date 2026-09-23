@@ -56,6 +56,11 @@ HANDOFF_CRITERIA = ("转人工判定：辱骂/威胁/重复催≥2次或情绪�
 SPAM_INSTRUCTION = "举一反三类推，禁单特征定罪脱罪；只看text字段独立判定。"
 HANDOFF_INSTRUCTION = "只看text字段独立判定。"
 
+# T14场景锚定（逐字用，不改一字；默认off保旧行为，--scn on时前置到instruction，与T7泛化/禁令叠加不替换）
+SCN_SPAM = "场景：购物评价区。读者默认为潜在买家。朋友间私下夸赞式语句出现在这里，即视为刷单/刷评嫌疑。"
+SCN_HANDOFF = "场景：用户对客服说话。读者为客服或分诊系统。生活情绪独白（如路况、天气抱怨）无客服指向，不算转人工。"
+SCN_OUT_PATH = ROOT / "training" / "abc_out" / "jev_v4_scn_scores.jsonl"
+
 # 规则兜底关键词（仅失败托底用；命中仍记ok=False，不充正确）
 SPAM_FALLBACK = {
     "垃圾": ["加微", "微信", "链接", "首存", "发票", "贷款", "赌博", "钓鱼", "返现"],
@@ -67,18 +72,25 @@ HANDOFF_FALLBACK = {
 }
 
 
-def build_tasks() -> dict:
-    """组两个classify Task（provider钉typesafe，不钉名会滑入rules兜底假绿）。"""
-    spam = Task(name="jev-v4-spam", primitive="classify",
+def build_tasks(scn: str = "off") -> dict:
+    """组两个classify Task（provider钉typesafe，不钉名会滑入rules兜底假绿）。
+
+    T14: scn="on"时两Task instruction前置场景句（SCN_SPAM/SCN_HANDOFF），
+    Task名追加-scn隔离旧190；默认off保旧行为（名/instruction逐字旧链）。
+    """
+    use_scn = (scn == "on")
+    spam_ins = (SCN_SPAM + SPAM_INSTRUCTION) if use_scn else SPAM_INSTRUCTION
+    handoff_ins = (SCN_HANDOFF + HANDOFF_INSTRUCTION) if use_scn else HANDOFF_INSTRUCTION
+    spam = Task(name="jev-v4-spam-scn" if use_scn else "jev-v4-spam", primitive="classify",
                 labels=["垃圾", "正常"],
                 label_descriptions=dict(SPAM_LABEL_DESC),
-                criteria=SPAM_CRITERIA, instruction=SPAM_INSTRUCTION,
+                criteria=SPAM_CRITERIA, instruction=spam_ins,
                 input_field="text", provider=PROVIDER_NAME,
                 fallback_rules={k: list(v) for k, v in SPAM_FALLBACK.items()})
-    handoff = Task(name="jev-v4-handoff", primitive="classify",
+    handoff = Task(name="jev-v4-handoff-scn" if use_scn else "jev-v4-handoff", primitive="classify",
                    labels=["转人工", "不转"],
                    label_descriptions=dict(HANDOFF_LABEL_DESC),
-                   criteria=HANDOFF_CRITERIA, instruction=HANDOFF_INSTRUCTION,
+                   criteria=HANDOFF_CRITERIA, instruction=handoff_ins,
                    input_field="text", provider=PROVIDER_NAME,
                    fallback_rules={k: list(v) for k, v in HANDOFF_FALLBACK.items()})
     return {"spam": spam, "handoff": handoff}
@@ -218,6 +230,8 @@ def main() -> None:
     ap.add_argument("--out", default=str(OUT_PATH))
     ap.add_argument("--tries", type=int, default=TRIES)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--scn", default="off", choices=("off", "on"),
+                    help="T14场景锚定：off=旧行为（默认，可比）；on=两Task instruction前置场景句，Task名-scn+落盘jev_v4_scn_scores.jsonl隔离旧190")
     a = ap.parse_args()
 
     rows = load_jsonl(Path(a.gold))
@@ -226,9 +240,11 @@ def main() -> None:
     if a.limit:
         rows = rows[:a.limit]
     providers = load_providers_strict()  # 缺key在此停线，零调用
-    tasks = build_tasks()
+    tasks = build_tasks(scn=a.scn)
 
     out = Path(a.out)
+    if a.scn == "on" and out == OUT_PATH:
+        out = SCN_OUT_PATH  # scn默认落盘隔离文件，防id续跑混入旧190
     done = {r["id"]: r for r in load_jsonl(out)}  # 断点续跑：已落盘id跳过
     n_skip = sum(1 for r in rows if r["id"] in done)
     if n_skip:

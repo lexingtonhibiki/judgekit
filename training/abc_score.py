@@ -132,6 +132,22 @@ SPAM_BRUSH_RUBRIC = ("刷单刷评须举一反三类推：先从例子抽象刷�
                      "火锅例安利集美冲呀免费吃=刷，"
                      "地点附近好找+等一小时排队久+总体很值=正常")
 
+# T14场景锚定（逐字用，不改一字；默认off保旧行为；on时A/B两rubric前置，与T7泛化/禁令叠加不替换）
+SCN_SPAM = "场景：购物评价区。读者默认为潜在买家。朋友间私下夸赞式语句出现在这里，即视为刷单/刷评嫌疑。"
+SCN_HANDOFF = "场景：用户对客服说话。读者为客服或分诊系统。生活情绪独白（如路况、天气抱怨）无客服指向，不算转人工。"
+
+
+def scn_block(kind: str, mode: str) -> str:
+    """T14场景块：off→空（保旧行为）；on→spam/handoff返回逐字场景句（route/sentiment恒空）。"""
+    if mode != "on":
+        return ""
+    if kind == "spam":
+        return SCN_SPAM
+    if kind == "handoff":
+        return SCN_HANDOFF
+    return ""
+
+
 # T9对比few-shot回炉：例源唯一gold_frozen.jsonl改标48行；spam取"判正常→实垃圾"、
 # handoff取"判不转→实转人工"，优先CSDS-AB双错13行，每任务≤6对（防prompt膨胀），
 # 每例截断≤120字（换行压空格）。id按字典序取前6，保证可复现。
@@ -243,13 +259,14 @@ def usage_totals(u: dict) -> tuple[int, int, int]:
 def cache_key_of(iid: str, a: str, b: str, c: str, c2: str,
                  c2t: float, ev: str, temp_ab: float | None = None,
                  calib: str = "off", cautious: str = "off",
-                 conly: bool = False) -> str:
+                 conly: bool = False, scn: str = "off") -> str:
     """cache键含模型名：换任一槽即全量重打，旧Jev行（无键）天然不命中。
 
     T4起含AB温度：temp_ab=None=旧格式（T3兼容）；传值则追加|TAB=后缀，换温即重打。
     T9起含校准模式：calib="off"=旧格式（保可比）；contrastive追加|CALIB=后缀，隔离旧跑。
     T11起含谨慎模式：cautious="off"=旧格式（保可比）；on追加|CAUTIOUS=后缀，隔离旧跑。
     T12起含C-only模式：conly=True追加|CONLY后缀，冻结复用行隔离旧跑（A/B零调用，TAB值沿用仅作键区分）。
+    T14起含场景模式：scn="off"=旧格式（保可比）；on追加|SCN=on后缀，隔离旧跑。
     """
     base = f"{iid}|A={a}|B={b}|C={c}|C2={c2 or '-'}|C2t={c2t}|EV={ev}"
     if temp_ab is not None:
@@ -260,6 +277,8 @@ def cache_key_of(iid: str, a: str, b: str, c: str, c2: str,
         base += f"|CAUTIOUS={cautious}"
     if conly:
         base += "|CONLY"
+    if scn and scn != "off":
+        base += f"|SCN={scn}"
     return base
 
 
@@ -289,7 +308,7 @@ class Adapter:
     def __init__(self, providers: dict, name: str, transport=None,
                  max_tokens: int = 1024, resp_tokens: int = 1024,
                  reasoning_effort: str = "", calib: str = "off",
-                 cautious: str = "off"):
+                 cautious: str = "off", scn: str = "off"):
         self.name = name
         self.p = providers.get(name)
         if self.p is None:
@@ -304,6 +323,7 @@ class Adapter:
         self.reasoning_effort = reasoning_effort  # ""=不传（保默认行为）；设了就透传
         self.calib = calib or "off"  # T9: off=旧行为；contrastive=A/B/C/C2同加纠偏例
         self.cautious = cautious or "off"  # T11: off=旧行为；on=C/C2追加存疑→人工句
+        self.scn = scn or "off"  # T14: off=旧行为；on=A/B两rubric前置场景句
 
     def endpoint(self) -> str:
         if self.kind == "TypeSafe":
@@ -325,6 +345,7 @@ class Adapter:
         ins = arb_ctx
         cb = calib_block(kind, getattr(self, "calib", "off"))
         cn = cautious_block(kind, getattr(self, "cautious", "off"))
+        sc = scn_block(kind, getattr(self, "scn", "off"))
         cau = (cn + "。" if cn else "")
         if kind == "route":
             return Task(name="abc-route", primitive="route", labels=labels,
@@ -335,14 +356,14 @@ class Adapter:
             return Task(name="abc-handoff", primitive="classify", labels=["转人工", "不转"],
                         label_descriptions=dict(HANDOFF_DESC),
                         criteria="转人工判定：辱骂威胁重复催≥2次/情绪崩溃才转，投诉但冷静不转",
-                        instruction=(cb + cau + ins) if (cb or cau or ins) else "")
+                        instruction=(sc + cb + cau + ins) if (sc or cb or cau or ins) else "")
         if kind == "sentiment":
             return Task(name="abc-sentiment", primitive="score", levels=list(SENTI_LEVELS),
                         criteria=SENTI_CRITERIA, instruction=(SENTI_ANCHOR + "。" + cau + ins) if (cau or ins) else SENTI_ANCHOR)
         return Task(name="abc-spam", primitive="classify", labels=["垃圾", "正常"],
                     label_descriptions=dict(SPAM_DESC),
                     criteria=("垃圾判定：营销引流刷屏才判，抱怨差评驳回；" + SPAM_BRUSH_RUBRIC),
-                    instruction=(SPAM_BRUSH_RUBRIC + "。" + cb + cau + ins) if (cb or cau or ins) else SPAM_BRUSH_RUBRIC)
+                    instruction=(sc + SPAM_BRUSH_RUBRIC + "。" + cb + cau + ins) if (sc or cb or cau or ins) else SPAM_BRUSH_RUBRIC)
 
     @staticmethod
     def _ts_reason(kind: str, value, conf: float) -> str:
@@ -454,21 +475,23 @@ class Adapter:
 
     @staticmethod
     def _abc_user_prompt(kind: str, text: str, labels: list[str], arb_ctx: str,
-                         calib: str = "off", cautious: str = "off") -> str:
+                         calib: str = "off", cautious: str = "off",
+                         scn: str = "off") -> str:
         cb = calib_block(kind, calib)
         cn = cautious_block(kind, cautious)
+        sc = scn_block(kind, scn)
         cau = (cn + "。" if cn else "")
         if kind == "route":
             cands = "\n".join(f"- {lb}" for lb in labels)
             return (f"客服意图路由：意图唯一，从候选中选一个。{cau}\n{cands}\n{arb_ctx}\n输入：{text}\n"
                     '只输出JSON：{"label":"<候选原文>","confidence":0-1,"reason":"≤18字理由"}')
         if kind == "handoff":
-            return (f"转人工判定：辱骂/威胁/重复催≥2次或情绪崩溃才判转人工；投诉但冷静不转。{cb}{cau}{arb_ctx}\n输入：{text}\n"
+            return (f"{sc}转人工判定：辱骂/威胁/重复催≥2次或情绪崩溃才判转人工；投诉但冷静不转。{cb}{cau}{arb_ctx}\n输入：{text}\n"
                     '只输出JSON：{"label":"转人工|不转","confidence":0-1,"reason":"≤18字理由"}')
         if kind == "sentiment":
             return (f"情感权重0-10分。{SENTI_CRITERIA}。锚点：{SENTI_ANCHOR}。{cau}{arb_ctx}\n输入：{text}\n"
                     '只输出JSON：{"score":0-10数字,"confidence":0-1,"reason":"≤40字理由"}')
-        return (f"垃圾判定：营销引流/刷屏重复才判垃圾；抱怨差评正常咨询不判。"
+        return (f"{sc}垃圾判定：营销引流/刷屏重复才判垃圾；抱怨差评正常咨询不判。"
                 f"{SPAM_BRUSH_RUBRIC}。{cb}{cau}{arb_ctx}\n输入：{text}\n"
                 '只输出JSON：{"label":"垃圾|正常","confidence":0-1,"reason":"≤18字理由"}')
 
@@ -476,7 +499,7 @@ class Adapter:
     def _chat(self, kind: str, text: str, labels: list[str], temp: float, arb_ctx: str) -> dict:
         p = self.p
         user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"),
-                                     getattr(self, "cautious", "off"))
+                                     getattr(self, "cautious", "off"), getattr(self, "scn", "off"))
         body = json.dumps({"model": p.model,
                            "messages": [{"role": "system",
                                          "content": "你是判断引擎。只输出一个JSON对象，无其他文字。"},
@@ -502,7 +525,7 @@ class Adapter:
     def _go_chat_once(self, kind: str, text: str, labels: list[str],
                       temp: float, arb_ctx: str) -> dict:
         user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"),
-                                     getattr(self, "cautious", "off"))
+                                     getattr(self, "cautious", "off"), getattr(self, "scn", "off"))
         body = json.dumps({"model": self.p.model,
                            "messages": [{"role": "system",
                                          "content": "你是判断引擎。只输出一个JSON对象，无其他文字。"},
@@ -535,7 +558,7 @@ class Adapter:
     def _go_responses_once(self, kind: str, text: str, labels: list[str],
                            temp: float, arb_ctx: str) -> dict:
         user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"),
-                                     getattr(self, "cautious", "off"))
+                                     getattr(self, "cautious", "off"), getattr(self, "scn", "off"))
         req: dict = {"model": self.p.model,
                      "input": f"你是判断引擎。只输出一个JSON对象，无其他文字。\n\n{user}",
                      "max_output_tokens": self.resp_tokens}
@@ -928,6 +951,8 @@ def main() -> None:
     ap.add_argument("--cautious", default="off", choices=("off", "on"),
                     help="T11阈值回炉：off=旧行为（默认，可比）；on=C/C2提示词追加存疑→人工句（全任务），cache键CAUTIOUS隔离。"
                     "EXPERIMENTAL(T11验证恶化：JD+5pt/FK+5pt，仅研究对比用，勿入生产)")
+    ap.add_argument("--scn", default="off", choices=("off", "on"),
+                    help="T14场景锚定：off=旧行为（默认，可比）；on=A/B两rubric前置场景句（与T7泛化/禁令叠加不替换），cache键SCN隔离")
     ap.add_argument("--c-responses", default="",
                     help="responses模型桩（遗留：只记endpoint、不硬调）")
     ap.add_argument("--conly", action="store_true",
@@ -960,10 +985,10 @@ def main() -> None:
     providers = load_providers(args.providers)
     a_ad = Adapter(providers, args.a, max_tokens=args.max_tokens,
                    resp_tokens=args.resp_tokens, reasoning_effort=args.reasoning_effort,
-                   calib=args.calib)
+                   calib=args.calib, scn=args.scn)
     b_ad = Adapter(providers, args.b, max_tokens=args.max_tokens,
                    resp_tokens=args.resp_tokens, reasoning_effort=args.reasoning_effort,
-                   calib=args.calib)
+                   calib=args.calib, scn=args.scn)
     c_ad = Adapter(providers, args.c, max_tokens=args.max_tokens,
                    resp_tokens=args.resp_tokens, reasoning_effort=args.reasoning_effort,
                    calib=args.calib, cautious=args.cautious)
@@ -974,7 +999,7 @@ def main() -> None:
              if args.c2 else None)
     ev_ad = (Adapter(providers, args.evidence_provider)
              if args.evidence == "spark" else None)
-    fb_ad = Adapter(providers, args.fallback_b, calib=args.calib) if args.fallback_b else None
+    fb_ad = Adapter(providers, args.fallback_b, calib=args.calib, scn=args.scn) if args.fallback_b else None
     quota_raise = fb_ad is not None
 
     conly = bool(args.conly)
@@ -1010,13 +1035,13 @@ def main() -> None:
     cur_key = lambda iid: cache_key_of(iid, args.a, args.b, args.c,
                                        args.c2, args.c2_threshold, args.evidence,
                                        args.temp_ab, args.calib, args.cautious,
-                                       conly)
+                                       conly, args.scn)
     skip = done if args.retry_failed else (done | failed)
     todo = [r for r in items if cur_key(r["id"]) not in skip]
     print(f"items={len(items)} cached_ok={len(done)} cached_fail={len(failed)} "
           f"todo={len(todo)} A={args.a} B={args.b} C={args.c} C2={args.c2 or '禁用'} "
           f"C2t={args.c2_threshold} evidence={args.evidence} retry_failed={args.retry_failed} "
-          f"calib={args.calib} cautious={args.cautious} conly={conly}")
+          f"calib={args.calib} cautious={args.cautious} scn={args.scn} conly={conly}")
 
     lock = threading.Lock()
     stats = {"ok": 0, "fail": 0, "c_rejudge": 0, "c2": 0, "ev": 0, "n": 0,
@@ -1125,6 +1150,7 @@ def main() -> None:
                                     "temp_AB": args.temp_ab, "temp_C": 0.2,
                                    "calib": args.calib,
                                    "cautious": args.cautious,
+                                   "scn": args.scn,
                                    "gateway_note": gw,
                                   "fallback_note": b.get("fallback_from", ""),
                                    "spark_excerpt": excerpt,
