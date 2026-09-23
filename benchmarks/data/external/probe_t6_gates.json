@@ -1,0 +1,32 @@
+{
+  "CSDS": {
+    "n": 70,
+    "ab_ok": 70,
+    "c_need": 0,
+    "need_rate": 0.0,
+    "delete_rate": 0.0,
+    "verdict": "PASS"
+  },
+  "FakeReview": {
+    "n": 60,
+    "ab_ok": 60,
+    "c_need": 0,
+    "need_rate": 0.0,
+    "delete_rate": 0.0,
+    "verdict": "PASS"
+  },
+  "JD刷单": {
+    "n": 60,
+    "ab_ok": 60,
+    "c_need": 0,
+    "need_rate": 0.0,
+    "delete_rate": 0.0,
+    "verdict": "PASS"
+  },
+  "CSDS_agree": {
+    "n": 70,
+    "agree": 57,
+    "agree_rate": 0.814,
+    "verdict": "PASS"
+  }
+}

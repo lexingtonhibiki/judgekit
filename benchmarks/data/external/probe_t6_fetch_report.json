@@ -1,0 +1,46 @@
+{
+  "seed": 43,
+  "contam_n": 268,
+  "note": "T6扩采：t6raw先取FK60/JD60/CSDS70(seed43)，再去重旧40(exact1+CSDS-DID3)后定额新FK50(25+25)/JD50(25+25)/CSDS50；旧40 orig经xlsx我的最终校正(fk_0003/jd_0008->正常，其余不变)，全程未读jsonl gold_final",
+  "sources": {
+    "FakeReview": {
+      "new_n": 50,
+      "total": 60,
+      "label_dist": {
+        "刷评spam": 25,
+        "正常": 25
+      },
+      "ids": "fk_0011-0060",
+      "pool": 5600,
+      "dup": 0,
+      "near": 0,
+      "contam": 0,
+      "exact_vs_old": 1
+    },
+    "JD刷单": {
+      "new_n": 50,
+      "total": 60,
+      "label_dist": {
+        "刷单spam": 25,
+        "正常": 25
+      },
+      "ids": "jd_0011-0060",
+      "pool": 9556
+    },
+    "CSDS": {
+      "new_n": 50,
+      "total": 70,
+      "ids": "csds_0021-0070",
+      "pre": {
+        "转人工": 9,
+        "不转": 41
+      },
+      "pool": 800,
+      "did_overlap_excluded": 3
+    },
+    "reatiny": {
+      "n": 0,
+      "status": "FETCH_FAIL沿用T4(不补)"
+    }
+  }
+}
