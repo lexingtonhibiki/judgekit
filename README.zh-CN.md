@@ -73,6 +73,21 @@ judge-econ 测的是**成本-准确率**，不是聪明程度：同一批任务�
 误判明细见 [errors.json](docs/errors.json)：1 条标注本身模糊（保修政策咨询）、
 1 条软广漏检、1 条负评被误判垃圾——全是真边界样本，且全部低置信。
 
+### 外部候选集 v4（冻结中）
+
+ 只报口径与状态，不是榜单：
+ - 口径：190 行冻结 gold（`training/abc_out/gold_frozen.jsonl`）= 125 自动通过
+   （gold=C 终判）+ 65 终审（改标 48 取反 + ✓通过 17 认同 + 删除 0）。gold 以
+   `training/abc_out/数据审核_v4_full.xlsx`（06 待审汇总「我的最终」列）为准。
+ - 状态：B 冻结（v4）；内部总览通过 190 / 待定 0。榜单数字未定——以下不是基准成绩。
+ - 三源 pending 率（相对冻结 gold 的翻转诊断，非准确率）：JD刷单 26.7% /
+   FakeReview 30.0% / CSDS 20.0%（T8 verdict 照抄；JD/FK 回炉，CSDS 仅 13 行
+   AB 双错列候选复核）。
+ - 对比 few-shot 重跑为负结果（CSDS 一致 81.4%→55.7%），不合入 rubric；
+   `--calib` 保持默认 off。
+
+ 上方 judge-econ 头条数字不变。
+
 ## 快速开始
 
 ```bash

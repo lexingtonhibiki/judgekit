@@ -83,6 +83,24 @@ Misjudgment details ([errors.json](docs/errors.json)): 1 ambiguous
 label (warranty-policy inquiry), 1 soft-ad undetected, 1 negative review flagged
 as spam — all genuinely borderline, all low-confidence.
 
+### External candidate set v4 (frozen, pending)
+
+ Caliber and status only — not a leaderboard:
+ - Caliber: 190-row frozen gold (`training/abc_out/gold_frozen.jsonl`) = 125
+   auto-pass (gold = model-C final) + 65 human-adjudicated (48 flips +
+   17 confirms + 0 drops). Authoritative source for gold:
+   `training/abc_out/数据审核_v4_full.xlsx` (sheet 06, "我的最终" column).
+ - Status: B-frozen (v4); internal overview counts pass 190 / pending 0.
+   Leaderboard numbers are NOT final — nothing below is a benchmark claim.
+ - Per-source pending rates (diagnostic flip-vs-frozen-gold, NOT accuracy):
+   JD-brush 26.7% / FakeReview 30.0% / CSDS 20.0% (T8 verdict, copied;
+   JD/FK flagged for rubric rework, CSDS lists 13 AB-double-miss rows as
+   rework candidates only).
+ - Contrastive few-shot rerun was negative (CSDS agreement 81.4% → 55.7%)
+   and is NOT merged; `--calib` stays default-off.
+
+ The headline judge-econ numbers above are unchanged.
+
 ## Quick start
 
 ```bash
