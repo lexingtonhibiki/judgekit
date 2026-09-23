@@ -136,9 +136,22 @@ SPAM_BRUSH_RUBRIC = ("刷单刷评须举一反三类推：先从例子抽象刷�
 SCN_SPAM = "场景：购物评价区。读者默认为潜在买家。朋友间私下夸赞式语句出现在这里，即视为刷单/刷评嫌疑。"
 SCN_HANDOFF = "场景：用户对客服说话。读者为客服或分诊系统。生活情绪独白（如路况、天气抱怨）无客服指向，不算转人工。"
 
+# T15用户版提示词verbatim（逐字用，不改一字；scnv2时A/B两rubric同句替换，与旧泛化串并存，位置放最前；T14 SCN作废替换）
+SCNV2_SPAM = "场景：购物评价区。你的身份是潜在买家。垃圾判定：对于你而言，纯粹情绪称赞（刷好评返现）/谩骂（恶意攻击）等不提供真实消费反馈的均为垃圾；只看text字段独立判定"
+SCNV2_HANDOFF = "场景：用户对客服说话。你的身份为客服或分诊系统。转人工判定：需要人工介入操作的, 如修改订单,多次发消息催促的(>=2), 非规范化信息回复的；text字段换行表示多段对话.只看text字段独立判定。"
+
 
 def scn_block(kind: str, mode: str) -> str:
-    """T14场景块：off→空（保旧行为）；on→spam/handoff返回逐字场景句（route/sentiment恒空）。"""
+    """T14场景块：off→空（保旧行为）；on→spam/handoff返回逐字场景句（route/sentiment恒空）。
+
+    T15扩展：scnv2→返回SCNV2逐字用户版两句（route/sentiment恒空），与旧泛化串并存时调用方放最前。
+    """
+    if mode == "scnv2":
+        if kind == "spam":
+            return SCNV2_SPAM
+        if kind == "handoff":
+            return SCNV2_HANDOFF
+        return ""
     if mode != "on":
         return ""
     if kind == "spam":
@@ -267,6 +280,7 @@ def cache_key_of(iid: str, a: str, b: str, c: str, c2: str,
     T11起含谨慎模式：cautious="off"=旧格式（保可比）；on追加|CAUTIOUS=后缀，隔离旧跑。
     T12起含C-only模式：conly=True追加|CONLY后缀，冻结复用行隔离旧跑（A/B零调用，TAB值沿用仅作键区分）。
     T14起含场景模式：scn="off"=旧格式（保可比）；on追加|SCN=on后缀，隔离旧跑。
+    T15起含场景v2模式：scn="scnv2"追加|SCNv2后缀，隔离旧链（含T14 SCN）。
     """
     base = f"{iid}|A={a}|B={b}|C={c}|C2={c2 or '-'}|C2t={c2t}|EV={ev}"
     if temp_ab is not None:
@@ -278,7 +292,10 @@ def cache_key_of(iid: str, a: str, b: str, c: str, c2: str,
     if conly:
         base += "|CONLY"
     if scn and scn != "off":
-        base += f"|SCN={scn}"
+        if scn == "scnv2":
+            base += "|SCNv2"
+        else:
+            base += f"|SCN={scn}"
     return base
 
 
@@ -323,7 +340,7 @@ class Adapter:
         self.reasoning_effort = reasoning_effort  # ""=不传（保默认行为）；设了就透传
         self.calib = calib or "off"  # T9: off=旧行为；contrastive=A/B/C/C2同加纠偏例
         self.cautious = cautious or "off"  # T11: off=旧行为；on=C/C2追加存疑→人工句
-        self.scn = scn or "off"  # T14: off=旧行为；on=A/B两rubric前置场景句
+        self.scn = scn or "off"  # T14: off=旧行为；on=A/B两rubric前置场景句；T15: scnv2=A/B两rubric前置SCNV2逐字句（与旧泛化串并存放最前）
 
     def endpoint(self) -> str:
         if self.kind == "TypeSafe":
@@ -951,8 +968,9 @@ def main() -> None:
     ap.add_argument("--cautious", default="off", choices=("off", "on"),
                     help="T11阈值回炉：off=旧行为（默认，可比）；on=C/C2提示词追加存疑→人工句（全任务），cache键CAUTIOUS隔离。"
                     "EXPERIMENTAL(T11验证恶化：JD+5pt/FK+5pt，仅研究对比用，勿入生产)")
-    ap.add_argument("--scn", default="off", choices=("off", "on"),
-                    help="T14场景锚定：off=旧行为（默认，可比）；on=A/B两rubric前置场景句（与T7泛化/禁令叠加不替换），cache键SCN隔离")
+    ap.add_argument("--scn", default="off", choices=("off", "on", "scnv2"),
+                    help="T14场景锚定：off=旧行为（默认，可比）；on=A/B两rubric前置场景句（与T7泛化/禁令叠加不替换），cache键SCN隔离；"
+                    "T15用户版verbatim：scnv2=A/B两rubric前置SCNV2逐字句（与旧泛化串并存放最前），cache键SCNv2隔离旧链")
     ap.add_argument("--c-responses", default="",
                     help="responses模型桩（遗留：只记endpoint、不硬调）")
     ap.add_argument("--conly", action="store_true",

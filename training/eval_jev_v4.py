@@ -61,6 +61,19 @@ SCN_SPAM = "场景：购物评价区。读者默认为潜在买家。朋友间�
 SCN_HANDOFF = "场景：用户对客服说话。读者为客服或分诊系统。生活情绪独白（如路况、天气抱怨）无客服指向，不算转人工。"
 SCN_OUT_PATH = ROOT / "training" / "abc_out" / "jev_v4_scn_scores.jsonl"
 
+# T15用户版提示词verbatim（逐字用，不改一字；--scn scnv2时两Task instruction整体替换，labels富描述同步压短呼应，不加新约束）
+SCNV2_SPAM = "场景：购物评价区。你的身份是潜在买家。垃圾判定：对于你而言，纯粹情绪称赞（刷好评返现）/谩骂（恶意攻击）等不提供真实消费反馈的均为垃圾；只看text字段独立判定"
+SCNV2_HANDOFF = "场景：用户对客服说话。你的身份为客服或分诊系统。转人工判定：需要人工介入操作的, 如修改订单,多次发消息催促的(>=2), 非规范化信息回复的；text字段换行表示多段对话.只看text字段独立判定。"
+SCNV2_SPAM_LABEL_DESC = {
+    "垃圾": "无消费反馈的称赞/谩骂/引流其余不判",
+    "正常": "其余",
+}
+SCNV2_HANDOFF_LABEL_DESC = {
+    "转人工": "需人工介入：改单/连催/非规范回复",
+    "不转": "其余",
+}
+SCNV2_OUT_PATH = ROOT / "training" / "abc_out" / "jev_v4_scnv2_scores.jsonl"
+
 # 规则兜底关键词（仅失败托底用；命中仍记ok=False，不充正确）
 SPAM_FALLBACK = {
     "垃圾": ["加微", "微信", "链接", "首存", "发票", "贷款", "赌博", "钓鱼", "返现"],
@@ -77,7 +90,23 @@ def build_tasks(scn: str = "off") -> dict:
 
     T14: scn="on"时两Task instruction前置场景句（SCN_SPAM/SCN_HANDOFF），
     Task名追加-scn隔离旧190；默认off保旧行为（名/instruction逐字旧链）。
+    T15: scn="scnv2"时两Task instruction整体替换为SCNV2两句逐字（labels富描述同步压短呼应，不加新约束），
+    Task名追加-scnv2+落盘jev_v4_scnv2_scores.jsonl隔离旧链；T14 SCN作废替换。
     """
+    if scn == "scnv2":
+        spam = Task(name="jev-v4-spam-scnv2", primitive="classify",
+                    labels=["垃圾", "正常"],
+                    label_descriptions=dict(SCNV2_SPAM_LABEL_DESC),
+                    criteria=SPAM_CRITERIA, instruction=SCNV2_SPAM,
+                    input_field="text", provider=PROVIDER_NAME,
+                    fallback_rules={k: list(v) for k, v in SPAM_FALLBACK.items()})
+        handoff = Task(name="jev-v4-handoff-scnv2", primitive="classify",
+                       labels=["转人工", "不转"],
+                       label_descriptions=dict(SCNV2_HANDOFF_LABEL_DESC),
+                       criteria=HANDOFF_CRITERIA, instruction=SCNV2_HANDOFF,
+                       input_field="text", provider=PROVIDER_NAME,
+                       fallback_rules={k: list(v) for k, v in HANDOFF_FALLBACK.items()})
+        return {"spam": spam, "handoff": handoff}
     use_scn = (scn == "on")
     spam_ins = (SCN_SPAM + SPAM_INSTRUCTION) if use_scn else SPAM_INSTRUCTION
     handoff_ins = (SCN_HANDOFF + HANDOFF_INSTRUCTION) if use_scn else HANDOFF_INSTRUCTION
@@ -230,8 +259,9 @@ def main() -> None:
     ap.add_argument("--out", default=str(OUT_PATH))
     ap.add_argument("--tries", type=int, default=TRIES)
     ap.add_argument("--limit", type=int, default=0)
-    ap.add_argument("--scn", default="off", choices=("off", "on"),
-                    help="T14场景锚定：off=旧行为（默认，可比）；on=两Task instruction前置场景句，Task名-scn+落盘jev_v4_scn_scores.jsonl隔离旧190")
+    ap.add_argument("--scn", default="off", choices=("off", "on", "scnv2"),
+                    help="T14场景锚定：off=旧行为（默认，可比）；on=两Task instruction前置场景句，Task名-scn+落盘jev_v4_scn_scores.jsonl隔离旧190；"
+                    "T15用户版verbatim：scnv2=两Task instruction整体替换为SCNV2两句逐字+labels压短呼应，Task名-scnv2+落盘jev_v4_scnv2_scores.jsonl隔离旧链")
     a = ap.parse_args()
 
     rows = load_jsonl(Path(a.gold))
@@ -245,6 +275,8 @@ def main() -> None:
     out = Path(a.out)
     if a.scn == "on" and out == OUT_PATH:
         out = SCN_OUT_PATH  # scn默认落盘隔离文件，防id续跑混入旧190
+    if a.scn == "scnv2" and out == OUT_PATH:
+        out = SCNV2_OUT_PATH  # scnv2默认落盘隔离文件，防id续跑混入旧190/SCN
     done = {r["id"]: r for r in load_jsonl(out)}  # 断点续跑：已落盘id跳过
     n_skip = sum(1 for r in rows if r["id"] in done)
     if n_skip:
