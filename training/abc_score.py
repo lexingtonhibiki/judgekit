@@ -125,6 +125,63 @@ SPAM_BRUSH_RUBRIC = ("刷单刷评须举一反三类推：先从例子抽象刷�
                      "火锅例安利集美冲呀免费吃=刷，"
                      "地点附近好找+等一小时排队久+总体很值=正常")
 
+# T9对比few-shot回炉：例源唯一gold_frozen.jsonl改标48行；spam取"判正常→实垃圾"、
+# handoff取"判不转→实转人工"，优先CSDS-AB双错13行，每任务≤6对（防prompt膨胀），
+# 每例截断≤120字（换行压空格）。id按字典序取前6，保证可复现。
+CALIB_TRUNC = 120
+CALIB_SPAM_EXAMPLES = [
+    {"id": "fk_0008", "wrong": "正常", "gold": "垃圾",
+     "text": "地点就在科华路川大附近，很好找。食材都很新鲜，摆盘也很用心，每份摆盘都好春，勾人食欲！味道很霸道，鲜，辣，正宗火锅特色！他家牛肉人好好吃，又新鲜又滑嫩，关键还很入味！吃完莱品，再来碗他家的冰粉，就更爽了！服务员态度很好！就是吃客太多了，等了一个多小时才吃到，不过为了美味也值了！"},
+    {"id": "fk_0009", "wrong": "正常", "gold": "垃圾",
+     "text": "第一次去没有好好吃，这次带着自己的爸爸去的，地理位置优越，很容易发现。空间宽敞，明亮，摆的桌子不少，我们比较幸运，去得早一点，没有排队，是六点半左右到的，后面人真的不少，都拿着在外面排队。服务很热情，态度很赞，会主动给你说能吃了，帮忙把火关小。菜很新鲜，这次的性价比惊艳到我了，两个人点了个套餐68，完全足够了，豆花很棒，想必是加了些青豆的，蘸料不错，按照老板墙上的推荐加了一个，味道真的不错，有机会一定再来！！！"},
+    {"id": "fk_0010", "wrong": "正常", "gold": "垃圾",
+     "text": "两个女生去，点了四个荤菜三个素菜～味道很好！午餐肉肥肠都很好很好吃！！就是晚上排队应该排了有40来分钟～建议提前在网上排号！不过有免费的甜品可以吃！还多好吃～哈哈哈哈哈还有就是这个提示太温馨咯哈～会再来！因为味道真的阔以哈～"},
+    {"id": "jd_0002", "wrong": "正常", "gold": "垃圾",
+     "text": "电脑机身轻薄运行速度快，携带方便又颜值超高，满足自己平时办公的需要，iOS系统用着超级舒服方便，用惯了真的超级好，就是下载软件APP商城软件能下载的太少了，瑕不掩瑜，自己还是很喜欢～"},
+    {"id": "jd_0012", "wrong": "正常", "gold": "垃圾",
+     "text": "很好，拿到后包装完好。没有一点磕碰痕迹。@后查询了保修信息，没毛病。使用过程中流畅，比我之前的6速度快了N倍。"},
+    {"id": "jd_0014", "wrong": "正常", "gold": "垃圾",
+     "text": "东西拿来做了win10系统盘。装新机用，没任何问题很舒服的款式。物流也快。十分满意金士顿还是一直都很好的。就是现在装完系统用不上了?"},
+]
+CALIB_HANDOFF_EXAMPLES = [
+    {"id": "csds_0004", "wrong": "不转", "gold": "转人工",
+     "text": "购买 多个 商品\n能 不能\n发货\n到 不同\n的 地方\n能 不能 填写 两个 收货 地址 啊 😊\n请问 该 怎么 操作 啊\n然后 在 两个 地方 收货\n是 吗\n把 那些 东西 分成 两批"},
+    {"id": "csds_0008", "wrong": "不转", "gold": "转人工",
+     "text": "plus 会员 退货 要收 运费 吗 ?"},
+    {"id": "csds_0011", "wrong": "不转", "gold": "转人工",
+     "text": "为什么 我 自己 查 显示 已经 签收 了 ， 这 京东 上边 的 物流 没有 显示 呢 ?\n商家 收到 我 拒收 的 货后 几天 能 给 我 退回来"},
+    {"id": "csds_0016", "wrong": "不转", "gold": "转人工",
+     "text": "有 现货 ?\n激光 色"},
+    {"id": "csds_0030", "wrong": "不转", "gold": "转人工",
+     "text": "昨天 反映 的 问题   怎么 还 没有 给 回复 ?\n哪里 设置\n‘ 是 啊   窗帘 很多 都 是 需要 按 尺寸 定制 的 呢\n发货 时效 要求 不是 [数字] 小时 吗 ?\n还有 请问 下 我 可以 卖 地毯 地垫 吗 ?\n现在 该 如何 添加 呢\n亲 ， 一个 店铺 可以 入驻 几个 一级 类目 ?\n质保金 和平 [地址]   还 需要 再多交 吗 ?"},
+    {"id": "csds_0034", "wrong": "不转", "gold": "转人工",
+     "text": "但是 没 人 配送 啊\n取消 也 不行"},
+]
+
+
+def calib_block(kind: str, mode: str) -> str:
+    """T9对比纠偏块：off→空（保旧行为）；contrastive→spam/handoff各≤6对原文+错判→正解。
+
+    每例截断≤120字（换行压空格），末尾一句类推收束，避免单特征定罪漂移。
+    """
+    if mode != "contrastive":
+        return ""
+    if kind == "spam":
+        lines = ["对比纠偏例（曾错判正常→实为垃圾，共6例，举一反三类推，避免同类错判）："]
+        for i, e in enumerate(CALIB_SPAM_EXAMPLES[:6], 1):
+            t = e["text"].replace("\n", " ")[:CALIB_TRUNC]
+            lines.append(f"例{i}「{t}」错判{e['wrong']}→正解{e['gold']}")
+        lines.append("以上虽带小缺点/数字仍无可验证细节，判垃圾；有可验证具体事实者才判正常。")
+        return "\n".join(lines) + "\n"
+    if kind == "handoff":
+        lines = ["对比纠偏例（曾错判不转→实为转人工，共6例，举一反三类推）："]
+        for i, e in enumerate(CALIB_HANDOFF_EXAMPLES[:6], 1):
+            t = e["text"].replace("\n", " ")[:CALIB_TRUNC]
+            lines.append(f"例{i}「{t}」错判{e['wrong']}→正解{e['gold']}")
+        lines.append("以上多为重复催/情绪失控边缘，类推从严；仅冷静单次咨询不转。")
+        return "\n".join(lines) + "\n"
+    return ""
+
 # ---- 重试判定 ----
 _RETRYABLE = ("429", "500", "502", "503", "504", "529", "timeout", "timed out",
               "curl", "connection", "reset by peer", "overloaded", "rate limit",
@@ -166,13 +223,19 @@ def usage_totals(u: dict) -> tuple[int, int, int]:
 
 
 def cache_key_of(iid: str, a: str, b: str, c: str, c2: str,
-                 c2t: float, ev: str, temp_ab: float | None = None) -> str:
+                 c2t: float, ev: str, temp_ab: float | None = None,
+                 calib: str = "off") -> str:
     """cache键含模型名：换任一槽即全量重打，旧Jev行（无键）天然不命中。
 
     T4起含AB温度：temp_ab=None=旧格式（T3兼容）；传值则追加|TAB=后缀，换温即重打。
+    T9起含校准模式：calib="off"=旧格式（保可比）；contrastive追加|CALIB=后缀，隔离旧跑。
     """
     base = f"{iid}|A={a}|B={b}|C={c}|C2={c2 or '-'}|C2t={c2t}|EV={ev}"
-    return base if temp_ab is None else f"{base}|TAB={temp_ab}"
+    if temp_ab is not None:
+        base += f"|TAB={temp_ab}"
+    if calib and calib != "off":
+        base += f"|CALIB={calib}"
+    return base
 
 
 def dedup_by_key(recs: list[dict]) -> list[dict]:
@@ -200,7 +263,7 @@ class Adapter:
 
     def __init__(self, providers: dict, name: str, transport=None,
                  max_tokens: int = 1024, resp_tokens: int = 1024,
-                 reasoning_effort: str = ""):
+                 reasoning_effort: str = "", calib: str = "off"):
         self.name = name
         self.p = providers.get(name)
         if self.p is None:
@@ -213,6 +276,7 @@ class Adapter:
         self.max_tokens = max_tokens  # chat侧输出预算（deepseek推理烧得多，默认1024）
         self.resp_tokens = resp_tokens  # responses侧输出预算
         self.reasoning_effort = reasoning_effort  # ""=不传（保默认行为）；设了就透传
+        self.calib = calib or "off"  # T9: off=旧行为；contrastive=A/B/C/C2同加纠偏例
 
     def endpoint(self) -> str:
         if self.kind == "TypeSafe":
@@ -232,6 +296,7 @@ class Adapter:
     # ---- typesafe原生 ----
     def _typesafe_task(self, kind: str, labels: list[str], arb_ctx: str = "") -> Task:
         ins = arb_ctx
+        cb = calib_block(kind, getattr(self, "calib", "off"))
         if kind == "route":
             return Task(name="abc-route", primitive="route", labels=labels,
                         label_descriptions={lb: lb for lb in labels},
@@ -241,14 +306,14 @@ class Adapter:
             return Task(name="abc-handoff", primitive="classify", labels=["转人工", "不转"],
                         label_descriptions=dict(HANDOFF_DESC),
                         criteria="转人工判定：辱骂威胁重复催≥2次/情绪崩溃才转，投诉但冷静不转",
-                        instruction=ins)
+                        instruction=(cb + ins) if (cb or ins) else "")
         if kind == "sentiment":
             return Task(name="abc-sentiment", primitive="score", levels=list(SENTI_LEVELS),
                         criteria=SENTI_CRITERIA, instruction=(SENTI_ANCHOR + "。" + ins) if ins else SENTI_ANCHOR)
         return Task(name="abc-spam", primitive="classify", labels=["垃圾", "正常"],
                     label_descriptions=dict(SPAM_DESC),
                     criteria=("垃圾判定：营销引流刷屏才判，抱怨差评驳回；" + SPAM_BRUSH_RUBRIC),
-                    instruction=(SPAM_BRUSH_RUBRIC + "。" + ins) if ins else SPAM_BRUSH_RUBRIC)
+                    instruction=(SPAM_BRUSH_RUBRIC + "。" + cb + ins) if (cb or ins) else SPAM_BRUSH_RUBRIC)
 
     @staticmethod
     def _ts_reason(kind: str, value, conf: float) -> str:
@@ -359,25 +424,27 @@ class Adapter:
         return v, conf, str(o.get("reason", ""))
 
     @staticmethod
-    def _abc_user_prompt(kind: str, text: str, labels: list[str], arb_ctx: str) -> str:
+    def _abc_user_prompt(kind: str, text: str, labels: list[str], arb_ctx: str,
+                         calib: str = "off") -> str:
+        cb = calib_block(kind, calib)
         if kind == "route":
             cands = "\n".join(f"- {lb}" for lb in labels)
             return (f"客服意图路由：意图唯一，从候选中选一个。\n{cands}\n{arb_ctx}\n输入：{text}\n"
                     '只输出JSON：{"label":"<候选原文>","confidence":0-1,"reason":"≤18字理由"}')
         if kind == "handoff":
-            return (f"转人工判定：辱骂/威胁/重复催≥2次或情绪崩溃才判转人工；投诉但冷静不转。{arb_ctx}\n输入：{text}\n"
+            return (f"转人工判定：辱骂/威胁/重复催≥2次或情绪崩溃才判转人工；投诉但冷静不转。{cb}{arb_ctx}\n输入：{text}\n"
                     '只输出JSON：{"label":"转人工|不转","confidence":0-1,"reason":"≤18字理由"}')
         if kind == "sentiment":
             return (f"情感权重0-10分。{SENTI_CRITERIA}。锚点：{SENTI_ANCHOR}。{arb_ctx}\n输入：{text}\n"
                     '只输出JSON：{"score":0-10数字,"confidence":0-1,"reason":"≤40字理由"}')
         return (f"垃圾判定：营销引流/刷屏重复才判垃圾；抱怨差评正常咨询不判。"
-                f"{SPAM_BRUSH_RUBRIC}。{arb_ctx}\n输入：{text}\n"
+                f"{SPAM_BRUSH_RUBRIC}。{cb}{arb_ctx}\n输入：{text}\n"
                 '只输出JSON：{"label":"垃圾|正常","confidence":0-1,"reason":"≤18字理由"}')
 
     # ---- openai chat（遗留直连，urllib）----
     def _chat(self, kind: str, text: str, labels: list[str], temp: float, arb_ctx: str) -> dict:
         p = self.p
-        user = self._abc_user_prompt(kind, text, labels, arb_ctx)
+        user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"))
         body = json.dumps({"model": p.model,
                            "messages": [{"role": "system",
                                          "content": "你是判断引擎。只输出一个JSON对象，无其他文字。"},
@@ -402,7 +469,7 @@ class Adapter:
     # ---- GO chat（curl传输，与_chat同提示词契约）----
     def _go_chat_once(self, kind: str, text: str, labels: list[str],
                       temp: float, arb_ctx: str) -> dict:
-        user = self._abc_user_prompt(kind, text, labels, arb_ctx)
+        user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"))
         body = json.dumps({"model": self.p.model,
                            "messages": [{"role": "system",
                                          "content": "你是判断引擎。只输出一个JSON对象，无其他文字。"},
@@ -434,7 +501,7 @@ class Adapter:
     # ---- GO responses（curl传输，input信封）----
     def _go_responses_once(self, kind: str, text: str, labels: list[str],
                            temp: float, arb_ctx: str) -> dict:
-        user = self._abc_user_prompt(kind, text, labels, arb_ctx)
+        user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"))
         req: dict = {"model": self.p.model,
                      "input": f"你是判断引擎。只输出一个JSON对象，无其他文字。\n\n{user}",
                      "max_output_tokens": self.resp_tokens}
@@ -669,6 +736,8 @@ def main() -> None:
     ap.add_argument("--cache", default="training/abc_out/abc_cache_go.jsonl")
     ap.add_argument("--retry-failed", action="store_true",
                     help="把缓存中AB失败行捡回重跑（成功行仍跳过）")
+    ap.add_argument("--calib", default="off", choices=("off", "contrastive"),
+                    help="T9对比few-shot：off=旧行为（默认，可比）；contrastive=spam/handoff各≤6对错判→正解例（源gold_frozen改标48，AB双错优先，每例≤120字）")
     ap.add_argument("--c-responses", default="",
                     help="responses模型桩（遗留：只记endpoint、不硬调）")
     args = ap.parse_args()
@@ -686,18 +755,22 @@ def main() -> None:
                 os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
     providers = load_providers(args.providers)
     a_ad = Adapter(providers, args.a, max_tokens=args.max_tokens,
-                   resp_tokens=args.resp_tokens, reasoning_effort=args.reasoning_effort)
+                   resp_tokens=args.resp_tokens, reasoning_effort=args.reasoning_effort,
+                   calib=args.calib)
     b_ad = Adapter(providers, args.b, max_tokens=args.max_tokens,
-                   resp_tokens=args.resp_tokens, reasoning_effort=args.reasoning_effort)
+                   resp_tokens=args.resp_tokens, reasoning_effort=args.reasoning_effort,
+                   calib=args.calib)
     c_ad = Adapter(providers, args.c, max_tokens=args.max_tokens,
-                   resp_tokens=args.resp_tokens, reasoning_effort=args.reasoning_effort)
+                   resp_tokens=args.resp_tokens, reasoning_effort=args.reasoning_effort,
+                   calib=args.calib)
     c2_ad = (Adapter(providers, args.c2, max_tokens=args.max_tokens,
                      resp_tokens=args.resp_tokens,
-                     reasoning_effort=args.reasoning_effort)
+                     reasoning_effort=args.reasoning_effort,
+                     calib=args.calib)
              if args.c2 else None)
     ev_ad = (Adapter(providers, args.evidence_provider)
              if args.evidence == "spark" else None)
-    fb_ad = Adapter(providers, args.fallback_b) if args.fallback_b else None
+    fb_ad = Adapter(providers, args.fallback_b, calib=args.calib) if args.fallback_b else None
     quota_raise = fb_ad is not None
 
     items, route_labels = (load_input(args.input, args.limit) if args.input
@@ -718,12 +791,13 @@ def main() -> None:
              else failed).add(k)
     cur_key = lambda iid: cache_key_of(iid, args.a, args.b, args.c,
                                        args.c2, args.c2_threshold, args.evidence,
-                                       args.temp_ab)
+                                       args.temp_ab, args.calib)
     skip = done if args.retry_failed else (done | failed)
     todo = [r for r in items if cur_key(r["id"]) not in skip]
     print(f"items={len(items)} cached_ok={len(done)} cached_fail={len(failed)} "
           f"todo={len(todo)} A={args.a} B={args.b} C={args.c} C2={args.c2 or '禁用'} "
-          f"C2t={args.c2_threshold} evidence={args.evidence} retry_failed={args.retry_failed}")
+          f"C2t={args.c2_threshold} evidence={args.evidence} retry_failed={args.retry_failed} "
+          f"calib={args.calib}")
 
     lock = threading.Lock()
     stats = {"ok": 0, "fail": 0, "c_rejudge": 0, "c2": 0, "ev": 0, "n": 0,
@@ -848,18 +922,19 @@ def main() -> None:
                    "A": a, "B": b, "C": c, "delta": delta,
                    **({"C2": c2rec} if c2rec is not None else {}),
                    "endpoint": ep, "model": md, "usage": us,
-                   "provenance": {"a_provider": args.a, "b_provider": args.b,
-                                  "b_effective": ("typesafe(fallback)" if b.get("fallback_from") else args.b),
-                                  "c_provider": args.c, "c_responses_stub": args.c_responses or None,
-                                  "c2_provider": args.c2 or None,
-                                  "c2_threshold": args.c2_threshold,
-                                  "c2_called": (c2rec or {}).get("called", "none"),
-                                  "evidence_mode": args.evidence,
-                                  "reasoning_effort": args.reasoning_effort or None,
-                                  "max_tokens_chat": args.max_tokens,
-                                  "max_tokens_resp": args.resp_tokens,
-                                   "temp_AB": args.temp_ab, "temp_C": 0.2,
-                                  "gateway_note": gw,
+                    "provenance": {"a_provider": args.a, "b_provider": args.b,
+                                   "b_effective": ("typesafe(fallback)" if b.get("fallback_from") else args.b),
+                                   "c_provider": args.c, "c_responses_stub": args.c_responses or None,
+                                   "c2_provider": args.c2 or None,
+                                   "c2_threshold": args.c2_threshold,
+                                   "c2_called": (c2rec or {}).get("called", "none"),
+                                   "evidence_mode": args.evidence,
+                                   "reasoning_effort": args.reasoning_effort or None,
+                                   "max_tokens_chat": args.max_tokens,
+                                   "max_tokens_resp": args.resp_tokens,
+                                    "temp_AB": args.temp_ab, "temp_C": 0.2,
+                                   "calib": args.calib,
+                                   "gateway_note": gw,
                                   "fallback_note": b.get("fallback_from", ""),
                                   "spark_excerpt": excerpt,
                                   "elapsed_s": round(time.time() - t0, 1)},
