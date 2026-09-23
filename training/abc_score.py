@@ -38,6 +38,8 @@ DeepSeek直连key禁用：本脚本默认只走GO的deepseek-v4.1-flash，不读
 合规路径声明（R1评审F1，选注释+--help方案，不加--strict-go）：GO为唯一合规路径
 （A/B/C/C2/EV默认全为go-槽）。TypeSafe/OpenAICompat分支为遗留兼容，仅本地mock/
 离线测试用（见Adapter类注释），生产打分禁止用--a/--b/--c/--c2切到非go-槽。
+T9-R1围栏：--calib为EXPERIMENTAL(2026-09 T9验证恶化：CSDS一致81.4→55.7)：
+默认off，仅研究对比用，勿入生产链。
 
 用法（分批400，GO全量）：
   python training/abc_score.py --only smp2019_ecdt,crosswoz --workers 3
@@ -737,12 +739,16 @@ def main() -> None:
     ap.add_argument("--retry-failed", action="store_true",
                     help="把缓存中AB失败行捡回重跑（成功行仍跳过）")
     ap.add_argument("--calib", default="off", choices=("off", "contrastive"),
-                    help="T9对比few-shot：off=旧行为（默认，可比）；contrastive=spam/handoff各≤6对错判→正解例（源gold_frozen改标48，AB双错优先，每例≤120字）")
+                    help="T9对比few-shot：off=旧行为（默认，可比）；contrastive=spam/handoff各≤6对错判→正解例（源gold_frozen改标48，AB双错优先，每例≤120字）。"
+                    "EXPERIMENTAL(2026-09 T9验证恶化：CSDS一致81.4→55.7)：默认off，仅研究对比用，勿入生产链")
     ap.add_argument("--c-responses", default="",
                     help="responses模型桩（遗留：只记endpoint、不硬调）")
     args = ap.parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
+    if args.calib == "contrastive":
+        print("⚠ WARNING: --calib contrastive为已知恶化实验（T9: CSDS一致81.4→55.7），仅研究对比用，勿入生产链！",
+              file=sys.stderr, flush=True)
 
     from judgekit.providers import load_providers
     # .env 本地加载（key永不进仓库；环境变量已存在则不覆盖）

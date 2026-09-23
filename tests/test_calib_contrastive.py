@@ -73,3 +73,11 @@ def test_calib_adapter_prompt_via_mock():
     ad2 = m.Adapter(provs2, "go-c", transport=provs2["go-c"].transport)  # 默认off
     ad2.call("spam", "测试文本", [], 0.95)
     assert "对比纠偏例" not in calls2[0]["messages"][1]["content"]
+
+
+def test_calib_help_marks_experimental():
+    import subprocess
+    r = subprocess.run([sys.executable, str(ROOT / "training" / "abc_score.py"), "--help"],
+                       capture_output=True, text=True, timeout=60)
+    assert r.returncode == 0
+    assert "EXPERIMENTAL" in r.stdout  # R1围栏：help须标恶化实验勿入生产链
