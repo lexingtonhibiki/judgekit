@@ -184,6 +184,17 @@ def calib_block(kind: str, mode: str) -> str:
         return "\n".join(lines) + "\n"
     return ""
 
+
+# T11阈值回炉：C仲裁谨慎倾向（默认off保旧链；on时C提示词追加存疑→人工句，全任务生效）
+CAUTIOUS_NOTE = "当证据不足、A/B分歧大或文本有刷单/升级疑点但不确凿时，判需人工复核而非硬判"
+
+
+def cautious_block(kind: str, mode: str) -> str:
+    """T11谨慎块：off→空（保旧行为）；on→存疑判需人工复核一句（全任务，不分kind）。"""
+    if mode != "on":
+        return ""
+    return CAUTIOUS_NOTE
+
 # ---- 重试判定 ----
 _RETRYABLE = ("429", "500", "502", "503", "504", "529", "timeout", "timed out",
               "curl", "connection", "reset by peer", "overloaded", "rate limit",
@@ -226,17 +237,20 @@ def usage_totals(u: dict) -> tuple[int, int, int]:
 
 def cache_key_of(iid: str, a: str, b: str, c: str, c2: str,
                  c2t: float, ev: str, temp_ab: float | None = None,
-                 calib: str = "off") -> str:
+                 calib: str = "off", cautious: str = "off") -> str:
     """cache键含模型名：换任一槽即全量重打，旧Jev行（无键）天然不命中。
 
     T4起含AB温度：temp_ab=None=旧格式（T3兼容）；传值则追加|TAB=后缀，换温即重打。
     T9起含校准模式：calib="off"=旧格式（保可比）；contrastive追加|CALIB=后缀，隔离旧跑。
+    T11起含谨慎模式：cautious="off"=旧格式（保可比）；on追加|CAUTIOUS=后缀，隔离旧跑。
     """
     base = f"{iid}|A={a}|B={b}|C={c}|C2={c2 or '-'}|C2t={c2t}|EV={ev}"
     if temp_ab is not None:
         base += f"|TAB={temp_ab}"
     if calib and calib != "off":
         base += f"|CALIB={calib}"
+    if cautious and cautious != "off":
+        base += f"|CAUTIOUS={cautious}"
     return base
 
 
@@ -265,7 +279,8 @@ class Adapter:
 
     def __init__(self, providers: dict, name: str, transport=None,
                  max_tokens: int = 1024, resp_tokens: int = 1024,
-                 reasoning_effort: str = "", calib: str = "off"):
+                 reasoning_effort: str = "", calib: str = "off",
+                 cautious: str = "off"):
         self.name = name
         self.p = providers.get(name)
         if self.p is None:
@@ -279,6 +294,7 @@ class Adapter:
         self.resp_tokens = resp_tokens  # responses侧输出预算
         self.reasoning_effort = reasoning_effort  # ""=不传（保默认行为）；设了就透传
         self.calib = calib or "off"  # T9: off=旧行为；contrastive=A/B/C/C2同加纠偏例
+        self.cautious = cautious or "off"  # T11: off=旧行为；on=C/C2追加存疑→人工句
 
     def endpoint(self) -> str:
         if self.kind == "TypeSafe":
@@ -299,23 +315,25 @@ class Adapter:
     def _typesafe_task(self, kind: str, labels: list[str], arb_ctx: str = "") -> Task:
         ins = arb_ctx
         cb = calib_block(kind, getattr(self, "calib", "off"))
+        cn = cautious_block(kind, getattr(self, "cautious", "off"))
+        cau = (cn + "。" if cn else "")
         if kind == "route":
             return Task(name="abc-route", primitive="route", labels=labels,
                         label_descriptions={lb: lb for lb in labels},
                         criteria="意图唯一：每条文本只归一个最贴切的意图",
-                        instruction=("客服意图路由。" + ins) if ins else "客服意图路由。")
+                        instruction=("客服意图路由。" + cau + ins) if (cau or ins) else "客服意图路由。")
         if kind == "handoff":
             return Task(name="abc-handoff", primitive="classify", labels=["转人工", "不转"],
                         label_descriptions=dict(HANDOFF_DESC),
                         criteria="转人工判定：辱骂威胁重复催≥2次/情绪崩溃才转，投诉但冷静不转",
-                        instruction=(cb + ins) if (cb or ins) else "")
+                        instruction=(cb + cau + ins) if (cb or cau or ins) else "")
         if kind == "sentiment":
             return Task(name="abc-sentiment", primitive="score", levels=list(SENTI_LEVELS),
-                        criteria=SENTI_CRITERIA, instruction=(SENTI_ANCHOR + "。" + ins) if ins else SENTI_ANCHOR)
+                        criteria=SENTI_CRITERIA, instruction=(SENTI_ANCHOR + "。" + cau + ins) if (cau or ins) else SENTI_ANCHOR)
         return Task(name="abc-spam", primitive="classify", labels=["垃圾", "正常"],
                     label_descriptions=dict(SPAM_DESC),
                     criteria=("垃圾判定：营销引流刷屏才判，抱怨差评驳回；" + SPAM_BRUSH_RUBRIC),
-                    instruction=(SPAM_BRUSH_RUBRIC + "。" + cb + ins) if (cb or ins) else SPAM_BRUSH_RUBRIC)
+                    instruction=(SPAM_BRUSH_RUBRIC + "。" + cb + cau + ins) if (cb or cau or ins) else SPAM_BRUSH_RUBRIC)
 
     @staticmethod
     def _ts_reason(kind: str, value, conf: float) -> str:
@@ -427,26 +445,29 @@ class Adapter:
 
     @staticmethod
     def _abc_user_prompt(kind: str, text: str, labels: list[str], arb_ctx: str,
-                         calib: str = "off") -> str:
+                         calib: str = "off", cautious: str = "off") -> str:
         cb = calib_block(kind, calib)
+        cn = cautious_block(kind, cautious)
+        cau = (cn + "。" if cn else "")
         if kind == "route":
             cands = "\n".join(f"- {lb}" for lb in labels)
-            return (f"客服意图路由：意图唯一，从候选中选一个。\n{cands}\n{arb_ctx}\n输入：{text}\n"
+            return (f"客服意图路由：意图唯一，从候选中选一个。{cau}\n{cands}\n{arb_ctx}\n输入：{text}\n"
                     '只输出JSON：{"label":"<候选原文>","confidence":0-1,"reason":"≤18字理由"}')
         if kind == "handoff":
-            return (f"转人工判定：辱骂/威胁/重复催≥2次或情绪崩溃才判转人工；投诉但冷静不转。{cb}{arb_ctx}\n输入：{text}\n"
+            return (f"转人工判定：辱骂/威胁/重复催≥2次或情绪崩溃才判转人工；投诉但冷静不转。{cb}{cau}{arb_ctx}\n输入：{text}\n"
                     '只输出JSON：{"label":"转人工|不转","confidence":0-1,"reason":"≤18字理由"}')
         if kind == "sentiment":
-            return (f"情感权重0-10分。{SENTI_CRITERIA}。锚点：{SENTI_ANCHOR}。{arb_ctx}\n输入：{text}\n"
+            return (f"情感权重0-10分。{SENTI_CRITERIA}。锚点：{SENTI_ANCHOR}。{cau}{arb_ctx}\n输入：{text}\n"
                     '只输出JSON：{"score":0-10数字,"confidence":0-1,"reason":"≤40字理由"}')
         return (f"垃圾判定：营销引流/刷屏重复才判垃圾；抱怨差评正常咨询不判。"
-                f"{SPAM_BRUSH_RUBRIC}。{cb}{arb_ctx}\n输入：{text}\n"
+                f"{SPAM_BRUSH_RUBRIC}。{cb}{cau}{arb_ctx}\n输入：{text}\n"
                 '只输出JSON：{"label":"垃圾|正常","confidence":0-1,"reason":"≤18字理由"}')
 
     # ---- openai chat（遗留直连，urllib）----
     def _chat(self, kind: str, text: str, labels: list[str], temp: float, arb_ctx: str) -> dict:
         p = self.p
-        user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"))
+        user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"),
+                                     getattr(self, "cautious", "off"))
         body = json.dumps({"model": p.model,
                            "messages": [{"role": "system",
                                          "content": "你是判断引擎。只输出一个JSON对象，无其他文字。"},
@@ -471,7 +492,8 @@ class Adapter:
     # ---- GO chat（curl传输，与_chat同提示词契约）----
     def _go_chat_once(self, kind: str, text: str, labels: list[str],
                       temp: float, arb_ctx: str) -> dict:
-        user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"))
+        user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"),
+                                     getattr(self, "cautious", "off"))
         body = json.dumps({"model": self.p.model,
                            "messages": [{"role": "system",
                                          "content": "你是判断引擎。只输出一个JSON对象，无其他文字。"},
@@ -503,7 +525,8 @@ class Adapter:
     # ---- GO responses（curl传输，input信封）----
     def _go_responses_once(self, kind: str, text: str, labels: list[str],
                            temp: float, arb_ctx: str) -> dict:
-        user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"))
+        user = self._abc_user_prompt(kind, text, labels, arb_ctx, getattr(self, "calib", "off"),
+                                     getattr(self, "cautious", "off"))
         req: dict = {"model": self.p.model,
                      "input": f"你是判断引擎。只输出一个JSON对象，无其他文字。\n\n{user}",
                      "max_output_tokens": self.resp_tokens}
@@ -741,6 +764,8 @@ def main() -> None:
     ap.add_argument("--calib", default="off", choices=("off", "contrastive"),
                     help="T9对比few-shot：off=旧行为（默认，可比）；contrastive=spam/handoff各≤6对错判→正解例（源gold_frozen改标48，AB双错优先，每例≤120字）。"
                     "EXPERIMENTAL(2026-09 T9验证恶化：CSDS一致81.4→55.7)：默认off，仅研究对比用，勿入生产链")
+    ap.add_argument("--cautious", default="off", choices=("off", "on"),
+                    help="T11阈值回炉：off=旧行为（默认，可比）；on=C/C2提示词追加存疑→人工句（全任务），cache键CAUTIOUS隔离")
     ap.add_argument("--c-responses", default="",
                     help="responses模型桩（遗留：只记endpoint、不硬调）")
     args = ap.parse_args()
@@ -768,11 +793,11 @@ def main() -> None:
                    calib=args.calib)
     c_ad = Adapter(providers, args.c, max_tokens=args.max_tokens,
                    resp_tokens=args.resp_tokens, reasoning_effort=args.reasoning_effort,
-                   calib=args.calib)
+                   calib=args.calib, cautious=args.cautious)
     c2_ad = (Adapter(providers, args.c2, max_tokens=args.max_tokens,
                      resp_tokens=args.resp_tokens,
                      reasoning_effort=args.reasoning_effort,
-                     calib=args.calib)
+                     calib=args.calib, cautious=args.cautious)
              if args.c2 else None)
     ev_ad = (Adapter(providers, args.evidence_provider)
              if args.evidence == "spark" else None)
@@ -797,13 +822,13 @@ def main() -> None:
              else failed).add(k)
     cur_key = lambda iid: cache_key_of(iid, args.a, args.b, args.c,
                                        args.c2, args.c2_threshold, args.evidence,
-                                       args.temp_ab, args.calib)
+                                       args.temp_ab, args.calib, args.cautious)
     skip = done if args.retry_failed else (done | failed)
     todo = [r for r in items if cur_key(r["id"]) not in skip]
     print(f"items={len(items)} cached_ok={len(done)} cached_fail={len(failed)} "
           f"todo={len(todo)} A={args.a} B={args.b} C={args.c} C2={args.c2 or '禁用'} "
           f"C2t={args.c2_threshold} evidence={args.evidence} retry_failed={args.retry_failed} "
-          f"calib={args.calib}")
+          f"calib={args.calib} cautious={args.cautious}")
 
     lock = threading.Lock()
     stats = {"ok": 0, "fail": 0, "c_rejudge": 0, "c2": 0, "ev": 0, "n": 0,
@@ -940,6 +965,7 @@ def main() -> None:
                                    "max_tokens_resp": args.resp_tokens,
                                     "temp_AB": args.temp_ab, "temp_C": 0.2,
                                    "calib": args.calib,
+                                   "cautious": args.cautious,
                                    "gateway_note": gw,
                                   "fallback_note": b.get("fallback_from", ""),
                                   "spark_excerpt": excerpt,
