@@ -50,12 +50,15 @@ T11-R1围栏：--cautious为EXPERIMENTAL(T11验证恶化：JD+5pt/FK+5pt，仅�
   python training/abc_score.py --only dmr,fbs --workers 3
 冒烟：
   python training/abc_score.py --limit 1 --workers 1 --cache training/abc_out/abc_cache_go_smoke.jsonl --out training/abc_out/abc_scores_go_smoke.jsonl
-探针（T4：自带task jsonl，A/B走--temp-ab默认0.95，C恒0.2）：
-  python training/abc_score.py --input training/abc_out/probe_all.jsonl --workers 3 --cache training/abc_out/probe_cache.jsonl --out training/abc_out/probe_scores.jsonl
-"""
+ 探针（T4：自带task jsonl，A/B走--temp-ab默认0.95，C恒0.2）：
+   python training/abc_score.py --input training/abc_out/probe_all.jsonl --workers 3 --cache training/abc_out/probe_cache.jsonl --out training/abc_out/probe_scores.jsonl
+ C瓶颈分离（T12：冻结复用T6 scores的A/B判定原文，零新增A/B调用，只重打C仲裁）：
+   python training/abc_score.py --conly --input training/abc_out/probe_t6_scores.jsonl --workers 3 --cache training/abc_out/c_only_cache.jsonl --out training/abc_out/c_only_scores.jsonl --report training/abc_out/c_only_report.md
+ """
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import os
 import re
@@ -239,12 +242,14 @@ def usage_totals(u: dict) -> tuple[int, int, int]:
 
 def cache_key_of(iid: str, a: str, b: str, c: str, c2: str,
                  c2t: float, ev: str, temp_ab: float | None = None,
-                 calib: str = "off", cautious: str = "off") -> str:
+                 calib: str = "off", cautious: str = "off",
+                 conly: bool = False) -> str:
     """cache键含模型名：换任一槽即全量重打，旧Jev行（无键）天然不命中。
 
     T4起含AB温度：temp_ab=None=旧格式（T3兼容）；传值则追加|TAB=后缀，换温即重打。
     T9起含校准模式：calib="off"=旧格式（保可比）；contrastive追加|CALIB=后缀，隔离旧跑。
     T11起含谨慎模式：cautious="off"=旧格式（保可比）；on追加|CAUTIOUS=后缀，隔离旧跑。
+    T12起含C-only模式：conly=True追加|CONLY后缀，冻结复用行隔离旧跑（A/B零调用，TAB值沿用仅作键区分）。
     """
     base = f"{iid}|A={a}|B={b}|C={c}|C2={c2 or '-'}|C2t={c2t}|EV={ev}"
     if temp_ab is not None:
@@ -253,6 +258,8 @@ def cache_key_of(iid: str, a: str, b: str, c: str, c2: str,
         base += f"|CALIB={calib}"
     if cautious and cautious != "off":
         base += f"|CAUTIOUS={cautious}"
+    if conly:
+        base += "|CONLY"
     return base
 
 
@@ -723,6 +730,158 @@ def apply_c2(kind: str, text: str, labels: list[str], a: dict, b: dict,
             "latency_ms": r.get("latency_ms", 0)}, c2rec
 
 
+def load_frozen(path: str, limit: int = 0) -> list[dict]:
+    """T12冻结入口：读T6 scores全量行（含A/B判定原文），逐行校验A/B可用。
+
+    缺id/text/task/A/B任一即抛错（冻结复用不允许半行）。
+    """
+    rows = [json.loads(l) for l in open(path, encoding="utf-8") if l.strip()]
+    if limit:
+        rows = rows[:limit]
+    for r in rows:
+        if not (r.get("id") and r.get("text") and r.get("task")):
+            raise ValueError(f"冻结行缺id/text/task: {str(r)[:80]!r}")
+        for side in ("A", "B"):
+            s = r.get(side)
+            if not isinstance(s, dict) or not s.get("ok") or s.get("value") is None:
+                raise ValueError(f"冻结行{r.get('id')} {side}不可用（ok/value缺失），禁重采")
+    return rows
+
+
+def frozen_ab_pair(fz: dict) -> tuple[dict, dict]:
+    """T12冻结复用：A/B判定原文逐字deepcopy，不调任何模型（零新增A/B调用）。
+
+    返回副本：调用方改动不污染冻结源。
+    """
+    return copy.deepcopy(fz["A"]), copy.deepcopy(fz["B"])
+
+
+def score_c_path(kind: str, text: str, labels: list[str], a: dict, b: dict,
+                 c_ad, c2_ad, c2_threshold: float,
+                 c_responses: str = "", tries: int = 5) -> tuple[dict, dict | None, float]:
+    """C仲裁公共路径（正常链与--conly共用，行为逐字一致）。
+
+    原提示词（arbitrate内组装），C temp恒0.2，C2同阈。返回(C, C2?, delta)。
+    要求a/b均ok（AB失败行走外层'AB有失败'短路，不进此函数）。
+    """
+    if kind == "sentiment":
+        try:
+            c, delta = arbitrate(kind, text, a, b, c_ad, c_responses)
+        except Exception as e:  # noqa: BLE001
+            c = {"final": None, "band": "", "action": "需人工复核",
+                 "reason": f"C失败:{str(e)[:60]}", "confidence": 0.0,
+                 "provider": c_ad.name, "called": "rejudge-fail", "ok": False,
+                 "endpoint": c_ad.endpoint(), "model": c_ad.model(), "usage": {}}
+            _aa, _bb = float(a["value"]), float(b["value"])
+            delta = round(abs(_aa - _bb), 1)
+        c, c2rec = apply_c2(kind, text, labels, a, b, c, delta,
+                             c2_ad, c2_threshold)
+        return c, c2rec, delta
+    if a["value"] == b["value"]:
+        c, delta = arbitrate(kind, text, a, b, c_ad, c_responses)
+        c, c2rec = apply_c2(kind, text, labels, a, b, c, delta,
+                             c2_ad, c2_threshold)
+        return c, c2rec, delta
+    if c_responses:
+        c, delta = arbitrate(kind, text, a, b, c_ad, c_responses)
+        c, c2rec = apply_c2(kind, text, labels, a, b, c, delta,
+                             c2_ad, c2_threshold)
+        return c, c2rec, delta
+    ctx = (f"仲裁语境：A判{a['value']}（{a['reason']}），"
+           f"B判{b['value']}（{b['reason']}），请独立重判。")
+    try:
+        cc = c_ad.call(kind, text, labels, 0.2, ctx, tries=tries)
+        act = "通过" if cc["confidence"] >= 0.6 else "需人工复核"
+        c = {"final": cc["value"], "action": act,
+             "reason": cc["reason"][:50],
+             "confidence": cc["confidence"], "provider": c_ad.name,
+             "called": "rejudge", "ok": True, "endpoint": cc["endpoint"],
+             "model": cc.get("model", ""), "usage": cc.get("usage", {}),
+             "latency_ms": cc.get("latency_ms", 0)}
+    except Exception as e:  # noqa: BLE001
+        c = {"final": None, "action": "需人工复核",
+             "reason": f"C失败:{str(e)[:60]}",
+             "confidence": 0.0, "provider": c_ad.name,
+             "called": "rejudge-fail", "ok": False,
+             "endpoint": c_ad.endpoint(), "model": c_ad.model(),
+             "usage": {}}
+    delta = 1
+    c, c2rec = apply_c2(kind, text, labels, a, b, c, delta,
+                         c2_ad, c2_threshold)
+    return c, c2rec, delta
+
+
+def norm_final(v) -> str:
+    """终判归一：刷单/刷评→垃圾（与T9/T11翻转口径一致）。"""
+    return "垃圾" if v in ("垃圾", "刷单", "刷评") else str(v)
+
+
+def conly_variance(new_recs: list[dict], frozen_recs: list[dict],
+                   gold: dict) -> str:
+    """T12方差报告：C终判vs T6基线C翻转分布、flip率vs基线、mismatch行Jaccard、结论句。
+
+    漂移规则（明示）：C翻转行占比>10%→大幅漂移（C不稳定，另立案）；
+    否则稳定偏松（瓶颈在A/B召回或任务难度，停调判官转源侧）。
+    """
+    fz = {r["id"]: r for r in frozen_recs}
+    new = {r["id"]: r for r in new_recs}
+    ids = sorted(set(new) & set(fz))
+    n = len(ids)
+
+    def cf(r):
+        return norm_final((r.get("C") or {}).get("final"))
+
+    flips = [i for i in ids if cf(new[i]) != cf(fz[i])]
+    lines = [f"C-only方差报告（n={n}，A/B冻结零重采，只重打C temp0.2+C2同阈）",
+             f"C翻转vs T6基线C：{len(flips)}/{n}={len(flips) / n * 100:.1f}%"]
+    # 翻转分布：按源×方向
+    from collections import Counter
+    dist = Counter((new[i]["source"], f"{cf(fz[i])}→{cf(new[i])}") for i in flips)
+    lines.append("翻转分布（源 旧→新：行数）：")
+    if dist:
+        for (src, d), k in sorted(dist.items()):
+            lines.append(f"  {src} {d}：{k}")
+    else:
+        lines.append("  无翻转")
+    lines.append(f"翻转行：{','.join(flips) if flips else '-'}")
+    # flip率vs基线26.7/30/20 + mismatch重叠Jaccard（需gold）
+    if gold:
+        lines.append("翻转率(C终判vs gold)与基线对照：")
+        j_all_old, j_all_new = set(), set()
+        for src in ("JD刷单", "FakeReview", "CSDS"):
+            sids = [i for i in ids if new[i]["source"] == src]
+            if not sids:
+                lines.append(f"  {src} n=0：无行，跳过")
+                continue
+            old_mm = {i for i in sids if cf(fz[i]) != norm_final(gold.get(i, {}).get("gold"))}
+            new_mm = {i for i in sids if cf(new[i]) != norm_final(gold.get(i, {}).get("gold"))}
+            j_all_old |= old_mm
+            j_all_new |= new_mm
+            union = old_mm | new_mm
+            j = len(old_mm & new_mm) / len(union) if union else 1.0
+            base = {"JD刷单": 26.7, "FakeReview": 30.0, "CSDS": 20.0}[src]
+            lines.append(f"  {src} n={len(sids)}：基线{len(old_mm)}/{len(sids)}="
+                         f"{len(old_mm) / len(sids) * 100:.1f}%（基线{base}%）→"
+                         f"新{len(new_mm)}/{len(sids)}={len(new_mm) / len(sids) * 100:.1f}%"
+                         f"（{len(new_mm) - len(old_mm):+d}行），mismatch重叠Jaccard={j:.3f}")
+        u = j_all_old | j_all_new
+        j_all = len(j_all_old & j_all_new) / len(u) if u else 1.0
+        lines.append(f"总体mismatch重叠Jaccard={j_all:.3f}（旧{len(j_all_old)}行∩新{len(j_all_new)}行/并{len(u)}行）")
+        # 偏松方向：新mismatch中C判正常/不转占比
+        loose = sum(1 for i in j_all_new if cf(new[i]) in ("正常", "不转"))
+        lines.append(f"新mismatch偏松占比：{loose}/{len(j_all_new)}="
+                     f"{loose / len(j_all_new) * 100:.1f}%（C判正常/不转）" if j_all_new else "新mismatch为0")
+    else:
+        lines.append("gold缺失：跳过翻转率/Jaccard（仅C翻转分布有效）")
+    flip_rate = len(flips) / n if n else 0
+    if flip_rate > 0.10:
+        lines.append(f"结论：漂移（C翻转{flip_rate * 100:.1f}%>10%阈值）→C不稳定，另立案。")
+    else:
+        lines.append(f"结论：稳定偏松（C翻转{flip_rate * 100:.1f}%≤10%阈值，错分仍集中偏松侧）"
+                     "→瓶颈在A/B召回或任务难度，停调判官转源侧。")
+    return "\n".join(lines)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0)
@@ -771,6 +930,14 @@ def main() -> None:
                     "EXPERIMENTAL(T11验证恶化：JD+5pt/FK+5pt，仅研究对比用，勿入生产)")
     ap.add_argument("--c-responses", default="",
                     help="responses模型桩（遗留：只记endpoint、不硬调）")
+    ap.add_argument("--conly", action="store_true",
+                    help="T12 C瓶颈分离：--input指向T6 scores文件，A/B判定原文冻结复用"
+                    "（零新增A/B调用），只重打C仲裁（原提示词temp0.2同模型+C2同阈），"
+                    "cache键追加CONLY隔离旧跑")
+    ap.add_argument("--gold", default="training/abc_out/gold_frozen.jsonl",
+                    help="T12方差报告用gold（C终判翻转率/mismatch Jaccard）；缺失则只报C翻转分布")
+    ap.add_argument("--report", default="",
+                    help="T12方差报告落盘路径（md文本；空=仅stdout）")
     args = ap.parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
@@ -810,8 +977,22 @@ def main() -> None:
     fb_ad = Adapter(providers, args.fallback_b, calib=args.calib) if args.fallback_b else None
     quota_raise = fb_ad is not None
 
-    items, route_labels = (load_input(args.input, args.limit) if args.input
-                             else load_items(args.limit, args.only))
+    conly = bool(args.conly)
+    frozen_by_id: dict[str, dict] = {}
+    if conly:
+        if not args.input:
+            raise ValueError("--conly需--input指向T6 scores文件（含A/B判定原文）")
+        frozen_rows = load_frozen(args.input, args.limit)
+        frozen_by_id = {r["id"]: r for r in frozen_rows}
+        items = [{"id": r["id"], "text": r["text"], "task": r["task"],
+                  "source": r.get("source", "probe"), "src_file": "probe",
+                  "orig_label": r.get("orig_label", ""),
+                  "url": r.get("url", ""), "license": r.get("license", "")}
+                 for r in frozen_rows]
+        route_labels = {}
+    else:
+        items, route_labels = (load_input(args.input, args.limit) if args.input
+                               else load_items(args.limit, args.only))
     out_p, cache_p = Path(args.out), Path(args.cache)
     out_p.parent.mkdir(parents=True, exist_ok=True)
     done: set[str] = set()
@@ -828,13 +1009,14 @@ def main() -> None:
              else failed).add(k)
     cur_key = lambda iid: cache_key_of(iid, args.a, args.b, args.c,
                                        args.c2, args.c2_threshold, args.evidence,
-                                       args.temp_ab, args.calib, args.cautious)
+                                       args.temp_ab, args.calib, args.cautious,
+                                       conly)
     skip = done if args.retry_failed else (done | failed)
     todo = [r for r in items if cur_key(r["id"]) not in skip]
     print(f"items={len(items)} cached_ok={len(done)} cached_fail={len(failed)} "
           f"todo={len(todo)} A={args.a} B={args.b} C={args.c} C2={args.c2 or '禁用'} "
           f"C2t={args.c2_threshold} evidence={args.evidence} retry_failed={args.retry_failed} "
-          f"calib={args.calib} cautious={args.cautious}")
+          f"calib={args.calib} cautious={args.cautious} conly={conly}")
 
     lock = threading.Lock()
     stats = {"ok": 0, "fail": 0, "c_rejudge": 0, "c2": 0, "ev": 0, "n": 0,
@@ -860,26 +1042,33 @@ def main() -> None:
         key = cur_key(r["id"])
         t0 = time.time()
         try:
-            try:
-                a = a_ad.call(kind, text, labels, args.temp_ab, tries=args.tries,
-                              quota_raise=quota_raise)
-            except Exception as e:  # noqa: BLE001
-                a = fail_side(a_ad, e)
-            try:
-                b = b_ad.call(kind, text, labels, args.temp_ab, tries=args.tries,
-                              quota_raise=quota_raise)
-            except Exception as e:  # noqa: BLE001
-                msg = str(e)
-                if is_quota_err(msg) and fb_ad is not None:
-                    try:
-                        b = fb_ad.call(kind, text, labels, args.temp_ab,
-                                       tries=args.tries)
-                        b["fallback_from"] = args.b
-                    except Exception as e2:  # noqa: BLE001
-                        b = fail_side(fb_ad, e2)
-                        b["error"] = f"B-fallback-fail {b['error']}"
-                else:
-                    b = fail_side(b_ad, e)
+            fz = frozen_by_id.get(r["id"]) if conly else None
+            if fz is not None:
+                # T12冻结复用：A/B判定原文逐字复用，零新增A/B调用
+                if kind == "route":
+                    raise ValueError(f"conly暂不支持route行{r['id']}（冻结行无候选labels）")
+                a, b = frozen_ab_pair(fz)
+            else:
+                try:
+                    a = a_ad.call(kind, text, labels, args.temp_ab, tries=args.tries,
+                                  quota_raise=quota_raise)
+                except Exception as e:  # noqa: BLE001
+                    a = fail_side(a_ad, e)
+                try:
+                    b = b_ad.call(kind, text, labels, args.temp_ab, tries=args.tries,
+                                  quota_raise=quota_raise)
+                except Exception as e:  # noqa: BLE001
+                    msg = str(e)
+                    if is_quota_err(msg) and fb_ad is not None:
+                        try:
+                            b = fb_ad.call(kind, text, labels, args.temp_ab,
+                                           tries=args.tries)
+                            b["fallback_from"] = args.b
+                        except Exception as e2:  # noqa: BLE001
+                            b = fail_side(fb_ad, e2)
+                            b["error"] = f"B-fallback-fail {b['error']}"
+                    else:
+                        b = fail_side(b_ad, e)
             if not (a.get("ok") and b.get("ok")):
                 c = {"final": None, "band": "", "action": "需人工复核",
                      "reason": "AB有失败", "confidence": 0.0,
@@ -887,53 +1076,17 @@ def main() -> None:
                      "endpoint": c_ad.endpoint(), "model": c_ad.model(), "usage": {}}
                 delta = -1
                 c2rec = None
-            elif kind == "sentiment":
-                try:
-                    c, delta = arbitrate(kind, text, a, b, c_ad, args.c_responses)
-                except Exception as e:  # noqa: BLE001
-                    c = {"final": None, "band": "", "action": "需人工复核",
-                         "reason": f"C失败:{str(e)[:60]}", "confidence": 0.0,
-                         "provider": args.c, "called": "rejudge-fail", "ok": False,
-                         "endpoint": c_ad.endpoint(), "model": c_ad.model(), "usage": {}}
-                    _aa, _bb = float(a["value"]), float(b["value"])
-                    delta = round(abs(_aa - _bb), 1)
-                c, c2rec = apply_c2(kind, text, labels, a, b, c, delta,
-                                    c2_ad, args.c2_threshold)
-            elif a["value"] == b["value"]:
-                c, delta = arbitrate(kind, text, a, b, c_ad, args.c_responses)
-                c, c2rec = apply_c2(kind, text, labels, a, b, c, delta,
-                                    c2_ad, args.c2_threshold)
             else:
-                if args.c_responses:
-                    c, delta = arbitrate(kind, text, a, b, c_ad, args.c_responses)
-                    c, c2rec = apply_c2(kind, text, labels, a, b, c, delta,
-                                        c2_ad, args.c2_threshold)
-                else:
-                    ctx = (f"仲裁语境：A判{a['value']}（{a['reason']}），"
-                           f"B判{b['value']}（{b['reason']}），请独立重判。")
-                    try:
-                        cc = c_ad.call(kind, text, labels, 0.2, ctx, tries=args.tries)
-                        act = "通过" if cc["confidence"] >= 0.6 else "需人工复核"
-                        c = {"final": cc["value"], "action": act,
-                             "reason": cc["reason"][:50],
-                             "confidence": cc["confidence"], "provider": args.c,
-                             "called": "rejudge", "ok": True, "endpoint": cc["endpoint"],
-                             "model": cc.get("model", ""), "usage": cc.get("usage", {}),
-                             "latency_ms": cc.get("latency_ms", 0)}
-                    except Exception as e:  # noqa: BLE001
-                        c = {"final": None, "action": "需人工复核",
-                             "reason": f"C失败:{str(e)[:60]}",
-                             "confidence": 0.0, "provider": args.c,
-                             "called": "rejudge-fail", "ok": False,
-                             "endpoint": c_ad.endpoint(), "model": c_ad.model(),
-                             "usage": {}}
-                    delta = 1
-                    c, c2rec = apply_c2(kind, text, labels, a, b, c, delta,
-                                        c2_ad, args.c2_threshold)
-            # evidence摘要（默认桩；spark旗开，存摘录不存原文）
+                # C仲裁公共路径（正常链与--conly共用）：原提示词，C temp0.2，C2同阈
+                c, c2rec, delta = score_c_path(kind, text, labels, a, b, c_ad,
+                                               c2_ad, args.c2_threshold,
+                                               args.c_responses, args.tries)
+            # evidence摘要（默认桩；spark旗开，存摘录不存原文；conly复用冻结摘录零调用）
             ev_usage: dict = {}
             ev_ep = ""
-            if ev_ad is not None:
+            if fz is not None:
+                excerpt = (fz.get("provenance") or {}).get("spark_excerpt") or text[:60]
+            elif ev_ad is not None:
                 try:
                     excerpt, ev_usage, ev_ep = ev_ad.excerpt(text)
                 except Exception:  # noqa: BLE001
@@ -974,9 +1127,12 @@ def main() -> None:
                                    "cautious": args.cautious,
                                    "gateway_note": gw,
                                   "fallback_note": b.get("fallback_from", ""),
-                                  "spark_excerpt": excerpt,
-                                  "elapsed_s": round(time.time() - t0, 1)},
-                   "cache_key": key}
+                                   "spark_excerpt": excerpt,
+                                   "elapsed_s": round(time.time() - t0, 1)},
+                    "cache_key": key}
+            if fz is not None:
+                rec["provenance"]["conly"] = True  # 冻结复用标记（正常链无此键）
+                rec["provenance"]["frozen_cache_key"] = fz.get("cache_key", "")
         except Exception as e:  # noqa: BLE001 单轮修复上限内先保证cache落盘
             rec = {"id": r["id"], "text": r["text"], "task": r["task"],
                    "source": r["source"], "orig_label": r["orig_label"],
@@ -1003,7 +1159,9 @@ def main() -> None:
                                   "elapsed_s": round(time.time() - t0, 1)},
                    "cache_key": key}
         with lock:
-            for u in rec.get("usage", {}).values():
+            for k, u in rec.get("usage", {}).items():
+                if conly and k in ("A", "B"):
+                    continue  # 冻结复用：A/B usage为历史花费，不计入本轮新增
                 add_usage(u if isinstance(u, dict) else {})
             if rec.get("C", {}).get("called") in ("rejudge", "rejudge-c2", "rejudge-fail"):
                 stats["c_rejudge"] += 1
@@ -1046,6 +1204,21 @@ def main() -> None:
           f"C2={stats['c2']} EV={stats['ev']} "
           f"tok_in={stats['tok_in']} tok_out={stats['tok_out']} "
           f"tok_reasoning={stats['tok_rs']} -> {out_p.name}")
+    if conly:
+        # T12方差报告：stdout+可选落盘（只统计CONLY键行，防混入旧键）
+        new_only = [r for r in all_recs if "|CONLY" in (r.get("cache_key") or "")]
+        gold: dict = {}
+        gold_p = Path(args.gold) if args.gold else None
+        if gold_p is not None and gold_p.exists():
+            for l in open(gold_p, encoding="utf-8"):
+                if l.strip():
+                    g = json.loads(l)
+                    gold[g["id"]] = g
+        vtext = conly_variance(new_only, list(frozen_by_id.values()), gold)
+        print(vtext, flush=True)
+        if args.report:
+            with open(args.report, "w", encoding="utf-8") as f:
+                f.write(vtext + "\n")
 
 
 if __name__ == "__main__":
