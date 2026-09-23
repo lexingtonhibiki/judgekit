@@ -40,6 +40,8 @@ DeepSeek直连key禁用：本脚本默认只走GO的deepseek-v4.1-flash，不读
 离线测试用（见Adapter类注释），生产打分禁止用--a/--b/--c/--c2切到非go-槽。
 T9-R1围栏：--calib为EXPERIMENTAL(2026-09 T9验证恶化：CSDS一致81.4→55.7)：
 默认off，仅研究对比用，勿入生产链。
+T11-R1围栏：--cautious为EXPERIMENTAL(T11验证恶化：JD+5pt/FK+5pt，仅研究对比用，勿入生产)：
+默认off，仅研究对比用，勿入生产链。
 
 用法（分批400，GO全量）：
   python training/abc_score.py --only smp2019_ecdt,crosswoz --workers 3
@@ -765,7 +767,8 @@ def main() -> None:
                     help="T9对比few-shot：off=旧行为（默认，可比）；contrastive=spam/handoff各≤6对错判→正解例（源gold_frozen改标48，AB双错优先，每例≤120字）。"
                     "EXPERIMENTAL(2026-09 T9验证恶化：CSDS一致81.4→55.7)：默认off，仅研究对比用，勿入生产链")
     ap.add_argument("--cautious", default="off", choices=("off", "on"),
-                    help="T11阈值回炉：off=旧行为（默认，可比）；on=C/C2提示词追加存疑→人工句（全任务），cache键CAUTIOUS隔离")
+                    help="T11阈值回炉：off=旧行为（默认，可比）；on=C/C2提示词追加存疑→人工句（全任务），cache键CAUTIOUS隔离。"
+                    "EXPERIMENTAL(T11验证恶化：JD+5pt/FK+5pt，仅研究对比用，勿入生产)")
     ap.add_argument("--c-responses", default="",
                     help="responses模型桩（遗留：只记endpoint、不硬调）")
     args = ap.parse_args()
@@ -773,6 +776,9 @@ def main() -> None:
         sys.stdout.reconfigure(encoding="utf-8")
     if args.calib == "contrastive":
         print("⚠ WARNING: --calib contrastive为已知恶化实验（T9: CSDS一致81.4→55.7），仅研究对比用，勿入生产链！",
+              file=sys.stderr, flush=True)
+    if args.cautious == "on":
+        print("⚠ WARNING: --cautious on为已知恶化实验（T11: JD+5pt/FK+5pt/CSDS持平），仅研究对比用，勿入生产链！",
               file=sys.stderr, flush=True)
 
     from judgekit.providers import load_providers

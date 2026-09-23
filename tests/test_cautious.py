@@ -73,3 +73,14 @@ def test_cautious_help_lists_flag():
                        capture_output=True, text=True, timeout=60)
     assert r.returncode == 0
     assert "--cautious" in r.stdout
+
+
+def test_cautious_help_marks_experimental():
+    import subprocess
+    r = subprocess.run([sys.executable, str(ROOT / "training" / "abc_score.py"), "--help"],
+                       capture_output=True, text=True, timeout=60)
+    assert r.returncode == 0
+    compact = "".join(r.stdout.split())  # argparse换行不断言据（T9同式，EXPERIMENTAL亦被换行）
+    assert "EXPERIMENTAL(T11验证恶化：JD+5pt/FK+5pt，仅研究对比用，勿入生产)" in compact  # R1围栏：help须标恶化实验勿入生产链
+    src = (ROOT / "training" / "abc_score.py").read_text(encoding="utf-8")
+    assert "--cautious on为已知恶化实验" in src and "file=sys.stderr" in src  # on时stderr警告一行
