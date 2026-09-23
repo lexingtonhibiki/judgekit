@@ -197,14 +197,41 @@ NORMAL_NEAR = ("地点就在科华路川大附近，很好找。等了一个多�
 
 
 def test_spam_prompt_has_brush_anchors():
+    # T7去死板化新口径：泛化指令+三锚点作例子+单特征禁令，A/B双路径语义等价（离线不调网）
+    GENERAL = ("无可验证细节的断言式夸赞", "情绪强度与事实密度倒挂", "对下单决策零信息增量")
+    BAN = ("感叹号数量", "品牌词/极端词", "维度计数",
+           "不得单独定罪或脱罪", "是否有可验证的具体事实", "综合判")
+    ANCHORS = ("U盘", "很稳定", "神速", "火锅", "安利",
+               "地点附近", "排队", "总体很值")
     for txt in (BRUSH_UPAN, BRUSH_HOT):
         p = m.Adapter._abc_user_prompt("spam", txt, [], "")
-        for kw in ("很稳定", "神速", "感叹号", "全维度", "零客观细节",
-                   "简洁客观", "排队", "参考价值", "U盘", "火锅",
-                   "地点附近", "总体很值", "刷单"):
+        assert "举一反三" in p and "类推" in p, "缺泛化指令举一反三/类推"
+        for kw in GENERAL:
+            assert kw in p, f"缺刷单语义{kw}"
+        for kw in BAN:
+            assert kw in p, f"缺单特征禁令{kw}"
+        for kw in ANCHORS:
             assert kw in p, f"缺锚点{kw}"
+        assert "同类信号" in p, "缺同类联想"
+    # SPAM_DESC新口径：泛化+禁令并存，锚词仅作例子保留
+    assert "举一反三" in m.SPAM_DESC["垃圾"] and "类推" in m.SPAM_DESC["垃圾"]
+    for kw in GENERAL:
+        assert kw in m.SPAM_DESC["垃圾"], f"DESC缺语义{kw}"
+    for kw in ("感叹号数量", "不得单独定罪或脱罪", "是否有可验证的具体事实"):
+        assert kw in m.SPAM_DESC["垃圾"], f"DESC缺禁令{kw}"
     assert "很稳定" in m.SPAM_DESC["垃圾"] and "神速" in m.SPAM_DESC["垃圾"]
     assert "排队" in m.SPAM_DESC["正常"] and "参考价值" in m.SPAM_DESC["正常"]
+    # A/B等价：TypeSafe criteria+instruction与_user_prompt同含泛化+禁令+锚点
+    provs, _ = _chat_provider(CHAT_SCORE)
+    ad = m.Adapter(provs, "go-c", transport=provs["go-c"].transport)
+    t = ad._typesafe_task("spam", ["垃圾", "正常"], "")
+    for kw in ("举一反三", "类推", "感叹号数量", "维度计数",
+               "是否有可验证的具体事实", "U盘", "火锅", "地点附近"):
+        assert kw in t.criteria, f"TypeSafe criteria缺{kw}"
+        assert kw in t.instruction, f"TypeSafe instruction缺{kw}"
+    p0 = m.Adapter._abc_user_prompt("spam", BRUSH_UPAN, [], "")
+    for kw in ("举一反三", "感叹号数量", "是否有可验证的具体事实"):
+        assert kw in p0 and kw in t.criteria, f"A/B不等价缺{kw}"
 
 
 def test_spam_mock_brush_vs_normal_no_net():
