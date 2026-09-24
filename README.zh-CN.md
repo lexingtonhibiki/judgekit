@@ -80,6 +80,12 @@ judge-econ 测的是**成本-准确率**，不是聪明程度：同一批任务�
  - 概率阈值实验说明：[docs/release-post-v0.3.md](docs/release-post-v0.3.md)——argmax 会丢弃概率分布中的分离信号；阈值校准是零重训杠杆。
  - 其余探索口径（190 系混合 gold，已被取代）见报告附录 `docs/jev-v4-report.md` §5.2，不引用。
 
+ 研究过程：v1/v2 是自建 mini 集、规则友好；v4 采公开数据做更硬的外部口径——候选来自公开中文数据集
+ （8×50 外部集 + 探针，seed=42，归一化去重，采样报告见 `benchmarks/data/external/`）；
+ **120 条垃圾候选由人工逐条亲标**（垃圾 71 / 正常 49，来源为京东刷单评论集与大众点评假评集），
+ 冻结为 `gold_spam120`——直标优先级高于任何派生 gold；Jev 对每条各判一次（原生 decisions API，
+ temperature 0）。协议、负结果与局限见 `docs/jev-v4-report.md`。
+
  上方 judge-econ 头条数字不变。
 
 ## 快速开始

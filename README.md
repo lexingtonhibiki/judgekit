@@ -90,6 +90,14 @@ as spam — all genuinely borderline, all low-confidence.
  - Probability-threshold write-up: [docs/release-post-v0.3.md](docs/release-post-v0.3.md) (zh) — argmax discards the distribution's separation signal; τ recalibration is a zero-retrain lever.
  - Other exploratory calibers (190-series mixed gold, superseded) see appendix in `docs/jev-v4-report.md` §5.2 — not quotable.
 
+ Process: the v1/v2 mini sets are in-house and rule-friendly; v4 samples harder public
+ data for an external caliber. Candidates come from public Chinese datasets (8×50 sets +
+ probes, seed=42, normalized/deduped; sampling report in `benchmarks/data/external/`);
+ **all 120 spam items were labeled one by one by a human annotator** (71 spam / 49 normal,
+ JD fake-order + Dianping fake-review sources), frozen as `gold_spam120` — direct labels
+ outrank any derived gold. Jev judged each item once (native decisions API,
+ temperature 0). Protocol, negative results and limitations: `docs/jev-v4-report.md`.
+
  The headline judge-econ numbers above are unchanged.
 
 ## Quick start
