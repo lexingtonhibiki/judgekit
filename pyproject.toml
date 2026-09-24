@@ -23,7 +23,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "pytest-cov"]
+dev = ["pytest>=8", "pytest-cov", "openpyxl"]
 plot = ["matplotlib"]
 
 [project.scripts]
