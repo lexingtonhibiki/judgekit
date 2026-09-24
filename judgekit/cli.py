@@ -31,6 +31,8 @@ def _load_task_and_providers(args):
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8")  # Windows非中文locale下中文警告防转义
     if hasattr(sys.stdin, "reconfigure"):
         sys.stdin.reconfigure(encoding="utf-8", errors="replace")  # Windows GBK 管道防崩
     ap = argparse.ArgumentParser(prog="judgekit")

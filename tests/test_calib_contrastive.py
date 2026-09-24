@@ -78,6 +78,6 @@ def test_calib_adapter_prompt_via_mock():
 def test_calib_help_marks_experimental():
     import subprocess
     r = subprocess.run([sys.executable, str(ROOT / "training" / "abc_score.py"), "--help"],
-                       capture_output=True, text=True, timeout=60)
+                       capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60)
     assert r.returncode == 0
     assert "EXPERIMENTAL" in r.stdout  # R1围栏：help须标恶化实验勿入生产链

@@ -139,5 +139,5 @@ def test_conly_variance_stable_vs_drift():
 def test_conly_help_lists_flag():
     import subprocess
     r = subprocess.run([sys.executable, str(ROOT / "training" / "abc_score.py"), "--help"],
-                       capture_output=True, text=True, timeout=60)
+                       capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60)
     assert r.returncode == 0 and "--conly" in r.stdout

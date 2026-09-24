@@ -75,6 +75,11 @@ sys.path.insert(0, str(ROOT))
 from judgekit.engine import Task, run_task  # noqa: E402
 from judgekit.providers.go_openai import curl_post_json, extract_responses_text  # noqa: E402
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")  # Windows非中文locale下--help/中文输出防崩
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 EXT = ROOT / "benchmarks" / "data" / "external"
 PROVIDERS_YAML = ROOT / "benchmarks" / "models.yaml"
 

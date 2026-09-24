@@ -70,7 +70,7 @@ def test_cautious_adapter_prompt_via_mock():
 def test_cautious_help_lists_flag():
     import subprocess
     r = subprocess.run([sys.executable, str(ROOT / "training" / "abc_score.py"), "--help"],
-                       capture_output=True, text=True, timeout=60)
+                       capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60)
     assert r.returncode == 0
     assert "--cautious" in r.stdout
 
@@ -78,7 +78,7 @@ def test_cautious_help_lists_flag():
 def test_cautious_help_marks_experimental():
     import subprocess
     r = subprocess.run([sys.executable, str(ROOT / "training" / "abc_score.py"), "--help"],
-                       capture_output=True, text=True, timeout=60)
+                       capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60)
     assert r.returncode == 0
     compact = "".join(r.stdout.split())  # argparse换行不断言据（T9同式，EXPERIMENTAL亦被换行）
     assert "EXPERIMENTAL(T11验证恶化：JD+5pt/FK+5pt，仅研究对比用，勿入生产)" in compact  # R1围栏：help须标恶化实验勿入生产链
