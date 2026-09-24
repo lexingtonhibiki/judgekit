@@ -26,9 +26,31 @@ XLSX_SKILL_DIR = r"C:\Users\14970\.zcode\cli\plugins\cache\zcode-plugins-officia
 for sub in [XLSX_SKILL_DIR, XLSX_SKILL_DIR + r"\templates"]:
     if sub not in sys.path:
         sys.path.insert(0, sub)
-from base import (FONT_NAME, NEUTRAL_600, NEUTRAL_900, setup_sheet, style_header_row,  # noqa: E402
-                  style_data_row, auto_fit_row_heights)
-import base as _xlsx_base  # noqa: E402  writer层色值FF归一用（根因：6位hex被补00透明通道）
+try:  # 本地 xlsx skill 存在→原样式；CI/无 skill 环境→最小兜底（纯逻辑函数不依赖样式，测试可全跑）
+    from base import (FONT_NAME, NEUTRAL_600, NEUTRAL_900, setup_sheet, style_header_row,  # noqa: E402
+                      style_data_row, auto_fit_row_heights)
+    import base as _xlsx_base  # noqa: E402  writer层色值FF归一用（根因：6位hex被补00透明通道）
+except ImportError:
+    FONT_NAME = "微软雅黑"
+    NEUTRAL_600, NEUTRAL_900 = "8C8A84", "37352F"
+
+    def setup_sheet(ws, title=None, last_col=None):
+        if title:
+            ws.title = str(title)[:31]
+
+    def style_header_row(ws, row_num, col_start, col_end):
+        pass
+
+    def style_data_row(ws, row_num, col_start, col_end, row_index):
+        pass
+
+    def auto_fit_row_heights(ws, header_row=None, data_start_row=None, data_end_row=None, **kw):
+        pass
+
+    class _XlsxBaseStub:  # 色值归一循环 getattr 兜底
+        pass
+
+    _xlsx_base = _XlsxBaseStub()
 from openpyxl import Workbook  # noqa: E402
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side  # noqa: E402
 from openpyxl.worksheet.datavalidation import DataValidation  # noqa: E402

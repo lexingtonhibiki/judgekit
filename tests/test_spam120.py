@@ -5,6 +5,8 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
@@ -18,6 +20,21 @@ EXP_SPAM = "场景：购物评价区。你的身份是潜在买家。垃圾判�
 EXP_CONFLICTS = sorted(["fk_0001", "fk_0005", "fk_0006", "fk_0007", "fk_0023",
                         "fk_0049", "fk_0053", "jd_0010", "jd_0011", "jd_0038",
                         "jd_0039", "jd_0046", "jd_0048", "jd_0060"])
+
+XLSX_PATH = ROOT / "training" / "abc_out" / "数据审核_v4_full.xlsx"
+GOLD120_PATH = ROOT / "benchmarks" / "data" / "external" / "gold_spam120.jsonl"
+GOLD190_PATH = ROOT / "benchmarks" / "data" / "external" / "gold_frozen190.jsonl"
+
+needs_local_review = pytest.mark.skipif(
+    not XLSX_PATH.exists(),
+    reason="依赖本机终审产物 training/abc_out/数据审核_v4_full.xlsx（gitignored），无则跳过")
+
+
+def _spam120_rows() -> list[dict]:
+    """优先本机loader（xlsx解析）；无本机终审产物时读已发布 gold_spam120.jsonl（内容同源）。"""
+    if XLSX_PATH.exists():
+        return m.load_spam120_rows()
+    return [json.loads(l) for l in open(GOLD120_PATH, encoding="utf-8") if l.strip()]
 
 
 _XLSX_CACHE: dict | None = None
@@ -52,7 +69,7 @@ def _xlsx_cell_by_id(rid: str) -> dict:
 
 
 def test_spam120_id_set_120_fk60_jd60():
-    rows = m.load_spam120_rows()
+    rows = _spam120_rows()
     assert len(rows) == 120
     assert len({r["id"] for r in rows}) == 120  # 去重120
     c = Counter(r["id"].split("_")[0] for r in rows)
@@ -66,6 +83,7 @@ def test_spam120_id_set_120_fk60_jd60():
     assert not any(r["id"].startswith("csds_") for r in rows)
 
 
+@needs_local_review
 def test_gold120_verbatim_from_xlsx():
     """直标原样：gold_spam120.jsonl每行id/text/gold/source与05表逐字一致。"""
     rows = m.load_spam120_rows()
@@ -92,8 +110,8 @@ def test_prompt_verbatim_singleton_t16():
 
 def test_conflict_override_rule_120_wins():
     """冲突覆盖：120直标赢；清单14行且落盘gold取直标值。"""
-    rows = m.load_spam120_rows()
-    conflicts, frozen = m.compute_conflicts(rows)
+    rows = _spam120_rows()
+    conflicts, frozen = m.compute_conflicts(rows, GOLD190_PATH)
     assert sorted(conflicts) == EXP_CONFLICTS
     assert len(conflicts) == 14
     new_by_id = {r["id"]: r for r in rows}
@@ -105,11 +123,11 @@ def test_conflict_override_rule_120_wins():
     for r in rows:
         if r["id"] not in set(conflicts):
             assert frozen[r["id"]]["gold"] == r["gold"]
-    # 落盘文件（若已生成）同样原样
-    p = ROOT / "training" / "abc_out" / "gold_spam120.jsonl"
-    if p.exists():
-        disk = [json.loads(l) for l in open(p, encoding="utf-8") if l.strip()]
-        assert len(disk) == 120
-        by_id = {r["id"]: r for r in disk}
-        for i in EXP_CONFLICTS:
-            assert by_id[i]["gold"] == new_by_id[i]["gold"]  # 120赢
+    # 落盘文件（本机产物与已发布副本）同样原样
+    for p in (ROOT / "training" / "abc_out" / "gold_spam120.jsonl", GOLD120_PATH):
+        if p.exists():
+            disk = [json.loads(l) for l in open(p, encoding="utf-8") if l.strip()]
+            assert len(disk) == 120
+            by_id = {r["id"]: r for r in disk}
+            for i in EXP_CONFLICTS:
+                assert by_id[i]["gold"] == new_by_id[i]["gold"]  # 120赢

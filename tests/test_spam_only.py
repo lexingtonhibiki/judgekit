@@ -16,7 +16,13 @@ from training import freeze_gold as fg  # noqa: E402
 
 EXP_SPAM = "场景：购物评价区。你的身份是潜在买家。垃圾判定：对于你而言，纯粹情绪称赞（刷好评返现）/谩骂（恶意攻击）等不提供真实消费反馈的均为垃圾；只看text字段独立判定"
 
+XLSX_PATH = ROOT / "training" / "abc_out" / "数据审核_v4_full.xlsx"
+needs_local_review = pytest.mark.skipif(
+    not XLSX_PATH.exists(),
+    reason="依赖本机终审产物 training/abc_out/数据审核_v4_full.xlsx（gitignored），无则跳过")
 
+
+@needs_local_review
 def test_spam_id_set_51_fk22_jd29():
     ids = m.load_spam_ids()
     assert len(ids) == 51
@@ -45,6 +51,7 @@ def test_prompt_verbatim_singleton():
     assert t.input_field == "text"
 
 
+@needs_local_review
 def test_gold_frozen_flip_51():
     """gold口径：改标=C取反/✓通过=C认同（亲审口径，不重算只断言）。"""
     ids = set(m.load_spam_ids())
