@@ -78,8 +78,8 @@ def judge_rescore(resume: dict, jds: list, survey: dict, base: list[dict],
     out = []
     for b in base:
         jd = next(j for j in jds if f'{j["company"]}·{j["title"]}' == b["jd"])
-        d1 = run_task(fit_task, {"简历": resume, "岗位": jd, "意愿问卷": survey}, providers)
-        d2 = run_task(flag_task, {"岗位描述": jd["extras"], "问卷加班容忍度": survey["overtime_tolerance"]},
+        d1 = run_task(fit_task, {"text": {"简历": resume, "岗位": jd, "意愿问卷": survey}}, providers)
+        d2 = run_task(flag_task, {"text": {"岗位描述": jd["extras"], "问卷加班容忍度": survey["overtime_tolerance"]}},
                       providers)
         total_cost += d1.cost + d2.cost
         jfit = d1.value if d1.ok else b["fit"]

@@ -39,6 +39,18 @@ def test_judge_no_hit_exits_1():
     assert rec["ok"] is False
 
 
+def test_judge_uses_task_input_field(tmp_path):
+    task = tmp_path / "body.yaml"
+    task.write_text(
+        "name: body-routing\nprimitive: route\ninput_field: body\n"
+        "labels: [refund]\nprovider: rules\nfallback_rules:\n  refund: [refund]\n",
+        encoding="utf-8",
+    )
+    result = _cli("judge", str(task), "please refund my order")
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["value"] == "refund"
+
+
 def test_run_stdin_pipe():
     line = json.dumps({"id": 1, "text": "想退货退款"}, ensure_ascii=False)
     r = _cli("run", TRIAGE, "--input", "-", stdin_text=line + "\n")

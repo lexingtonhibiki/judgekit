@@ -62,7 +62,7 @@ def main() -> None:
     from .engine import run_task
 
     if args.cmd == "judge":
-        dec = run_task(task, {"text": " ".join(args.text)}, providers)
+        dec = run_task(task, {task.input_field: " ".join(args.text)}, providers)
         print(json.dumps(dec.to_dict(), ensure_ascii=False))
         sys.exit(0 if dec.ok else 1)
 

@@ -6,181 +6,137 @@
 
 [English](README.md) | **简体中文**
 
-> **System One（判官）模型的运行时判断引擎。**
-> 一份 YAML 定义判断任务，原生跑在 TypeSafe Jev 的 decisions API 上，或自动翻译给任意
-> OpenAI 兼容大模型——输出带校准概率的类型化决策，并告诉你每一个判断花了多少钱。
+**用一份 YAML 做分类、派单、打分或校验，得到统一的决策 JSON 与费用记录。**
 
-| 项目 | 回答的问题 | 时机 |
-|---|---|---|
-| [JudgeBench](https://github.com/ScalerLab/JudgeBench) (ICLR'25) / [JudgeLM](https://github.com/baaivision/JudgeLM) | 判官模型在难题上判断得**准不准** | 学术基准 |
-| [DeepEval](https://github.com/confident-ai/deepeval) / [promptfoo](https://github.com/promptfoo/promptfoo) | LLM 输出在**测试时**过不过关 | 开发期/CI |
-| [semantic-router](https://github.com/aurelio-labs/semantic-router) | 请求路由给哪个模型 | 运行时，仅路由 |
-| **judgekit** | 生产环境的**每一个判断**花多少钱、可不可信 | **运行时判断层** |
+从免费的本地关键词规则开始；需要模型时，同一份任务定义可接 TypeSafe Jev 原生 API、
+任意 OpenAI 兼容端点或本地 NanoJev。适合把小而明确的判断接进脚本、工单流程和应用。
 
-一句话：**别人测判官聪不聪明，judgekit 让判断以可控成本常驻生产。**
-
-## 评测基准（judge-econ）
-
-judge-econ 测的是**成本-准确率**，不是聪明程度：同一批任务上对比各供应商的准确率、延迟、
-每千次判断成本。据我们所知，这是**中文场景判官模型的第一批公开评测数字**
-（[awesome-jev-zh](https://github.com/yzfly/awesome-jev-zh) 收录方明确把"中文场景没有公开评测"
-列为当前缺口）。
-
-### 数据集（人工构建 mini 集，v0.1）
-
-| 数据集 | n | 任务 | 说明 |
-|---|---|---|---|
-| `intent_zh` | 40 | route：电商工单→部门 | 退款售后 / 物流 / 投诉 / 故障 / 咨询 |
-| `sentiment_zh` | 30 | classify：评论情感 | 正面 / 负面 |
-| `spam_zh` | 30 | classify：评论垃圾识别 | 垃圾(广告导流/灌水) / 正常 |
-| `urgency_zh` | 30 | classify：客服紧急度 | 紧急(安全/资损) / 非紧急 |
-
-共 130 条，全部随仓库开源，每个都带关键词规则基线（`*.rules.yaml`）。
-公共大数据集（ag_news / sst2）在路线图上，欢迎 PR 扩充。
-
-### 评测协议
-
-- 每样本 1 次判断调用；`temperature=0`；无 few-shot。
-- 准确率附 **Wilson 95% 置信区间**（小样本诚实口径）。
-- 成本 = 运行时供应商牌价（Jev：$0.042/MTok 输入，输出免费；每千次成本=总成本÷总次数）。
-- 完全可复现：`python benchmarks/run_bench.py --models rules,typesafe --limit 0`。
-
-### 结果（2026-09-20，n=130）
-
-| 供应商 | 后端 | 准确率 (95% CI) | 延迟/次 | 每千次成本 |
-|---|---|---|---|---|
-| **typesafe**（Jev `jev-1.13.0`，原生 decisions API） | choice → 全量概率分布 | **97.7% [93.4–99.2%]**（127/130；**3 轮独立重复，0 判定漂移**） | **~890 ms** | **¥0.105** |
-| glm-5.3-flash（智谱 coding-plan 端点） | OpenAI 兼容 | 97.7%（127/130；与 Jev 共享 3 个误判中的 2 个） | ~4.0 s | ¥0（订阅） |
-| deepseek-flash（官方 API） | OpenAI 兼容 | 96.2%（125/130；**漏判 2 条紧急工单**） | ~1.1 s | 按量 |
-| rules（关键词基线） | — | 91.5% [85.5–95.2%]（119/130） | ~0 ms | ¥0 |
-| nanojev-local（NanoJev 0.6B，[开源复刻](https://github.com/TianyuCodings/NanoJev)，本机 GPU 实测） | 本地 decisions API | 61.5%（80/130；英文游戏域零样本跨中文域） | **~220 ms** | ¥0 |
-
-解读：Jev 与大得多的 GLM-5.3-flash 精度持平、**延迟只有 1/4.5**，且 3 轮零漂移
-（temperature=0 下完全确定）；关键词基线 91.5% 依然能打——传统基线没有死。
-错误重叠：Jev 与 GLM 共享同样 2 个真边界误判；DeepSeek 另漏判 2 条紧急工单
-（u009/u011），这是客服派单场景里代价最高的错误类型。
-
-![cost-accuracy pareto](docs/pareto.png)
-
-### 发现：Jev 的校准概率是真校准
-
-全部 3 个误判的置信度都**低于 0.7**（0.63 / 0.42 / 0.37），而低置信输出总共只占 9.2%：
-
-> **在 0.7 处设一道置信度门控，就能以"9% 的判断交给免费规则兜底"为代价，捕获 100% 的错误。**
-> 这正是 judgekit 的 Task 抽象强制推行的"原子任务 + 置信度门控 + 显式兜底"模式——与社区
-> 钓鱼评测的结论一致（拆原子信号+代码组合 95.0% vs 复合问题直问 62.6%）。
-
-误判明细见 [errors.json](docs/errors.json)：1 条标注本身模糊（保修政策咨询）、
-1 条软广漏检、1 条负评被误判垃圾——全是真边界样本，且全部低置信。
-
-### 外部候选集 v4（冻结中）
-
- 可引用成绩（120 直标，`gold_spam120`）：
- - argmax 60.0%（72/120，95% CI [51.1%, 68.3%]）/ τ=0.10 68.3%（82/120，Youden最优，in-sample，无留出）。
- - 概率阈值实验说明：[docs/release-post-v0.3.md](docs/release-post-v0.3.md)——argmax 会丢弃概率分布中的分离信号；阈值校准是零重训杠杆。
- - 其余探索口径（190 系混合 gold，已被取代）见报告附录 `docs/jev-v4-report.md` §5.2，不引用。
-
- 研究过程：v1/v2 是自建 mini 集、规则友好；v4 采公开数据做更硬的外部口径——候选来自公开中文数据集
- （8×50 外部集 + 探针，seed=42，归一化去重，采样报告见 `benchmarks/data/external/`）；
- **120 条垃圾候选由人工逐条亲标**（垃圾 71 / 正常 49，来源为京东刷单评论集与大众点评假评集），
- 冻结为 `gold_spam120`——直标优先级高于任何派生 gold；Jev 对每条各判一次（原生 decisions API，
- temperature 0）。协议、负结果与局限见 `docs/jev-v4-report.md`。
-
- 上方 judge-econ 头条数字不变。
-
-## 快速开始
+## 30 秒试用：无 key、无 API 花费
 
 ```bash
-git clone https://github.com/lexingtonhibiki/judgekit && cd judgekit
-pip install -e .              # 唯一硬依赖 pyyaml；装好后有 judgekit 命令
-cp .env.example .env          # 可选：填 TYPESAFE_API_KEY（不填走规则兜底，0 成本）
-
-# ⓪ 10 秒试用——不要数据文件、不要 key（规则兜底 0 成本）；退出码 0/1 可直接做 shell 门
-judgekit judge judgekit/examples/triage.yaml "我的订单三天了还没发货，再不处理就投诉了"
-
-# ① 一份 YAML，跑一个派单判断（无 key 自动规则兜底）
-judgekit run judgekit/examples/triage.yaml --input benchmarks/data/econ_zh/intent_zh.jsonl --limit 3
-
-# ⓪b 工作流管道与 CI 门禁：stdin 读入；ok 率低于 80% 退出码 2
-cat tickets.jsonl | judgekit run judgekit/examples/triage.yaml --input - --fail-under 80
-
-# ② 同一份 YAML 原生跑 Jev（choice/score/noul，全量概率分布）
-export TYPESAFE_API_KEY=...
-judgekit run judgekit/examples/triage.yaml --providers benchmarks/models.yaml --provider typesafe \
-  --input benchmarks/data/econ_zh/intent_zh.jsonl --limit 3
-
-# ③ 全量评测 + Pareto 报告
-python benchmarks/run_bench.py --models rules,typesafe --limit 0 \
-  --datasets intent_zh,sentiment_zh,spam_zh,urgency_zh    # n=130，头条数字的同款配方
-python benchmarks/report.py   # → benchmarks/results/（发布时手工拷贝到 docs/）
-
-# ④ 配方（默认本地启发式 0 成本；--model 开判官精排）
-python recipes/learn_next/next.py --model typesafe --top 3
-python recipes/resume_lens/match.py --model typesafe
+git clone https://github.com/lexingtonhibiki/judgekit
+cd judgekit
+python -m pip install -e .
+python -m judgekit judge judgekit/examples/triage.en.yaml "my parcel has not arrived"
 ```
 
-## 同一份任务定义，任意后端
+输出是 JSON；其中这些字段会是：
+
+```json
+{"primitive": "route", "value": "shipping", "provider": "rules", "cost": 0.0, "ok": true}
+```
+
+完整输出还包含启发式置信度、耗时和错误信息。规则没有命中时返回 `ok=false`、退出码 1。
+中文示例：
+
+```bash
+python -m judgekit judge judgekit/examples/triage.yaml "快递三天了还没到，催单"
+```
+
+[安装与 Windows 指引](docs/usage.zh-CN.md#安装) · [Python API / 供应商 / 退出码](docs/usage.zh-CN.md) · [评测证据](docs/evaluation.md)
+
+## 一份任务定义，多个后端
 
 ```yaml
-name: 工单派单
+name: ticket-routing
 primitive: route
-criteria: 判断该求助内容应流转到哪个部门
-labels:                       # map 写法：候选→说明
-  退款售后: 退货、退款、换货、发票、赔偿
-  物流查询: 快递、运单、发货进度、签收
-provider: typesafe            # 换成任意 openai 兼容供应商名即切后端，YAML 零改动
-fallback_rules:               # 供应商失败/无 key 时的零成本兜底
-  退款售后: [退款, 退货, 换货, 发票]
+criteria: which department should handle this ticket
+labels:
+  refund: returns, refunds, exchanges, invoices
+  shipping: parcels, tracking, delivery
+provider: rules
+fallback_rules:
+  refund: [refund, return, invoice]
+  shipping: [parcel, tracking, delivery]
 ```
 
-- **typesafe 后端**：原生 choice criteria、score 刻度（归一化到 0-1）、verify→noul，
-  返回全量概率分布与 confidence
-- **openai 后端**：同一份 YAML 自动翻译成「只输出 JSON」的提示词（含刻度锚点），响应解析+标签校验
-- **rules 后端**：在任务声明的 `input_field`（默认 `text`）上做关键词匹配，永远免费；
-  兜底只对 classify/route 生效——score/verify 供应商失败即失败
-- **单输入字段白名单**：规则匹配与 LLM 提示词只看声明字段，jsonl 里的金标/元数据
-  不会泄漏进提示词，也不会虚增命中率
+| 原语 | 输出 | 用例 |
+|---|---|---|
+| `classify` | 标签 | 情感、垃圾内容识别 |
+| `route` | 路由标签 | 工单派单 |
+| `score` | 0–1 分数 | 候选知识点或岗位匹配评分 |
+| `verify` | 布尔值 | 按明确定义的判据校验 |
 
-## 供应商（bring your own）
+- 规则后端本地运行，支持 `classify` / `route`；`score` / `verify` 需要模型。
+- 原生 Jev / NanoJev 可提供标签概率分布；OpenAI 兼容后端解析并验证 JSON 输出。
+- `run_task` 仅把声明的 `input_field`（默认 `text`）传给供应商，金标和额外元数据留在本地。
+- 模型失败时，分类和路由任务可走显式关键词兜底；实际后端与失败原因会写进决策。
+- 费用按你配置的价格计算。未配置价格、订阅边际费用或本地 API 费用为零，都不等于总成本为零。
+- 已计费但响应解析失败的请求可能漏记费用，总支出应核对供应商账单。
+- 置信度的统计校准取决于后端和你的数据；低置信度不会自动触发规则兜底。
 
-`benchmarks/models.yaml` 声明：`kind: typesafe | openai | rules`。key 只走环境变量
-（`.env.example` 模板），**永不入库**。没有国外渠道完全成立：任何 OpenAI 兼容端点
-（本地网关 / GLM / DeepSeek / OpenRouter…）都能跑通全链路，Jev 只是其中一家。
+```python
+from judgekit import Task, run_task
 
-## 配方四原则
+task = Task.load("judgekit/examples/triage.en.yaml")
+decision = run_task(task, {"text": "my parcel has not arrived"}, {})
+print(decision.value, decision.provider, decision.cost)  # shipping rules 0.0
+```
 
-1. 判官给概率，人做决定（涉人场景强制意愿/知情前置）
-2. 不做员工逐人标签；不做企业侧自动淘汰
-3. 每个配方必须带零成本本地模式——判官是增强，不是依赖
-4. 成本透明：每次运行打印本次判官花费
-
-## 开发
+## 接进你的工作流
 
 ```bash
-pip install -e .[dev]
-pytest               # 124 个离线单元测试（1 个 live-ping 默认跳过）
+python -m judgekit run judgekit/examples/triage.yaml --input benchmarks/data/econ_zh/intent_zh.jsonl --limit 3 --out decisions.jsonl
 ```
 
-CI 在 Ubuntu/Windows × Python 3.10/3.12 上跑测试 + 零成本烟测。
+每行输入一个 JSON 对象，每行输出一个决策。`--input -` 支持 stdin 管道；
+`--fail-under 80` 可在成功执行率低于 80% 时退出 2。
+它检查 `ok` 的比例，不检查分类准确率或远端模型是否成功。
 
-## 路线图
+供应商配置见 [benchmarks/models.yaml](benchmarks/models.yaml)。`--provider typesafe` 与
+`--providers benchmarks/models.yaml` 一起覆盖 YAML 的规则后端。
+CLI 读取环境变量，**不会自动加载 `.env`**；接远端前先配置 key、端点和价格。
+完整例子见 [使用指南](docs/usage.zh-CN.md#更换供应商)。
 
-- [x] 四原语引擎 + 原生 TypeSafe 适配器 + OpenAI 兼容 + 规则兜底
-- [x] judge-econ mini 基准 + Pareto 报告（Jev 97.7% @ ¥0.105/千次，n=130）
-- [x] 置信度门控研究（0.7 门控 → 捕获 100% 错误 @ 9% 升级率）
-- [x] learn_next / resume_lens 配方（双模式）
-- [x] 测试套件 + CI
-- [ ] LLM 判官对照全量补测（GLM / DeepSeek / 免费链）
-- [ ] 公共大数据集（ag_news / sst2 / 客服意图全量）
-- [ ] smart-triage 配方（12345 政务热线派单）
-- [ ] PyPI 发布 / GIF 演示
+## 两个可直接运行的 recipe
 
-## 贡献
+| recipe | 作用 | 免费本地试用 |
+|---|---|---|
+| learn_next | 结合先修关系、掌握缺口与考试权重，排序下一步学什么 | `python recipes/learn_next/next.py` |
+| resume_lens | 结合简历、岗位与意愿问卷，给求职者匹配参考 | `python recipes/resume_lens/match.py` |
 
-配方欢迎 PR（放 `recipes/`，遵守四原则）；基准数据欢迎扩充（放 `benchmarks/data/`，
-带 `.rules.yaml` 基线）；新供应商适配欢迎 PR（`judgekit/providers/`，
-实现 `decide(task, x) -> Decision` 即可）。
+两者默认走本地启发式；`--model` 才启用模型评分。人的决定由人作出，
+简历 recipe 保留意愿问卷，不用于企业自动淘汰。
 
-## License
+## 评测：先看数据版本
 
-MIT
+judge-econ 关注同一任务上的准确率、耗时与配置费用。小样本与阈值选择结果均保留局限。
+
+| 口径 | 可引用事实 | 边界 |
+|---|---|---|
+| **当前 econ_zh v2** | 规则基线 **107/130 = 82.3%**，四个中文任务 | 去除 v1 的标签词/标点捷径；2026-10-02 离线复跑 |
+| 历史 v0.1 mini 集 | Jev **127/130 = 97.7%**，历史规则 **119/130 = 91.5%** | 2026-09-20 的旧数据成绩，不是当前 v2 模型跑分 |
+| 外部 gold_spam120 | argmax **72/120 = 60.0%**；τ=0.10 **82/120 = 68.3%** | 120 条人工逐条直标；阈值在同一集合选择，**in-sample，无留出** |
+
+当前零成本复现：
+
+```bash
+python benchmarks/run_bench.py --models rules --limit 0 --datasets intent_zh,sentiment_zh,spam_zh,urgency_zh
+```
+
+详细结果、历史榜单、失败数与复现边界见 [评测证据](docs/evaluation.md)。
+外部研究的协议、提示词、负结果与局限见 [v4 规范报告](docs/jev-v4-report.md)；
+概率阈值解释见 [中文研究文章](docs/release-post-v0.3.md)。
+当前 v2 规则复跑不调用远端模型，也不验证历史模型成绩。
+
+## 参与开发
+
+```bash
+python -m pip install -e ".[dev]"
+python -m pytest -q
+```
+
+CI 覆盖 Ubuntu / Windows × Python 3.10 / 3.12。
+欢迎补文档、离线示例、供应商 mock 测试与有来源/许可的评测数据。
+[贡献说明](CONTRIBUTING.zh-CN.md) · [反馈问题](https://github.com/lexingtonhibiki/judgekit/issues)
+
+## 下一步
+
+- 对当前 v2 数据做新模型对照，并保留原始逐条结果与失败记录。
+- 给概率阈值准备独立留出集，验证召回率与误报取舍。
+- 扩充有发布许可、标签清楚的真实场景数据和可运行 recipe。
+- 核对发布包与演示材料后准备正式版本。
+
+## 许可
+
+[MIT](LICENSE)
