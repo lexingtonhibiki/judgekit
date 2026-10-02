@@ -73,16 +73,20 @@ results.
 ## Run a new model comparison
 
 Configure providers and token prices in `benchmarks/models.yaml`, export the
-named API-key environment variables, then use a separate output directory or
+named API-key environment variables, then use a separate output directory and
 `--tag` for each run. Remote calls consume the selected provider's quota/budget.
+Start with a fresh directory and unused tag: reruns overwrite matching filenames
+but can leave results from previously evaluated providers.
 
 ```bash
-python benchmarks/run_bench.py --models rules,typesafe --limit 0 --datasets intent_zh,sentiment_zh,spam_zh,urgency_zh --tag v2
-python benchmarks/report.py
+python benchmarks/run_bench.py --models rules,typesafe --limit 0 --datasets intent_zh,sentiment_zh,spam_zh,urgency_zh --out-dir benchmarks/results/v2 --tag v2
+python benchmarks/report.py --results-dir benchmarks/results/v2 --tag v2
 ```
 
-The first command evaluates **v2**, not v1. The report requires the optional
-plotting dependency (`python -m pip install -e ".[plot]"`). Retain the dataset
+The first command evaluates **v2**, not v1. The report uses only the selected tag
+in that directory; without `--tag`, only untagged files are included. Markdown,
+CSV and error JSON work without plotting dependencies; install the optional
+plotting dependency (`python -m pip install -e ".[plot]"`) for a PNG. Retain the dataset
 revision, model ID, provider configuration, raw per-item outputs, failures and
 run date when reporting a result. A benchmark subprocess exit of zero only means
 the runner finished; inspect the `ok`, `error`, and `provider` fields before

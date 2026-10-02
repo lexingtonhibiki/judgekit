@@ -6,6 +6,7 @@
 """
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import sys
@@ -28,12 +29,28 @@ def wilson_ci(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
-    rows = []
-    import re
-    for f in sorted(RES.glob("*__*.jsonl")):
-        if re.search(r"__r\d+$", f.stem):   # 多轮重复文件（--tag r2/r3）不进单轮汇总
+    ap = argparse.ArgumentParser(description="Report one directory and one benchmark run tag.")
+    ap.add_argument("--results-dir", type=Path, default=RES,
+                    help="JSONL input and report output directory")
+    ap.add_argument("--tag", default="", help="Select this run tag; default: untagged files only")
+    args = ap.parse_args()
+    results_dir = args.results_dir
+    sources = []
+    for f in sorted(results_dir.glob("*__*.jsonl")):
+        stem = f.stem
+        if args.tag:
+            suffix = "__" + args.tag
+            if not stem.endswith(suffix):
+                continue
+            stem = stem[:-len(suffix)]
+        parts = stem.split("__")
+        if len(parts) != 2:  # Untagged: provider__dataset; tagged: provider__dataset__tag.
             continue
-        provider, ds = f.stem.rsplit("__", 1)
+        sources.append((f, *parts))
+    if not sources:
+        ap.error(f"no matching result files in {results_dir} (tag={args.tag!r})")
+    rows = []
+    for f, provider, ds in sources:
         recs = [json.loads(l) for l in open(f, encoding="utf-8") if l.strip()]
         if not recs:
             continue
@@ -58,7 +75,7 @@ def main() -> None:
         lines.append(f"| {r['provider']} | {r['dataset']} | {r['n']} | "
                      f"{r['accuracy']:.1%} [{lo:.0%}–{hi:.0%}] | {r['cost_per_1k']:.4f} | "
                      f"{r['avg_latency_ms']} | {r['errors']} |")
-    (RES / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (results_dir / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     # Pareto 数据：准确率按样本合并（micro 平均，比 macro 更真实）；成本 = 总成本/总次数（与 README 同口径）
     agg: dict[str, dict] = {}
@@ -71,14 +88,14 @@ def main() -> None:
                "cost_per_1k": round(v["cost"] / max(1, v["n"]) * 1000, 4)}
               for p, v in agg.items()]
     pareto.sort(key=lambda x: x["cost_per_1k"])
-    with open(RES / "pareto.csv", "w", newline="", encoding="utf-8") as f:
+    with open(results_dir / "pareto.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["provider", "accuracy", "cost_per_1k"])
         w.writeheader()
         w.writerows(pareto)
 
     # 错误样本清单（误判明细，供 README 错误分析节引用）
     errs = []
-    for f in sorted(RES.glob("*__*.jsonl")):
+    for f, _, _ in sources:
         for l in open(f, encoding="utf-8"):
             if not l.strip():
                 continue
@@ -86,7 +103,7 @@ def main() -> None:
             if not r["correct"]:
                 errs.append({"file": f.stem, "id": r["id"], "gold": r["gold"],
                              "pred": r["pred"], "conf": r["confidence"]})
-    with open(RES / "errors.json", "w", encoding="utf-8") as f:
+    with open(results_dir / "errors.json", "w", encoding="utf-8") as f:
         json.dump(errs, f, ensure_ascii=False, indent=1)
 
     # ASCII Pareto：x=成本(对数), y=准确率
@@ -112,15 +129,15 @@ def main() -> None:
         plt.title("benchmarks: cost-accuracy Pareto")
         plt.grid(alpha=0.3)
         plt.tight_layout()
-        plt.savefig(RES / "pareto.png", dpi=150)
+        plt.savefig(results_dir / "pareto.png", dpi=150)
         lines.append("")
-        lines.append("图：results/pareto.png")
+        lines.append("图：[pareto.png](pareto.png)")
     except ImportError:
         lines.append("(装 matplotlib 可生成 pareto.png：pip install matplotlib)")
-    with open(RES / "report.md", "a", encoding="utf-8") as f:
+    with open(results_dir / "report.md", "a", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
     print("\n".join(lines))
-    print(f"\nreport → {RES / 'report.md'}")
+    print(f"\nreport → {results_dir / 'report.md'}")
 
 
 if __name__ == "__main__":

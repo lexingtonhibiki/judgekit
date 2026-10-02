@@ -37,6 +37,7 @@ python -m judgekit run judgekit/examples/triage.yaml --input benchmarks/data/eco
 
 stdout emits JSON; batch summaries are written to stderr. `--out` overwrites the file each time.
 The `provider` field identifies the backend actually used for the invocation; `rules-after-fail` indicates a rules fallback after a remote failure, in which case `error` retains the failure reason. `cost` is calculated using the provider's configured prices; a zero value for an unconfigured price does not mean free.
+Cost accounting happens after successful response parsing. A billed request whose response fails parsing can still record zero cost, including after rule fallback. Check provider bills for total spend.
 
 | Situation | Exit code |
 |---|---:|

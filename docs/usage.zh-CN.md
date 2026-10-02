@@ -38,6 +38,7 @@ python -m judgekit run judgekit/examples/triage.yaml --input benchmarks/data/eco
 stdout 输出 JSON；批量摘要写 stderr。`--out` 每次重写文件。
 `provider` 字段说明本次实际使用的后端；`rules-after-fail` 表示远端失败后规则兜底，
 此时 `error` 保留失败原因。`cost` 使用供应商配置的价格计算；未配置价格的零值不代表免费。
+费用在响应成功解析后计算。已计费但解析失败的请求，包括随后走规则兜底的情况，仍可能记为零费用；总支出应核对供应商账单。
 
 | 情况 | 退出码 |
 |---|---:|

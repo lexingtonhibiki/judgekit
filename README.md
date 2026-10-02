@@ -64,6 +64,7 @@ fallback_rules:
 - `run_task` passes only the declared `input_field` (default `text`) to providers. Gold labels and extra metadata stay local.
 - Failed model decisions can use explicit keyword fallbacks for classification and routing. Decisions record the actual backend and failure reason.
 - Costs use the prices you configure. An unconfigured price, zero subscription marginal cost, or zero local API spend does not mean zero total cost.
+- Billed requests that fail response parsing can be undercounted; check provider bills for total spend.
 - Statistical confidence calibration depends on the backend and your data. Low confidence does not automatically trigger a rule fallback.
 
 ```python
