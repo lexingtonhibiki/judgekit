@@ -1,0 +1,16 @@
+name: support-routing
+primitive: route
+criteria: Choose the department that should handle this support ticket.
+labels:
+  refund: Returns, refunds, exchanges, and invoices.
+  shipping: Parcels, tracking, delivery, and shipment delays.
+  complaint: Complaints about service or the merchant.
+  technical: Crashes, login failures, and application errors.
+  other: General questions.
+provider: rules
+fallback_rules:
+  refund: [refund, return, exchange, invoice]
+  shipping: [parcel, tracking, delivery, shipment]
+  complaint: [complaint, rude, unacceptable]
+  technical: [crash, login, error, broken]
+  other: [question, help, how]
