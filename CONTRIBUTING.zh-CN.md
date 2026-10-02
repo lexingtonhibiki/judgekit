@@ -10,12 +10,25 @@
 ```bash
 python -m pip install -e ".[dev]"
 python -m pytest -q
+python -m judgekit demo
+python -m judgekit demo --lang zh
 python benchmarks/run_bench.py --models rules --limit 4
 ```
 
 默认测试不需要 key，也不应访问远端 API。依赖本机研究产物的检查会显式跳过；
 CI 使用 Ubuntu / Windows 与 Python 3.10 / 3.12。
 行为改动应添加能捕获原问题的离线回归检查；只改文字时核对命令、链接和两种语言的一致性。
+
+改动 CLI 或打包时，再构建并在源码目录外检查安装后的 wheel：
+
+```bash
+python -m pip wheel --no-deps --wheel-dir dist .
+python tools/check_wheel.py
+```
+
+检查器创建临时虚拟环境，复用前面安装的 PyYAML，并用 `--no-index --no-deps` 安装 wheel。
+通过命令行入口与 `python -m judgekit` 检查两种语言，演示期间阻止网络连接与子进程。
+CI 对每个支持的 OS/Python 组合运行此检查。安装包可能下载构建依赖；演示和默认测试不调用付费 API。
 
 ## 贡献类型
 

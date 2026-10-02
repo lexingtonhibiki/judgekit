@@ -23,10 +23,24 @@ Windows PowerShell (no virtual environment activation required):
 
 ```powershell
 .venv\Scripts\python.exe -m pip install -e .
-.venv\Scripts\python.exe -m judgekit judge judgekit/examples/triage.en.yaml "my parcel has not arrived"
+.venv\Scripts\python.exe -m judgekit demo
 ```
 
 In subsequent examples, `python` refers to the interpreter in which judgekit is installed. The only required dependency is PyYAML.
+
+## Built-in offline demo
+
+```bash
+python -m judgekit demo
+python -m judgekit demo --lang zh
+```
+
+After installation, these commands work from any directory and load the task YAML from package resources.
+They use only keyword rules: no provider registry, API key, model download, or network call.
+stdout emits four JSON records; stderr explains the demo. Three inputs match, while the fourth
+returns `ok=false`, `value=null`, and `error="rules-no-hit"`.
+Exit 0 means the selected examples produced their expected outcomes, including the no-hit;
+it is not a 100% accuracy claim. Unexpected demo behavior exits 1.
 
 ## Single-item and batch processing
 
@@ -36,12 +50,15 @@ python -m judgekit run judgekit/examples/triage.yaml --input benchmarks/data/eco
 ```
 
 stdout emits JSON; batch summaries are written to stderr. `--out` overwrites the file each time.
+The CLI rejects an output file that is also the open input, including hard links, symbolic links,
+and a file redirected to stdin. Other existing output files are still overwritten.
 The `provider` field identifies the backend actually used for the invocation; `rules-after-fail` indicates a rules fallback after a remote failure, in which case `error` retains the failure reason. `cost` is calculated using the provider's configured prices; a zero value for an unconfigured price does not mean free.
 Cost accounting happens after successful response parsing. A billed request whose response fails parsing can still record zero cost, including after rule fallback. Check provider bills for total spend.
 
 | Situation | Exit code |
 |---|---:|
 | Successful single-item decision | 0 |
+| Built-in demo produced all expected outcomes, including its deliberate no-hit | 0 |
 | No match or decision failure for a single item; empty batch input | 1 |
 | Argument error; batch successful execution rate below `--fail-under` | 2 |
 
@@ -52,6 +69,9 @@ python -m judgekit run judgekit/examples/triage.yaml --input tickets.jsonl --fai
 ```
 
 Each input line is a JSON object, such as `{"id": "t1", "text": "想退款"}`.
+Every nonblank line produces one record. Invalid JSON produces `bad-json`; valid JSON that is not
+an object produces `bad-input`. Both remain in stdout and `--out`, count toward `--limit`, and
+count as failures for `--fail-under`. Blank lines are ignored. `--fail-under` accepts 0–100.
 `--input -` reads from stdin; on macOS/Linux, use `cat tickets.jsonl | ...`; in PowerShell, use `Get-Content -Encoding utf8 tickets.jsonl | ...`.
 `--fail-under` checks the proportion of `ok=true`; **it does not check classification accuracy or require the decision to come from a remote model**.
 Deployment gates should also check the actual provider and your own gold labels/business rules.

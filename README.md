@@ -18,22 +18,29 @@ Use it for small, clearly defined decisions in scripts, support workflows, and a
 git clone https://github.com/lexingtonhibiki/judgekit
 cd judgekit
 python -m pip install -e .
-python -m judgekit judge judgekit/examples/triage.en.yaml "my parcel has not arrived"
+python -m judgekit demo
 ```
 
-The output is JSON. These fields will contain:
+The demo works from any directory after installation, uses only local rules, and never
+loads a provider registry or makes an API call. stdout contains four JSON records:
+three matches and one visible `rules-no-hit`. The shipping record includes:
 
 ```json
 {"primitive": "route", "value": "shipping", "provider": "rules", "cost": 0.0, "ok": true}
 ```
 
-The full output also includes heuristic confidence, latency, and error information.
-When no rule matches, the result has `ok=false` and the command exits with 1.
-A Chinese example is included too:
+These are selected examples, not an accuracy benchmark. Rule confidence is heuristic.
+The demo exits 0 when all four expected outcomes occur, including the deliberate no-hit.
+Try the Chinese demo, or pass your own text to the existing YAML:
 
 ```bash
+python -m judgekit demo --lang zh
+python -m judgekit judge judgekit/examples/triage.en.yaml "my parcel has not arrived"
 python -m judgekit judge judgekit/examples/triage.yaml "快递三天了还没到，催单"
 ```
+
+`judge` exits 1 for an unmatched input. Custom YAML paths are relative to your current directory;
+the built-in demo needs no path or checkout.
 
 [Installation and Windows instructions](docs/usage.md#installation) · [Python API / providers / exit codes](docs/usage.md) · [Evaluation evidence](docs/evaluation.md)
 

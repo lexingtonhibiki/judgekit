@@ -23,10 +23,24 @@ Windows PowerShell（无需激活虚拟环境）：
 
 ```powershell
 .venv\Scripts\python.exe -m pip install -e .
-.venv\Scripts\python.exe -m judgekit judge judgekit/examples/triage.en.yaml "my parcel has not arrived"
+.venv\Scripts\python.exe -m judgekit demo
 ```
 
 后续示例的 `python` 指已安装 judgekit 的解释器。唯一必需依赖是 PyYAML。
+
+## 内置离线演示
+
+```bash
+python -m judgekit demo
+python -m judgekit demo --lang zh
+```
+
+安装后可在任意目录运行，任务 YAML 从包资源读取。仅使用关键词规则：
+不读取供应商注册表、不需要 API key、不下载模型、不发起网络请求。
+stdout 输出四行 JSON，stderr 说明演示口径。前三条命中，第四条返回
+`ok=false`、`value=null`、`error="rules-no-hit"`。
+退出 0 表示选定样例得到全部预期结果，包含故意展示的 no-hit，并非 100% 准确率声明。
+演示出现非预期行为时退出 1。
 
 ## 单条与批量
 
@@ -36,6 +50,8 @@ python -m judgekit run judgekit/examples/triage.yaml --input benchmarks/data/eco
 ```
 
 stdout 输出 JSON；批量摘要写 stderr。`--out` 每次重写文件。
+输出若与已打开的输入是同一个文件，会被拒绝，包括硬链接、符号链接，以及重定向给 stdin 的文件。
+其他已存在的输出文件仍会覆盖。
 `provider` 字段说明本次实际使用的后端；`rules-after-fail` 表示远端失败后规则兜底，
 此时 `error` 保留失败原因。`cost` 使用供应商配置的价格计算；未配置价格的零值不代表免费。
 费用在响应成功解析后计算。已计费但解析失败的请求，包括随后走规则兜底的情况，仍可能记为零费用；总支出应核对供应商账单。
@@ -43,6 +59,7 @@ stdout 输出 JSON；批量摘要写 stderr。`--out` 每次重写文件。
 | 情况 | 退出码 |
 |---|---:|
 | 单条成功判断 | 0 |
+| 内置演示产生全部预期结果，含故意展示的 no-hit | 0 |
 | 单条未命中或判断失败；批量空输入 | 1 |
 | 参数错误；批量成功执行率低于 `--fail-under` | 2 |
 
@@ -53,6 +70,9 @@ python -m judgekit run judgekit/examples/triage.yaml --input tickets.jsonl --fai
 ```
 
 输入每行一个 JSON 对象，如 `{"id": "t1", "text": "想退款"}`。
+每个非空行产出一条记录。非法 JSON 产出 `bad-json`；合法 JSON 但非对象产出 `bad-input`。
+二者同时保留在 stdout 与 `--out` 中，计入 `--limit`，在 `--fail-under` 中计为失败；空行忽略。
+`--fail-under` 接受 0–100。
 `--input -` 从 stdin 读；macOS/Linux 可用 `cat tickets.jsonl | ...`，
 PowerShell 可用 `Get-Content -Encoding utf8 tickets.jsonl | ...`。
 `--fail-under` 检查 `ok=true` 的比例，**不检查分类准确率，也不要求判断来自远端模型**。

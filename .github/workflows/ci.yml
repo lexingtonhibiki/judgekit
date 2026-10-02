@@ -20,3 +20,7 @@ jobs:
       - run: pytest -q
       - name: zero-cost smoke (rules baseline)
         run: python benchmarks/run_bench.py --models rules --limit 4
+      - name: Build the distribution wheel
+        run: python -m pip wheel --no-deps --wheel-dir dist .
+      - name: Installed wheel demo outside the checkout (offline)
+        run: python tools/check_wheel.py

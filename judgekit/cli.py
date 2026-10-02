@@ -4,11 +4,13 @@
   judgekit judge <task.yaml> <文本...>          单条快速判断（退出码：ok=0 / 失败=1，可做 shell 门）
   judgekit run <task.yaml> --input in.jsonl     批量判断（--input - 读 stdin 管道）
   judgekit run ... --fail-under 80              ok 率低于 80% 退出码 2（CI 质量门禁）
+  judgekit demo --lang zh                     内置离线演示（无 key，任意目录运行）
 """
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 
 
@@ -26,6 +28,43 @@ def _load_task_and_providers(args):
         elif providers and task.provider in ("", "rules"):
             print(f"⚠ task 钉在 rules：要测 LLM 请加 --provider {'/'.join(list(providers)[:3])} 覆盖", file=sys.stderr)
     return task, providers
+
+
+def _cmd_demo(lang: str) -> int:
+    """Use packaged rule tasks; no provider registry, environment key, or network."""
+    from importlib.resources import as_file, files
+
+    from .engine import Task, run_task
+
+    filename = "triage.yaml" if lang == "zh" else "triage.en.yaml"
+    with as_file(files("judgekit").joinpath("examples", filename)) as path:
+        task = Task.load(str(path))
+    task.provider = "rules"
+    samples = (
+        [("想申请退货退款，订单还没收到", "退款售后"),
+         ("快递三天了还没到，麻烦帮我催一下", "物流查询"),
+         ("APP 一直闪退，登不上", "技术故障"), ("今天天气晴朗", None)]
+        if lang == "zh" else
+        [("please refund this order", "refund"),
+         ("my parcel has not arrived", "shipping"),
+         ("the app crashes on login", "technical"), ("the sky is blue", None)]
+    )
+    valid = True
+    for index, (text, expected) in enumerate(samples, 1):
+        dec = run_task(task, {task.input_field: text}, {}, fallback=False)
+        print(json.dumps({"id": index, "input": {task.input_field: text}, **dec.to_dict()}, ensure_ascii=False))
+        valid &= dec.value == expected and dec.ok == (expected is not None) and dec.cost == 0 and dec.provider == "rules"
+    note = (
+        "离线规则演示：3 条命中 + 1 条预期 no-hit；无 key，无 API 调用。\n"
+        "样例用于展示行为，不是准确率评测；规则置信度是启发式。"
+        if lang == "zh" else
+        "Offline rules demo: 3 matches + 1 expected no-hit; no key or API calls.\n"
+        "Selected examples show behavior, not benchmark accuracy; rule confidence is heuristic."
+    )
+    print(note, file=sys.stderr)
+    if not valid:
+        print("demo: unexpected result", file=sys.stderr)
+    return 0 if valid else 1
 
 
 def main() -> None:
@@ -54,9 +93,16 @@ def main() -> None:
     j.add_argument("--provider", default=None, help="覆盖任务 YAML 里钉死的 provider 名")
     j.add_argument("text", nargs="+", help="待判断文本（多词自动拼接）")
 
+    demo = sub.add_parser("demo", help="内置离线规则演示：无 key、无 API 调用、任意目录运行")
+    demo.add_argument("--lang", choices=("en", "zh"), default="en", help="样例语言（默认 en）")
+
     args = ap.parse_args()
+    if args.cmd == "demo":
+        sys.exit(_cmd_demo(args.lang))
     if args.cmd == "run" and args.limit < 0:
         ap.error("--limit 需 ≥ 0")
+    if args.cmd == "run" and args.fail_under is not None and not 0 <= args.fail_under <= 100:
+        ap.error("--fail-under 需在 0–100 之间")
     task, providers = _load_task_and_providers(args)
 
     from .engine import run_task
@@ -71,8 +117,16 @@ def main() -> None:
         fh = sys.stdin if args.input == "-" else open(args.input, encoding="utf-8-sig")
     except OSError as e:
         ap.error(f"输入打不开: {e}")
-    out_fh = open(args.out, "w", encoding="utf-8") if args.out else None  # 每次 run 重写，防跨 run 追加混数据
+    out_fh = None
     try:
+        try:
+            if args.out:
+                # Check the open input, including redirected stdin and path aliases.
+                if os.path.exists(args.out) and os.path.samestat(os.fstat(fh.fileno()), os.stat(args.out)):
+                    ap.error("--out 必须与输入文件不同（包括硬链接、符号链接和重定向 stdin）")
+                out_fh = open(args.out, "w", encoding="utf-8")
+        except OSError as e:
+            ap.error(f"输出打不开: {e}")
         for line in fh:
             line = line.strip()
             if not line:
@@ -80,19 +134,21 @@ def main() -> None:
             try:
                 row = json.loads(line)
             except json.JSONDecodeError as e:
-                # 坏行不炸批次：记为 error 事件继续（借鉴 openai/evals 事件化容错）
-                print(json.dumps({"id": done, "input": {"_raw": line[:200]},
-                                  "primitive": task.primitive, "value": None, "ok": False,
-                                  "error": f"bad-json: {e}"}, ensure_ascii=False))
-                done += 1
-                continue
-            x = {k: v for k, v in row.items() if k != "id"}
-            dec = run_task(task, x, providers)
-            ok += dec.ok
-            rec = {"id": row.get("id", done), "input": x, **dec.to_dict()}
-            print(json.dumps(rec, ensure_ascii=False))
+                error = f"bad-json: {e}"
+            else:
+                error = "" if isinstance(row, dict) else "bad-input: expected a JSON object"
+            if error:
+                rec = {"id": done, "input": {"_raw": line[:200]},
+                       "primitive": task.primitive, "value": None, "ok": False, "error": error}
+            else:
+                x = {k: v for k, v in row.items() if k != "id"}
+                dec = run_task(task, x, providers)
+                ok += dec.ok
+                rec = {"id": row.get("id", done), "input": x, **dec.to_dict()}
+            encoded = json.dumps(rec, ensure_ascii=False)
+            print(encoded)
             if out_fh:
-                out_fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                out_fh.write(encoded + "\n")
             done += 1
             if args.limit and done >= args.limit:
                 break

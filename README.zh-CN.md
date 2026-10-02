@@ -17,21 +17,27 @@
 git clone https://github.com/lexingtonhibiki/judgekit
 cd judgekit
 python -m pip install -e .
-python -m judgekit judge judgekit/examples/triage.en.yaml "my parcel has not arrived"
+python -m judgekit demo
 ```
 
-输出是 JSON；其中这些字段会是：
+安装后演示可在任意目录运行，只使用本地规则，不读取供应商注册表、不调用 API。
+stdout 输出四行 JSON：三条命中，以及一条明确的 `rules-no-hit`。物流行包含：
 
 ```json
 {"primitive": "route", "value": "shipping", "provider": "rules", "cost": 0.0, "ok": true}
 ```
 
-完整输出还包含启发式置信度、耗时和错误信息。规则没有命中时返回 `ok=false`、退出码 1。
-中文示例：
+样例用于展示行为，不是准确率评测；规则置信度是启发式。
+四个预期结果全部出现时，演示退出 0，包含故意展示的 no-hit。
+可运行中文演示，或给现有 YAML 传入自己的文本：
 
 ```bash
+python -m judgekit demo --lang zh
+python -m judgekit judge judgekit/examples/triage.en.yaml "my parcel has not arrived"
 python -m judgekit judge judgekit/examples/triage.yaml "快递三天了还没到，催单"
 ```
+
+`judge` 遇到未命中输入时退出 1。自定义 YAML 路径相对于当前目录；内置演示无需路径或源码目录。
 
 [安装与 Windows 指引](docs/usage.zh-CN.md#安装) · [Python API / 供应商 / 退出码](docs/usage.zh-CN.md) · [评测证据](docs/evaluation.md)
 
