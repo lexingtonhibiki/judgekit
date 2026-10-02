@@ -57,7 +57,7 @@ def judge_rescore(kg: dict, mastery: dict, goal: str, cands: list[dict],
     for c in cands:
         x = {"课程": kg["course"], "目标": goal, "各点掌握度": snap, "候选知识点": c["node"],
              "候选详情": c["why"]}
-        dec = run_task(task, x, providers)
+        dec = run_task(task, {"text": x}, providers)
         total_cost += dec.cost
         j = dec.value if dec.ok else c["score"]
         blended = round(0.5 * j + 0.5 * c["score"], 3)

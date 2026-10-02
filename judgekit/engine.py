@@ -118,7 +118,8 @@ def run_task(task: Task, x: dict, providers: dict, fallback: bool = True) -> Dec
     else:
         t0 = time.monotonic()
         try:
-            dec = p.decide(task, x)
+            # Apply the input-field boundary to every backend, including native APIs.
+            dec = p.decide(task, {task.input_field: x.get(task.input_field, "")})
             dec.latency_ms = int((time.monotonic() - t0) * 1000)
         except Exception as e:  # 网络/供应商/解析失败
             dec = Decision(task.primitive, None, 0.0, "", task.provider,
