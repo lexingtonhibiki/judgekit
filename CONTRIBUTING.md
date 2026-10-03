@@ -9,11 +9,26 @@ Small, complete changes are easiest to review. You can submit a PR directly to f
 ```bash
 python -m pip install -e ".[dev]"
 python -m pytest -q
+python -m judgekit demo
+python -m judgekit demo --lang zh
 python benchmarks/run_bench.py --models rules --limit 4
 ```
 
 Default tests do not require a key and should not access remote APIs. Checks that depend on local research artifacts will explicitly skip; CI uses Ubuntu / Windows and Python 3.10 / 3.12.
 Behavior changes should add an offline regression check that captures the original issue; when changing text only, verify commands, links, and consistency between both languages.
+
+For CLI or packaging changes, also build and check the installed wheel outside the checkout:
+
+```bash
+python -m pip wheel --no-deps --wheel-dir dist .
+python tools/check_wheel.py
+```
+
+The checker uses a temporary virtual environment, reuses the PyYAML installed above, and installs
+the wheel with `--no-index --no-deps`. It runs both languages through the console script and
+`python -m judgekit`, with network connections and child processes blocked during each demo.
+CI runs this check for every supported OS/Python combination. Package installation can download
+build dependencies; the demos and default tests make no paid API calls.
 
 ## Contribution types
 
