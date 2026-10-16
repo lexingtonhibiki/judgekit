@@ -62,9 +62,17 @@ def parse_decision(task: Task, raw: str, name: str, latency: int, cost: float) -
         raise ValueError("no-json-in-response")
     conf = max(0.0, min(1.0, float(obj.get("confidence", 0.5))))
     if task.primitive in ("classify", "route"):
-        label = str(obj.get("label", "")).strip()
-        hit = next((lb for lb in task.labels if lb == label), None) \
-            or next((lb for lb in task.labels if lb in label or label in lb), None)
+        label = obj.get("label")
+        if not isinstance(label, str) or not label.strip():
+            raise ValueError(f"label-invalid: {label!r}")
+        label = label.strip()
+        hit = next((lb for lb in task.labels if lb == label), None)
+        if hit is None:
+            # 保留唯一的子串匹配，但不能按候选顺序替模型解决歧义。
+            matches = {lb for lb in task.labels if lb in label or label in lb}
+            if len(matches) > 1:
+                raise ValueError(f"label-ambiguous: {label!r}")
+            hit = next(iter(matches), None)
         # 注意：不做"候选词出现在响应原文任意位置"的三级模糊匹配——那会把顺嘴一提当判定
         if hit is None:
             raise ValueError(f"label-not-in-candidates: {label!r}")
