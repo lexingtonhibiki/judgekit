@@ -64,7 +64,7 @@ def test_cli_rejects_invalid_rules_before_output_or_providers(tmp_path, command,
     assert result.returncode == 2, result.stderr
     assert result.stdout == ""
     assert "fallback_rules" in result.stderr and diagnostic in result.stderr
-    assert str(task) in result.stderr
+    assert repr(str(task)) in result.stderr
     assert "Traceback" not in result.stderr
     assert "must-not-be-loaded" not in result.stderr
     assert output.read_text(encoding="utf-8") == "keep previous results\n"
