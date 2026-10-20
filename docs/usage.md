@@ -87,6 +87,12 @@ Deployment gates should also check the actual provider and your own gold labels/
 
 See the [English triage YAML](../judgekit/examples/triage.en.yaml), [Chinese triage YAML](../judgekit/examples/triage.yaml), and [scoring YAML](../judgekit/examples/score_comment.yaml) for definitions.
 Rules use case-sensitive substring counts; ties are resolved by selecting the rule that appears first in the YAML; if there is no match, the operation returns a failure.
+For `classify` / `route`, `Task.load` and `Task.from_dict` validate `fallback_rules`:
+each key must exactly match a declared label, and each value must be a list of non-empty
+keyword strings (for example, `shipping: [parcel]`, not `shipping: parcel`). An empty list
+disables that rule; omitted, null, or empty mappings mean no rules. Invalid rules raise
+`ValueError`; the CLI exits 2 with the task path and configuration error before loading
+providers, processing input, or overwriting `--out`. Keywords are not trimmed or case-folded.
 Rule confidence values are heuristic; confidence values from OpenAI-compatible backends are self-reported by the model; native backends provide the full label distribution when available. The statistical calibration of these values must be validated separately on your data.
 
 ## Changing providers

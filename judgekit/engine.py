@@ -75,7 +75,19 @@ class Task:
         t.instruction = d.get("instruction", "")
         t.input_field = str(d.get("input_field", "text") or "text")
         t.provider = d.get("provider", "")
-        t.fallback_rules = d.get("fallback_rules", {}) or {}
+        t.fallback_rules = d.get("fallback_rules", {})
+        if t.fallback_rules is None:
+            t.fallback_rules = {}
+        if t.primitive in ("classify", "route"):
+            if not isinstance(t.fallback_rules, dict):
+                raise ValueError("fallback_rules must be a mapping of labels to keyword lists")
+            for label, keywords in t.fallback_rules.items():
+                if label not in t.labels:
+                    raise ValueError(f"fallback_rules label {label!r} must be declared in labels")
+                if not isinstance(keywords, list):
+                    raise ValueError(f"fallback_rules[{label!r}] must be a list of keyword strings")
+                if any(not isinstance(keyword, str) or not keyword for keyword in keywords):
+                    raise ValueError(f"fallback_rules[{label!r}] keywords must be non-empty strings")
         return t
 
     @staticmethod

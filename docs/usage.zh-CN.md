@@ -91,6 +91,11 @@ PowerShell 可用 `Get-Content -Encoding utf8 tickets.jsonl | ...`。
 [中文派单 YAML](../judgekit/examples/triage.yaml) 与
 [打分 YAML](../judgekit/examples/score_comment.yaml)。
 规则是区分大小写的子串计数，平票按 YAML 中先出现的规则选；无命中返回失败。
+对 `classify` / `route`，`Task.load` 与 `Task.from_dict` 会校验 `fallback_rules`：
+键必须与已声明的标签完全一致，值必须是非空关键词字符串组成的列表
+（例如 `shipping: [parcel]`，不能写成 `shipping: parcel`）。空列表禁用该条规则；
+省略、null 或空映射表示无规则。非法规则抛出 `ValueError`；CLI 在加载供应商、
+处理输入或覆盖 `--out` 之前退出 2，并显示任务路径及配置错误。关键词不去除空白，也不转换大小写。
 规则置信度是启发值；OpenAI 兼容后端的置信度由模型自报；可用时原生后端提供完整标签分布。
 这些值的统计校准都需要在你的数据上另行验证。
 

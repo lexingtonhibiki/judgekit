@@ -14,9 +14,14 @@ import os
 import sys
 
 
-def _load_task_and_providers(args):
+def _load_task_and_providers(args, parser):
     from .engine import Task
-    task = Task.load(args.task)
+    import yaml
+
+    try:
+        task = Task.load(args.task)
+    except (OSError, ValueError, yaml.YAMLError) as exc:
+        parser.error(f"task {args.task!r}: {exc}")
     if getattr(args, "provider", None):        # CLI 显式覆盖任务 YAML 里钉死的 provider
         task.provider = args.provider
     providers = {}
@@ -103,7 +108,7 @@ def main() -> None:
         ap.error("--limit 需 ≥ 0")
     if args.cmd == "run" and args.fail_under is not None and not 0 <= args.fail_under <= 100:
         ap.error("--fail-under 需在 0–100 之间")
-    task, providers = _load_task_and_providers(args)
+    task, providers = _load_task_and_providers(args, ap)
 
     from .engine import run_task
 
