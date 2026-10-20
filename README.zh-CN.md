@@ -125,6 +125,13 @@ python benchmarks/run_bench.py --models rules --limit 0 --datasets intent_zh,sen
 概率阈值解释见 [中文研究文章](docs/release-post-v0.3.md)。
 当前 v2 规则复跑不调用远端模型，也不验证历史模型成绩。
 
+报告保留配置的供应商名，但准确率是**包含规则兜底的端到端准确率**，不是模型单独的准确率。
+`err` 只统计最终失败，模型失败后兜底成功不计入其中。Markdown 表格与 Pareto CSV 的
+`rule_fallbacks` 统计实际 `provider=rules-after-fail` 的记录；文本与 PNG Pareto 均标出
+兜底次数，`errors.json` 保留误判记录的实际 provider。普通 `rules` 不算兜底。
+旧记录若缺少 provider，零条已知兜底不能证明没有兜底，误判明细的 provider 为 `null`；
+兜底费用仍受[用法文档](docs/usage.zh-CN.md)所述的成本计数边界限制。
+
 ## 参与开发
 
 ```bash

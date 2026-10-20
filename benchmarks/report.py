@@ -26,6 +26,13 @@ def wilson_ci(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     return (max(0.0, center - half), min(1.0, center + half))
 
 
+def pareto_label(row: dict) -> str:
+    label = row["provider"]
+    if row["rule_fallbacks"]:
+        label += f" [rules fallback: {row['rule_fallbacks']}]"
+    return label
+
+
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
@@ -59,37 +66,46 @@ def main() -> None:
         cost = sum(r["cost"] for r in recs)
         lat = sum(r["latency_ms"] for r in recs) / n
         err = sum(1 for r in recs if not r["ok"])
+        fallbacks = sum(r.get("provider") == "rules-after-fail" for r in recs)
         rows.append({"provider": provider, "dataset": ds, "n": n,
                      "accuracy": round(acc, 4), "cost_total": round(cost, 6),
                      "cost_per_1k": round(cost / n * 1000, 4),
-                     "avg_latency_ms": round(lat), "errors": err})
+                     "avg_latency_ms": round(lat), "errors": err,
+                     "rule_fallbacks": fallbacks})
 
     # 汇总表（按数据集分组、按准确率降序）
     lines = ["# judge-econ 结果", "",
              "协议：temperature=0，每样本 1 次判断调用，无 few-shot；CI 为 Wilson 95%。", "",
-             "| provider | dataset | n | accuracy (95% CI) | ¥/1000次 | 平均延迟ms | err |",
-             "|---|---|---|---|---|---|---|"]
+             "provider 为配置名；accuracy 是包含规则兜底的端到端准确率，不是模型单独的准确率。"
+             "err 仅统计最终失败；rule_fallbacks 统计 provider=rules-after-fail 的记录，"
+             "不含普通 rules。旧记录缺少 provider 时无法确认是否兜底。", "",
+             "| provider | dataset | n | accuracy (95% CI) | ¥/1000次 | 平均延迟ms | err | rule_fallbacks |",
+             "|---|---|---|---|---|---|---|---|"]
     for r in sorted(rows, key=lambda x: (x["dataset"], -x["accuracy"])):
         k = round(r["accuracy"] * r["n"])
         lo, hi = wilson_ci(k, r["n"])
         lines.append(f"| {r['provider']} | {r['dataset']} | {r['n']} | "
                      f"{r['accuracy']:.1%} [{lo:.0%}–{hi:.0%}] | {r['cost_per_1k']:.4f} | "
-                     f"{r['avg_latency_ms']} | {r['errors']} |")
+                     f"{r['avg_latency_ms']} | {r['errors']} | {r['rule_fallbacks']} |")
     (results_dir / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     # Pareto 数据：准确率按样本合并（micro 平均，比 macro 更真实）；成本 = 总成本/总次数（与 README 同口径）
     agg: dict[str, dict] = {}
     for r in rows:
-        a = agg.setdefault(r["provider"], {"k": 0, "n": 0, "cost": 0.0})
+        a = agg.setdefault(r["provider"], {"k": 0, "n": 0, "cost": 0.0,
+                                          "rule_fallbacks": 0})
         a["k"] += round(r["accuracy"] * r["n"])
         a["n"] += r["n"]
         a["cost"] += r["cost_total"]
+        a["rule_fallbacks"] += r["rule_fallbacks"]
     pareto = [{"provider": p, "accuracy": round(v["k"] / max(1, v["n"]), 4),
-               "cost_per_1k": round(v["cost"] / max(1, v["n"]) * 1000, 4)}
+               "cost_per_1k": round(v["cost"] / max(1, v["n"]) * 1000, 4),
+               "rule_fallbacks": v["rule_fallbacks"]}
               for p, v in agg.items()]
     pareto.sort(key=lambda x: x["cost_per_1k"])
     with open(results_dir / "pareto.csv", "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=["provider", "accuracy", "cost_per_1k"])
+        w = csv.DictWriter(f, fieldnames=["provider", "accuracy", "cost_per_1k",
+                                        "rule_fallbacks"])
         w.writeheader()
         w.writerows(pareto)
 
@@ -102,17 +118,18 @@ def main() -> None:
             r = json.loads(l)
             if not r["correct"]:
                 errs.append({"file": f.stem, "id": r["id"], "gold": r["gold"],
-                             "pred": r["pred"], "conf": r["confidence"]})
+                             "pred": r["pred"], "conf": r["confidence"],
+                             "provider": r.get("provider")})
     with open(results_dir / "errors.json", "w", encoding="utf-8") as f:
         json.dump(errs, f, ensure_ascii=False, indent=1)
 
     # ASCII Pareto：x=成本(对数), y=准确率
-    lines = ["", "## Cost-Accuracy Pareto（x=¥/1000次判断, y=accuracy）", "", "```"]
+    lines = ["", "## Cost-Accuracy Pareto（x=¥/1000次判断, y=end-to-end accuracy）", "", "```"]
     for p in pareto:
         c = max(p["cost_per_1k"], 1e-6)
         import math
         col = min(60, max(1, int(math.log10(c * 10) * 20))) if c > 0 else 1
-        lines.append(f"{p['accuracy']:6.1%} |{' ' * col}● {p['provider']} (¥{p['cost_per_1k']}/k)")
+        lines.append(f"{p['accuracy']:6.1%} |{' ' * col}● {pareto_label(p)} (¥{p['cost_per_1k']}/k)")
     lines.append("```")
     try:
         import matplotlib
@@ -121,11 +138,11 @@ def main() -> None:
         plt.figure(figsize=(6, 4))
         for p in pareto:
             plt.scatter(max(p["cost_per_1k"], 1e-6), p["accuracy"])
-            plt.annotate(p["provider"], (max(p["cost_per_1k"], 1e-6), p["accuracy"]),
+            plt.annotate(pareto_label(p), (max(p["cost_per_1k"], 1e-6), p["accuracy"]),
                          fontsize=8, xytext=(4, 2), textcoords="offset points")
         plt.xscale("symlog", linthresh=0.01)
         plt.xlabel("cost ¥ / 1000 decisions")
-        plt.ylabel("accuracy")
+        plt.ylabel("end-to-end accuracy (includes rules fallback)")
         plt.title("benchmarks: cost-accuracy Pareto")
         plt.grid(alpha=0.3)
         plt.tight_layout()
