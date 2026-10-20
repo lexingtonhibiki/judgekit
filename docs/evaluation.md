@@ -91,3 +91,14 @@ revision, model ID, provider configuration, raw per-item outputs, failures and
 run date when reporting a result. A benchmark subprocess exit of zero only means
 the runner finished; inspect the `ok`, `error`, and `provider` fields before
 claiming that a remote model was evaluated successfully.
+
+Reports retain the configured provider name but measure **end-to-end accuracy,
+including successful rules fallback**, not model-only accuracy. `err` counts
+final unsuccessful decisions; a recovered model failure does not increase it.
+The Markdown table and Pareto CSV expose `rule_fallbacks`, the number of records
+whose actual `provider` is `rules-after-fail`; both Pareto displays label these
+fallbacks, and `errors.json` retains the actual provider for incorrect predictions.
+Ordinary `rules` decisions are not fallbacks. Legacy records without `provider`
+remain readable, but zero observed fallbacks cannot establish that none occurred;
+their error-detail provider is `null`. Fallback cost still has the accounting
+limitations described in the [usage guide](usage.md#single-item-and-batch-processing).
