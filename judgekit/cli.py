@@ -78,7 +78,7 @@ def main() -> None:
     if hasattr(sys.stderr, "reconfigure"):
         sys.stderr.reconfigure(encoding="utf-8")  # Windows非中文locale下中文警告防转义
     if hasattr(sys.stdin, "reconfigure"):
-        sys.stdin.reconfigure(encoding="utf-8", errors="replace")  # Windows GBK 管道防崩
+        sys.stdin.reconfigure(encoding="utf-8-sig", errors="replace")  # Windows GBK 管道防崩
     ap = argparse.ArgumentParser(prog="judgekit")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
