@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 import time
 import urllib.request
@@ -49,6 +50,19 @@ def build_prompt(task: Task, x: dict) -> tuple[str, str]:
     return system, user
 
 
+def _finite_number(value: object, field: str) -> float:
+    """Keep finite numeric-string compatibility, but never coerce bool/NaN to success."""
+    try:
+        if isinstance(value, bool):
+            raise ValueError
+        number = float(value)
+        if not math.isfinite(number):
+            raise ValueError
+    except (TypeError, ValueError, OverflowError):
+        raise ValueError(f"{field}-invalid: {value!r}") from None
+    return number
+
+
 def parse_decision(task: Task, raw: str, name: str, latency: int, cost: float) -> Decision:
     """从模型原文里抠出 JSON 并按原语取值；失败抛 ValueError。"""
     m = _JSON_RE.search(raw or "")
@@ -60,7 +74,7 @@ def parse_decision(task: Task, raw: str, name: str, latency: int, cost: float) -
             obj = None
     if not isinstance(obj, dict):
         raise ValueError("no-json-in-response")
-    conf = max(0.0, min(1.0, float(obj.get("confidence", 0.5))))
+    conf = max(0.0, min(1.0, _finite_number(obj.get("confidence", 0.5), "confidence")))
     if task.primitive in ("classify", "route"):
         label = obj.get("label")
         if not isinstance(label, str) or not label.strip():
@@ -78,10 +92,7 @@ def parse_decision(task: Task, raw: str, name: str, latency: int, cost: float) -
             raise ValueError(f"label-not-in-candidates: {label!r}")
         return Decision(task.primitive, hit, conf, raw, name, latency, cost)
     if task.primitive == "score":
-        try:
-            sc = float(obj["score"])
-        except (KeyError, TypeError, ValueError):
-            raise ValueError(f"score-invalid: {obj.get('score')!r}")
+        sc = _finite_number(obj.get("score"), "score")
         return Decision(task.primitive, round(max(0.0, min(1.0, sc)), 3),
                         conf, raw, name, latency, cost)
     v = obj.get("verdict")
