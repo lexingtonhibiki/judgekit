@@ -56,6 +56,8 @@ fallback_rules:
   shipping: [parcel, tracking, delivery]
 ```
 
+`classify` / `route` 的 `labels` 必须是非空字符串组成的非空列表，或以非空字符串为键的映射。YAML 中类似布尔值的标签需要加引号，例如 `labels: ["yes", "no"]`；无效候选会在加载供应商或打开批量输出文件前被拒绝。
+
 | 原语 | 输出 | 用例 |
 |---|---|---|
 | `classify` | 标签 | 情感、垃圾内容识别 |
