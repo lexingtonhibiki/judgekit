@@ -59,6 +59,8 @@ fallback_rules:
   shipping: [parcel, tracking, delivery]
 ```
 
+For `classify` / `route`, `labels` must be a non-empty list of non-empty strings or a mapping with non-empty string keys. Quote YAML boolean-like labels, for example `labels: ["yes", "no"]`; malformed candidates are rejected before providers or batch output are opened.
+
 | Primitive | Output | Example |
 |---|---|---|
 | `classify` | Label | Sentiment or spam classification |

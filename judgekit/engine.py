@@ -62,14 +62,22 @@ class Task:
             raise ValueError(f"未知原语 {t.primitive!r}，可选 {PRIMITIVES}")
         # labels 允许两种写法：列表（无描述）或 map（候选→说明，保持插入序）
         raw_labels = d.get("labels", [])
+        if t.primitive in ("classify", "route"):
+            if isinstance(raw_labels, (str, bytes)) or not (
+                hasattr(raw_labels, "__iter__") or hasattr(raw_labels, "__getitem__")
+            ):
+                raise ValueError("labels must be a list of candidate strings or a mapping")
         if isinstance(raw_labels, dict):
             t.labels = list(raw_labels)
             t.label_descriptions = dict(raw_labels)
         else:
             t.labels = list(raw_labels)
             t.label_descriptions = d.get("label_descriptions", {}) or {}
-        if t.primitive in ("classify", "route") and not t.labels:
-            raise ValueError("classify/route 任务必须给 labels 候选")
+        if t.primitive in ("classify", "route"):
+            if not t.labels:
+                raise ValueError("classify/route 任务必须给 labels 候选")
+            if any(not isinstance(label, str) or not label for label in t.labels):
+                raise ValueError("labels candidates must be non-empty strings (quote YAML yes/no)")
         t.criteria = d.get("criteria", "")
         t.levels = list(d.get("levels", []) or [])
         t.instruction = d.get("instruction", "")
