@@ -129,6 +129,11 @@ def main() -> None:
                 # Check the open input, including redirected stdin and path aliases.
                 if os.path.exists(args.out) and os.path.samestat(os.fstat(fh.fileno()), os.stat(args.out)):
                     ap.error("--out 必须与输入文件不同（包括硬链接、符号链接和重定向 stdin）")
+                # Configuration is also source data, even though it is already loaded.
+                if os.path.exists(args.out):
+                    for config in (args.task, args.providers):
+                        if config and os.path.samefile(args.out, config):
+                            ap.error("--out 必须与任务及 providers 配置文件不同（包括硬链接和符号链接）")
                 out_fh = open(args.out, "w", encoding="utf-8")
         except OSError as e:
             ap.error(f"输出打不开: {e}")
