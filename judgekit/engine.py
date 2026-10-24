@@ -141,6 +141,7 @@ def run_task(task: Task, x: dict, providers: dict, fallback: bool = True) -> Dec
         fb = rules_fallback(task, x, "rules-after-fail")
         fb.latency_ms += dec.latency_ms  # 失败尝试的真实耗时别丢（兜底 latency 失真修复）
         if fb.ok:
+            fb.cost += dec.cost  # Rule recovery does not refund the provider attempt.
             fb.error = f"provider-failed({dec.error}); fallback-ok"  # 保留根因，防止兜底假数据混入结果
             return fb
         dec.error = f"{dec.error}; fallback:{fb.error}"
